@@ -1,0 +1,3893 @@
+[
+    {
+        "id": "tab_main",
+        "type": "tab",
+        "label": "ระบบหลัก (กลุ่ม ก–ง)",
+        "disabled": false,
+        "info": "Flow ของ Node-RED ตามหัวข้อ 2.7.4: ก รับและตรวจข้อมูล · ข สถานะออนไลน์ · ค ควบคุมการทดลอง · ง สรุปผลรายนาที",
+        "env": []
+    },
+    {
+        "id": "tab_ui",
+        "type": "tab",
+        "label": "หน้าเว็บ Dashboard",
+        "disabled": false,
+        "info": "กราฟและเกจที่กลุ่มเห็นผ่านเว็บ http://<ip ของ Pi>:1880/dashboard",
+        "env": []
+    },
+    {
+        "id": "tab_api",
+        "type": "tab",
+        "label": "ส่งออก CSV / API",
+        "disabled": false,
+        "info": "GET /api/export.csv · /api/range · /api/health",
+        "env": []
+    },
+    {
+        "id": "tab_sim",
+        "type": "tab",
+        "label": "เฉพาะการจำลอง",
+        "disabled": false,
+        "info": "ส่วนนี้ใช้กับตัวจำลอง ESP32 (esp32-sim) เท่านั้น — ตัดออกได้เมื่อใช้บอร์ดจริง",
+        "env": []
+    },
+    {
+        "id": "cfg_mqtt",
+        "type": "mqtt-broker",
+        "name": "Mosquitto (บน Pi, พอร์ตภายใน 1884)",
+        "broker": "mosquitto",
+        "port": "1884",
+        "clientid": "nodered-pi",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "30",
+        "cleansession": false,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "cfg_influxdb",
+        "type": "influxdb",
+        "hostname": "127.0.0.1",
+        "port": "8086",
+        "protocol": "http",
+        "database": "solar_raw",
+        "name": "InfluxDB 2.x (solar)",
+        "usetls": false,
+        "tls": "",
+        "influxdbVersion": "2.0",
+        "url": "http://influxdb:8086",
+        "timeout": "10",
+        "rejectUnauthorized": true
+    },
+    {
+        "id": "ui_base",
+        "type": "ui-base",
+        "name": "Solar Monitor (Simulated Pi)",
+        "path": "/dashboard",
+        "appIcon": "",
+        "includeClientData": true,
+        "acceptsClientConfig": [
+            "ui-notification",
+            "ui-control"
+        ],
+        "showPathInSidebar": false,
+        "headerContent": "page",
+        "navigationStyle": "default",
+        "titleBarStyle": "default",
+        "showReconnectNotification": true,
+        "notificationDisplayTime": 1,
+        "showDisconnectNotification": true,
+        "allowInstall": false
+    },
+    {
+        "id": "ui_theme",
+        "type": "ui-theme",
+        "name": "Solar theme",
+        "colors": {
+            "surface": "#ffffff",
+            "primary": "#e8590c",
+            "bgPage": "#f4f5f7",
+            "groupBg": "#ffffff",
+            "groupOutline": "#e2e4e9"
+        },
+        "sizes": {
+            "density": "default",
+            "pagePadding": "12px",
+            "groupGap": "12px",
+            "groupBorderRadius": "8px",
+            "widgetGap": "12px"
+        }
+    },
+    {
+        "id": "pg_overview",
+        "type": "ui-page",
+        "name": "ภาพรวม",
+        "ui": "ui_base",
+        "path": "/overview",
+        "icon": "solar-power",
+        "layout": "grid",
+        "theme": "ui_theme",
+        "breakpoints": [
+            {
+                "name": "Default",
+                "px": "0",
+                "cols": "3"
+            },
+            {
+                "name": "Tablet",
+                "px": "576",
+                "cols": "6"
+            },
+            {
+                "name": "Small Desktop",
+                "px": "768",
+                "cols": "9"
+            },
+            {
+                "name": "Desktop",
+                "px": "1024",
+                "cols": "12"
+            }
+        ],
+        "order": 1,
+        "className": "",
+        "visible": "true",
+        "disabled": "false"
+    },
+    {
+        "id": "pg_elec",
+        "type": "ui-page",
+        "name": "ไฟฟ้าและ MPPT",
+        "ui": "ui_base",
+        "path": "/electrical",
+        "icon": "flash",
+        "layout": "grid",
+        "theme": "ui_theme",
+        "breakpoints": [
+            {
+                "name": "Default",
+                "px": "0",
+                "cols": "3"
+            },
+            {
+                "name": "Tablet",
+                "px": "576",
+                "cols": "6"
+            },
+            {
+                "name": "Small Desktop",
+                "px": "768",
+                "cols": "9"
+            },
+            {
+                "name": "Desktop",
+                "px": "1024",
+                "cols": "12"
+            }
+        ],
+        "order": 2,
+        "className": "",
+        "visible": "true",
+        "disabled": "false"
+    },
+    {
+        "id": "pg_trk",
+        "type": "ui-page",
+        "name": "ระบบติดตามแสง",
+        "ui": "ui_base",
+        "path": "/tracker",
+        "icon": "compass-outline",
+        "layout": "grid",
+        "theme": "ui_theme",
+        "breakpoints": [
+            {
+                "name": "Default",
+                "px": "0",
+                "cols": "3"
+            },
+            {
+                "name": "Tablet",
+                "px": "576",
+                "cols": "6"
+            },
+            {
+                "name": "Small Desktop",
+                "px": "768",
+                "cols": "9"
+            },
+            {
+                "name": "Desktop",
+                "px": "1024",
+                "cols": "12"
+            }
+        ],
+        "order": 3,
+        "className": "",
+        "visible": "true",
+        "disabled": "false"
+    },
+    {
+        "id": "pg_ctrl",
+        "type": "ui-page",
+        "name": "ควบคุมการทดลอง",
+        "ui": "ui_base",
+        "path": "/control",
+        "icon": "tune",
+        "layout": "grid",
+        "theme": "ui_theme",
+        "breakpoints": [
+            {
+                "name": "Default",
+                "px": "0",
+                "cols": "3"
+            },
+            {
+                "name": "Tablet",
+                "px": "576",
+                "cols": "6"
+            },
+            {
+                "name": "Small Desktop",
+                "px": "768",
+                "cols": "9"
+            },
+            {
+                "name": "Desktop",
+                "px": "1024",
+                "cols": "12"
+            }
+        ],
+        "order": 4,
+        "className": "",
+        "visible": "true",
+        "disabled": "false"
+    },
+    {
+        "id": "pg_quality",
+        "type": "ui-page",
+        "name": "คุณภาพข้อมูล",
+        "ui": "ui_base",
+        "path": "/quality",
+        "icon": "check-decagram",
+        "layout": "grid",
+        "theme": "ui_theme",
+        "breakpoints": [
+            {
+                "name": "Default",
+                "px": "0",
+                "cols": "3"
+            },
+            {
+                "name": "Tablet",
+                "px": "576",
+                "cols": "6"
+            },
+            {
+                "name": "Small Desktop",
+                "px": "768",
+                "cols": "9"
+            },
+            {
+                "name": "Desktop",
+                "px": "1024",
+                "cols": "12"
+            }
+        ],
+        "order": 5,
+        "className": "",
+        "visible": "true",
+        "disabled": "false"
+    },
+    {
+        "id": "pg_export",
+        "type": "ui-page",
+        "name": "ส่งออกข้อมูล",
+        "ui": "ui_base",
+        "path": "/export",
+        "icon": "download",
+        "layout": "grid",
+        "theme": "ui_theme",
+        "breakpoints": [
+            {
+                "name": "Default",
+                "px": "0",
+                "cols": "3"
+            },
+            {
+                "name": "Tablet",
+                "px": "576",
+                "cols": "6"
+            },
+            {
+                "name": "Small Desktop",
+                "px": "768",
+                "cols": "9"
+            },
+            {
+                "name": "Desktop",
+                "px": "1024",
+                "cols": "12"
+            }
+        ],
+        "order": 6,
+        "className": "",
+        "visible": "true",
+        "disabled": "false"
+    },
+    {
+        "id": "pg_sim",
+        "type": "ui-page",
+        "name": "จำลอง (เฉพาะการจำลอง)",
+        "ui": "ui_base",
+        "path": "/simulation",
+        "icon": "flask-outline",
+        "layout": "grid",
+        "theme": "ui_theme",
+        "breakpoints": [
+            {
+                "name": "Default",
+                "px": "0",
+                "cols": "3"
+            },
+            {
+                "name": "Tablet",
+                "px": "576",
+                "cols": "6"
+            },
+            {
+                "name": "Small Desktop",
+                "px": "768",
+                "cols": "9"
+            },
+            {
+                "name": "Desktop",
+                "px": "1024",
+                "cols": "12"
+            }
+        ],
+        "order": 7,
+        "className": "",
+        "visible": "true",
+        "disabled": "false"
+    },
+    {
+        "id": "ug_status",
+        "type": "ui-group",
+        "name": "สถานะอุปกรณ์",
+        "page": "pg_overview",
+        "width": "4",
+        "height": "1",
+        "order": 1,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "ug_gauges",
+        "type": "ui-group",
+        "name": "กำลังไฟฟ้าขาออกตอนนี้",
+        "page": "pg_overview",
+        "width": "4",
+        "height": "1",
+        "order": 2,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "ug_energy",
+        "type": "ui-group",
+        "name": "พลังงานวันนี้",
+        "page": "pg_overview",
+        "width": "4",
+        "height": "1",
+        "order": 3,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "ug_pout",
+        "type": "ui-group",
+        "name": "กำลังไฟฟ้าขาออก P_out: Fixed vs Tracking",
+        "page": "pg_overview",
+        "width": "12",
+        "height": "1",
+        "order": 4,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "ug_ppv",
+        "type": "ui-group",
+        "name": "กำลังไฟฟ้าจากแผง P_pv",
+        "page": "pg_overview",
+        "width": "6",
+        "height": "1",
+        "order": 5,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "ug_env",
+        "type": "ui-group",
+        "name": "ความเข้มแสงและอุณหภูมิ",
+        "page": "pg_overview",
+        "width": "6",
+        "height": "1",
+        "order": 6,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "ug_vpv",
+        "type": "ui-group",
+        "name": "แรงดันแผง V_pv",
+        "page": "pg_elec",
+        "width": "6",
+        "height": "1",
+        "order": 1,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "ug_ipv",
+        "type": "ui-group",
+        "name": "กระแสแผง I_pv",
+        "page": "pg_elec",
+        "width": "6",
+        "height": "1",
+        "order": 2,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "ug_duty",
+        "type": "ui-group",
+        "name": "Duty cycle ของ Buck",
+        "page": "pg_elec",
+        "width": "6",
+        "height": "1",
+        "order": 3,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "ug_eff",
+        "type": "ui-group",
+        "name": "ประสิทธิภาพ Converter P_out/P_pv (%)",
+        "page": "pg_elec",
+        "width": "6",
+        "height": "1",
+        "order": 4,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "ug_latest",
+        "type": "ui-group",
+        "name": "ค่าล่าสุดจาก ESP32 (ตามตาราง 2.7-1)",
+        "page": "pg_elec",
+        "width": "12",
+        "height": "1",
+        "order": 5,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "ug_angle",
+        "type": "ui-group",
+        "name": "มุมแผงเทียบตำแหน่งดวงอาทิตย์",
+        "page": "pg_trk",
+        "width": "12",
+        "height": "1",
+        "order": 1,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "ug_ldr",
+        "type": "ui-group",
+        "name": "สัญญาณผิดพลาดจากเซนเซอร์แสง 4 ทิศทาง",
+        "page": "pg_trk",
+        "width": "6",
+        "height": "1",
+        "order": 2,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "ug_motor",
+        "type": "ui-group",
+        "name": "สถานะมอเตอร์และโหมด",
+        "page": "pg_trk",
+        "width": "6",
+        "height": "1",
+        "order": 3,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "ug_label",
+        "type": "ui-group",
+        "name": "Label ของการทดลอง (บันทึกเป็น Tag)",
+        "page": "pg_ctrl",
+        "width": "6",
+        "height": "1",
+        "order": 1,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "ug_cmd",
+        "type": "ui-group",
+        "name": "สั่งงาน ESP32 ผ่าน solar/cmd",
+        "page": "pg_ctrl",
+        "width": "6",
+        "height": "1",
+        "order": 2,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "ug_qual",
+        "type": "ui-group",
+        "name": "ตัวชี้วัดคุณภาพข้อมูล",
+        "page": "pg_quality",
+        "width": "12",
+        "height": "1",
+        "order": 1,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "ug_events",
+        "type": "ui-group",
+        "name": "เหตุการณ์ล่าสุด",
+        "page": "pg_quality",
+        "width": "12",
+        "height": "1",
+        "order": 2,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "ug_export",
+        "type": "ui-group",
+        "name": "ส่งออก CSV จาก InfluxDB",
+        "page": "pg_export",
+        "width": "12",
+        "height": "1",
+        "order": 1,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "ug_simstate",
+        "type": "ui-group",
+        "name": "สถานะตัวจำลอง ESP32",
+        "page": "pg_sim",
+        "width": "12",
+        "height": "1",
+        "order": 1,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "ug_simsky",
+        "type": "ui-group",
+        "name": "ท้องฟ้าและความเร็วเวลา",
+        "page": "pg_sim",
+        "width": "4",
+        "height": "1",
+        "order": 2,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "ug_simshade",
+        "type": "ui-group",
+        "name": "เงาบังและความผิดปกติ",
+        "page": "pg_sim",
+        "width": "4",
+        "height": "1",
+        "order": 3,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "ug_simnet",
+        "type": "ui-group",
+        "name": "เครือข่ายและบอร์ด",
+        "page": "pg_sim",
+        "width": "4",
+        "height": "1",
+        "order": 4,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "a_in",
+        "type": "mqtt in",
+        "z": "tab_main",
+        "name": "solar/+/telemetry (QoS 1)",
+        "topic": "solar/+/telemetry",
+        "qos": "1",
+        "datatype": "json",
+        "broker": "cfg_mqtt",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "wires": [
+            [
+                "a_validate"
+            ]
+        ],
+        "x": 170,
+        "y": 110,
+        "g": "grp_a"
+    },
+    {
+        "id": "a_validate",
+        "type": "function",
+        "z": "tab_main",
+        "name": "ตรวจช่วงค่า + seq + เติม Tag",
+        "func": "// กลุ่ม ก: ตรวจข้อมูลวัด 1 ระเบียนจาก ESP32 (หัวข้อ 2.7.4)\n//  1) ตรวจช่วงค่าที่เป็นไปได้ทางกายภาพ   2) ตรวจ seq หาข้อมูลหาย/ซ้ำ/รีบูต (2.7.6)\n//  3) เติม Tag channel, mppt, label      4) แยก ESP32 #2 เป็น 2 Point (ไฟฟ้า + ระบบติดตาม)\n// เอาต์พุต 1 = Point ไป InfluxDB, 2 = เหตุการณ์ผิดปกติ, 3 = ค่าที่ผ่านการตรวจ (Dashboard/สรุปพลังงาน)\nconst ch = msg.topic.split('/')[1];            // \"fixed\" | \"track\"\nconst d = msg.payload;\nconst rx = Date.now();\nif (typeof d !== 'object' || d === null || Array.isArray(d)) {\n    return [null, { topic: ch, payload: { type: 'parse', detail: 'payload ไม่ใช่ JSON object' } }, null];\n}\n\n// ---- 1) ช่วงค่าที่เป็นไปได้ (แก้ได้ทาง environment ของ container) -------------\nconst VOC_MAX = Number(env.get('VOC_MAX') || 23.0);   // V: Voc 21.6 V ตาม datasheet + เผื่อตอนเย็น\nconst ISC_MAX = Number(env.get('ISC_MAX') || 3.6);    // A: Isc 3.0 A + เผื่อ 20 %\nconst errs = [];\nfunction num(k, lo, hi) {\n    const v = d[k];\n    if (typeof v !== 'number' || !isFinite(v)) { errs.push(k + ' ไม่มีค่า'); return; }\n    if (v < lo || v > hi) errs.push(`${k}=${v} นอกช่วง [${lo}, ${hi}]`);\n}\nnum('ts', 1.5e12, 4.1e12); num('seq', 0, 1e12);\nnum('v_pv', 0, VOC_MAX); num('i_pv', 0, ISC_MAX); num('p_pv', 0, 70);\nnum('v_out', 0, 25); num('i_out', 0, 8); num('p_out', 0, 70);\nnum('duty', 0, 1); num('t_panel', -20, 100);\nif (!['po', 'inc'].includes(d.mppt)) errs.push('mppt=' + d.mppt);\nif (ch === 'fixed') { num('g', 0, 1500); num('t_amb', -10, 60); }\nif (ch === 'track') {\n    num('az', 0, 360); num('el', -5, 95); num('e_az', -1, 1); num('e_el', -1, 1);\n    num('m_az', -1, 1); num('m_el', -1, 1); num('p_mot', 0, 50);\n    if (!['track', 'park', 'home', 'stuck', 'manual'].includes(d.mode)) errs.push('mode=' + d.mode);\n}\nif (errs.length) {\n    node.status({ fill: 'red', shape: 'ring', text: `${ch}: ${errs[0]}` });\n    return [null, { topic: ch, payload: { type: 'range', detail: errs.join('; '), seq: d.seq } }, null];\n}\n\n// ---- 2) seq: ข้อมูลหาย / ซ้ำ / มาช้า / รีบูต แยกตามอุปกรณ์และรอบการเปิดเครื่อง ----\nconst key = 'seq_' + ch;\nlet s = global.get(key);\nlet kind = 'new';\nconst prevTs = s ? s.seen.get(d.seq) : undefined;\nif (!s || s.first === null) kind = 'first';\nelse if (prevTs === d.ts) kind = 'dup';                                   // QoS 1 ส่งซ้ำ (ts เดิม)\nelse if (prevTs !== undefined || d.seq + 1000 < s.last) kind = 'reboot';   // seq เริ่มนับใหม่\nelse if (d.seq < s.last) kind = 'late';                                   // มาช้ากว่าลำดับ\nif (kind === 'first' || kind === 'reboot') {\n    if (kind === 'reboot') {\n        const nexp = s.last - s.first + 1;\n        node.send([null, { topic: ch, payload: { type: 'reboot',\n            detail: `seq เริ่มใหม่ที่ ${d.seq} (รอบก่อนได้รับ ${s.rx}/${nexp} ระเบียน)` } }, null]);\n    }\n    s = { boot: s ? s.boot + 1 : 1, since: rx, first: d.seq, last: d.seq, rx: 0, dup: 0, late: 0, gaps: 0,\n          seen: new Map() };\n}\nif (kind === 'dup') {\n    s.dup++;\n} else {\n    if (kind === 'new' && d.seq > s.last + 1) {\n        s.gaps++;\n        node.send([null, { topic: ch, payload: { type: 'seq_gap',\n            detail: `ขาด ${d.seq - s.last - 1} ระเบียน หลัง seq ${s.last}`, seq: d.seq } }, null]);\n    }\n    if (kind === 'late') s.late++;\n    s.rx++;\n    if (d.seq > s.last) s.last = d.seq;\n    s.seen.set(d.seq, d.ts);\n    if (s.seen.size > 5000) s.seen.delete(s.seen.keys().next().value);   // จำกัดหน่วยความจำ\n}\nglobal.set(key, s);\nglobal.set('last_rx_' + ch, rx);\n\n// ---- 3) Tag และ 4) Point --------------------------------------------------\n// Label ของการทดลองที่ผู้ทดลองตั้งในกลุ่ม ค; ข้อมูลที่เล่นซ้ำจาก dataset (esp32_sim.replay)\n// ส่ง label ของแต่ละแถวมาเอง จึงใช้ค่านั้นแทน (บอร์ดจริงไม่ส่งฟิลด์นี้)\nconst dsLabel = (typeof d.label === 'string' && /^[a-z0-9_]{1,32}$/.test(d.label)) ? d.label : null;\nconst label = dsLabel || global.get('label', 'file') || 'normal';\nconst tags = { channel: ch, mppt: d.mppt, label: label };\nconst f = { v_pv: d.v_pv, i_pv: d.i_pv, p_pv: d.p_pv, v_out: d.v_out, i_out: d.i_out, p_out: d.p_out,\n            duty: d.duty, t_panel: d.t_panel, seq: d.seq };\nif (ch === 'fixed') { f.g = d.g; f.t_amb = d.t_amb; }\nconst lat = rx - d.ts;                                 // สมการ (2.7-4) ใช้ได้เมื่อนาฬิกาซิงก์กัน\nconst latOk = Math.abs(lat) < 60000 && kind !== 'dup';\nif (latOk) f.lat_ms = lat;\nconst pts = [{ measurement: 'electrical', tags, fields: f, timestamp: d.ts }];\nif (ch === 'track') {\n    pts.push({ measurement: 'tracker', tags, timestamp: d.ts,\n               fields: { az: d.az, el: d.el, e_az: d.e_az, e_el: d.e_el, m_az: d.m_az, m_el: d.m_el,\n                         p_mot: d.p_mot, mode: d.mode } });\n}\nconst nexp = s.last - s.first + 1;\nnode.status({ fill: kind === 'dup' ? 'yellow' : 'green', shape: 'dot',\n              text: `${ch} seq ${d.seq} (${kind}) loss ${(100 * (nexp - s.rx) / nexp).toFixed(2)}%` });\n// ระเบียนซ้ำยังเขียนลงฐานข้อมูล (เวลาเดียวกันจึงเขียนทับ ไม่เกิดข้อมูลซ้ำ) แต่ไม่ส่งไปคิดพลังงาน\nconst live = kind === 'dup' ? null : { topic: ch, payload: d, ts: d.ts, rx: rx, lat: latOk ? lat : null,\n                                       kind: kind, label: label };\nreturn [{ payload: pts }, null, live];",
+        "outputs": 3,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "wires": [
+            [
+                "a_batch"
+            ],
+            [
+                "a_to_events"
+            ],
+            [
+                "a_to_live"
+            ]
+        ],
+        "x": 500,
+        "y": 110,
+        "g": "grp_a"
+    },
+    {
+        "id": "a_batch",
+        "type": "function",
+        "z": "tab_main",
+        "name": "รวม Point (เขียนทุก 1 วินาที)",
+        "func": "// รวม Point แล้วเขียนครั้งเดียวทุก 1 วินาที (หรือทุก 500 Point) แทนการเขียนทีละข้อความ\nlet buf = context.get('buf') || [];\nlet total = context.get('total') || 0;\nfunction flush() {\n    if (!buf.length) return;\n    total += buf.length;\n    node.send({ payload: buf });\n    buf = [];\n    context.set('total', total);\n    global.set('db_points_written', total);\n    node.status({ fill: 'green', shape: 'dot', text: `เขียนแล้ว ${total} points` });\n}\nif (msg.topic === 'flush') {\n    flush();\n} else if (Array.isArray(msg.payload)) {\n    buf = buf.concat(msg.payload);\n    if (buf.length >= 500) flush();\n}\ncontext.set('buf', buf);\nreturn null;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "wires": [
+            [
+                "a_db"
+            ]
+        ],
+        "x": 860,
+        "y": 90,
+        "g": "grp_a"
+    },
+    {
+        "id": "a_tick",
+        "type": "inject",
+        "z": "tab_main",
+        "name": "ทุก 1 วินาที",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "1",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.5,
+        "topic": "flush",
+        "payload": "",
+        "payloadType": "str",
+        "wires": [
+            [
+                "a_batch"
+            ]
+        ],
+        "x": 500,
+        "y": 60,
+        "g": "grp_a"
+    },
+    {
+        "id": "a_db",
+        "type": "influxdb batch",
+        "z": "tab_main",
+        "influxdb": "cfg_influxdb",
+        "precision": "",
+        "retentionPolicy": "",
+        "name": "InfluxDB solar_raw",
+        "database": "",
+        "precisionV18FluxV20": "ms",
+        "retentionPolicyV18Flux": "",
+        "org": "${INFLUX_ORG}",
+        "bucket": "solar_raw",
+        "wires": [],
+        "x": 1120,
+        "y": 90,
+        "g": "grp_a"
+    },
+    {
+        "id": "a_to_events",
+        "type": "link out",
+        "z": "tab_main",
+        "name": "→ เหตุการณ์",
+        "mode": "link",
+        "links": [
+            "b_events_in"
+        ],
+        "wires": [],
+        "x": 720,
+        "y": 140,
+        "g": "grp_a"
+    },
+    {
+        "id": "a_to_live",
+        "type": "link out",
+        "z": "tab_main",
+        "name": "→ ข้อมูลที่ผ่านการตรวจ",
+        "mode": "link",
+        "links": [
+            "d_in",
+            "ui_in"
+        ],
+        "wires": [],
+        "x": 720,
+        "y": 180,
+        "g": "grp_a"
+    },
+    {
+        "id": "a_catch",
+        "type": "catch",
+        "z": "tab_main",
+        "name": "จับข้อผิดพลาดการเขียน DB",
+        "scope": [
+            "a_db"
+        ],
+        "uncaught": false,
+        "wires": [
+            [
+                "a_dberr"
+            ]
+        ],
+        "x": 500,
+        "y": 230,
+        "g": "grp_a"
+    },
+    {
+        "id": "a_dberr",
+        "type": "function",
+        "z": "tab_main",
+        "name": "แจ้งเขียน DB ไม่สำเร็จ",
+        "func": "// แจ้งเตือนเมื่อเขียน InfluxDB ไม่สำเร็จ (เช่น token ผิด หรือ InfluxDB ยังไม่พร้อม)\nconst n = (context.get('n') || 0) + 1;\ncontext.set('n', n);\nnode.status({ fill: 'red', shape: 'dot', text: `เขียนไม่สำเร็จ ${n} ครั้ง` });\nreturn { topic: 'db', payload: { type: 'db_error', detail: String(msg.error && msg.error.message || msg.error) } };",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "wires": [
+            [
+                "a_dberr_ev"
+            ]
+        ],
+        "x": 860,
+        "y": 230,
+        "g": "grp_a"
+    },
+    {
+        "id": "a_dberr_ev",
+        "type": "link out",
+        "z": "tab_main",
+        "name": "→ เหตุการณ์",
+        "mode": "link",
+        "links": [
+            "b_events_in"
+        ],
+        "wires": [],
+        "x": 1020,
+        "y": 230,
+        "g": "grp_a"
+    },
+    {
+        "id": "a_from_others",
+        "type": "link in",
+        "z": "tab_main",
+        "name": "Point จากกลุ่มอื่น",
+        "links": [
+            "b_events_db",
+            "d_to_db",
+            "s_truth_db"
+        ],
+        "wires": [
+            [
+                "a_batch"
+            ]
+        ],
+        "x": 720,
+        "y": 60,
+        "g": "grp_a"
+    },
+    {
+        "id": "grp_a",
+        "type": "group",
+        "z": "tab_main",
+        "name": "ก  รับข้อมูลวัด ตรวจช่วงค่า/seq เติม Tag แล้วบันทึกลง InfluxDB",
+        "style": {
+            "label": true,
+            "stroke": "#1c7ed6",
+            "fill": "#e7f5ff",
+            "fill-opacity": "0.45",
+            "color": "#1c7ed6",
+            "label-position": "nw"
+        },
+        "nodes": [
+            "a_in",
+            "a_validate",
+            "a_batch",
+            "a_tick",
+            "a_db",
+            "a_to_events",
+            "a_to_live",
+            "a_catch",
+            "a_dberr",
+            "a_dberr_ev",
+            "a_from_others"
+        ],
+        "x": 40,
+        "y": 11,
+        "w": 1190,
+        "h": 252
+    },
+    {
+        "id": "b_in",
+        "type": "mqtt in",
+        "z": "tab_main",
+        "name": "solar/+/status (retained, LWT)",
+        "topic": "solar/+/status",
+        "qos": "1",
+        "datatype": "utf8",
+        "broker": "cfg_mqtt",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "wires": [
+            [
+                "b_status"
+            ]
+        ],
+        "x": 170,
+        "y": 340,
+        "g": "grp_b"
+    },
+    {
+        "id": "b_status",
+        "type": "function",
+        "z": "tab_main",
+        "name": "สถานะออนไลน์ + แจ้งเตือน",
+        "func": "// กลุ่ม ข: สถานะออนไลน์จาก retained message และ LWT (หัวข้อ 2.7.2)\n// เอาต์พุต 1 = ข้อความสถานะ Fixed, 2 = Track, 3 = แจ้งเตือน, 4 = บันทึกเหตุการณ์\nconst ch = msg.topic.split('/')[1];\nconst st = String(msg.payload).trim();\nconst prev = global.get('status_' + ch);\nglobal.set('status_' + ch, st);\nglobal.set('status_since_' + ch, Date.now());\nconst name = ch === 'fixed' ? 'ESP32 #1 (Fixed)' : 'ESP32 #2 (Track)';\nconst text = { payload: st === 'online' ? '🟢 ออนไลน์' : '🔴 ออฟไลน์', topic: ch };\nlet note = null;\nif (st === 'offline') note = { payload: `⚠️ ${name} ออฟไลน์ (ได้รับ LWT หรือบอร์ดปิด)` };\nelse if (prev === 'offline') note = { payload: `✅ ${name} กลับมาออนไลน์` };\nconst ev = { topic: ch, payload: { type: 'status', detail: st } };\nnode.status({ fill: st === 'online' ? 'green' : 'red', shape: 'dot', text: `${ch}: ${st}` });\nreturn [ch === 'fixed' ? text : null, ch === 'track' ? text : null, note, ev];",
+        "outputs": 4,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "wires": [
+            [
+                "b_txt_fixed"
+            ],
+            [
+                "b_txt_track"
+            ],
+            [
+                "b_note"
+            ],
+            [
+                "b_to_events"
+            ]
+        ],
+        "x": 500,
+        "y": 340,
+        "g": "grp_b"
+    },
+    {
+        "id": "b_tick",
+        "type": "inject",
+        "z": "tab_main",
+        "name": "ทุก 5 วินาที",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "5",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.5,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "wires": [
+            [
+                "b_watch"
+            ]
+        ],
+        "x": 170,
+        "y": 420,
+        "g": "grp_b"
+    },
+    {
+        "id": "b_watch",
+        "type": "function",
+        "z": "tab_main",
+        "name": "ตรวจข้อมูลค้าง > 5 วินาที",
+        "func": "// ตรวจข้อมูลค้าง: บอร์ดยังออนไลน์ (ยังไม่ครบเวลา Keep Alive) แต่ไม่มีข้อมูลเกิน 5 วินาที\nconst out = [null, null];\n['fixed', 'track'].forEach((ch, i) => {\n    const st = global.get('status_' + ch);\n    const last = global.get('last_rx_' + ch) || 0;\n    const age = (Date.now() - last) / 1000;\n    let text;\n    if (st === 'offline') text = '🔴 ออฟไลน์';\n    else if (!last) text = st === 'online' ? '🟡 ออนไลน์ (ยังไม่มีข้อมูล)' : '⚪ ไม่ทราบสถานะ';\n    else if (age > 5) text = `🟠 ไม่มีข้อมูล ${age.toFixed(0)} วินาที`;\n    else text = '🟢 ออนไลน์';\n    if (context.get(ch) !== text) { out[i] = { payload: text, topic: ch }; context.set(ch, text); }\n});\nreturn out;",
+        "outputs": 2,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "wires": [
+            [
+                "b_txt_fixed"
+            ],
+            [
+                "b_txt_track"
+            ]
+        ],
+        "x": 500,
+        "y": 420,
+        "g": "grp_b"
+    },
+    {
+        "id": "b_txt_fixed",
+        "type": "ui-text",
+        "z": "tab_main",
+        "group": "ug_status",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "name": "ESP32 #1 (Fixed)",
+        "label": "ESP32 #1 (Fixed)",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "style": true,
+        "font": "",
+        "fontSize": 16,
+        "color": "#374151",
+        "wrapText": false,
+        "className": "",
+        "value": "payload",
+        "valueType": "msg",
+        "wires": [],
+        "x": 900,
+        "y": 310,
+        "g": "grp_b"
+    },
+    {
+        "id": "b_txt_track",
+        "type": "ui-text",
+        "z": "tab_main",
+        "group": "ug_status",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "name": "ESP32 #2 (Track)",
+        "label": "ESP32 #2 (Track)",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "style": true,
+        "font": "",
+        "fontSize": 16,
+        "color": "#374151",
+        "wrapText": false,
+        "className": "",
+        "value": "payload",
+        "valueType": "msg",
+        "wires": [],
+        "x": 900,
+        "y": 350,
+        "g": "grp_b"
+    },
+    {
+        "id": "b_note",
+        "type": "ui-notification",
+        "z": "tab_main",
+        "ui": "ui_base",
+        "position": "top right",
+        "colorDefault": true,
+        "color": "",
+        "displayTime": "6",
+        "showCountdown": true,
+        "outputs": 1,
+        "allowDismiss": true,
+        "dismissText": "ปิด",
+        "allowConfirm": false,
+        "confirmText": "ยืนยัน",
+        "raw": false,
+        "className": "",
+        "name": "แจ้งเตือนบน Dashboard",
+        "wires": [
+            []
+        ],
+        "x": 900,
+        "y": 390,
+        "g": "grp_b"
+    },
+    {
+        "id": "b_to_events",
+        "type": "link out",
+        "z": "tab_main",
+        "name": "→ เหตุการณ์",
+        "mode": "link",
+        "links": [
+            "b_events_in"
+        ],
+        "wires": [],
+        "x": 720,
+        "y": 380,
+        "g": "grp_b"
+    },
+    {
+        "id": "b_events_in",
+        "type": "link in",
+        "z": "tab_main",
+        "name": "เหตุการณ์ (ทุกกลุ่ม)",
+        "links": [
+            "a_to_events",
+            "b_to_events",
+            "c_to_events",
+            "a_dberr_ev",
+            "s_to_events"
+        ],
+        "wires": [
+            [
+                "b_eventlog"
+            ]
+        ],
+        "x": 170,
+        "y": 490,
+        "g": "grp_b"
+    },
+    {
+        "id": "b_eventlog",
+        "type": "function",
+        "z": "tab_main",
+        "name": "บันทึกเหตุการณ์",
+        "func": "// บันทึกเหตุการณ์ (ค่าผิดช่วง, seq ขาด, รีบูต, สถานะ, คำสั่ง, เปลี่ยน Label) ลง InfluxDB และตาราง\n// เอาต์พุต 1 = Point measurement \"events\", 2 = ตารางเหตุการณ์ล่าสุดบน Dashboard\nconst ch = msg.topic || 'system';\nconst e = msg.payload || {};\nconst now = Date.now();\nlet last = context.get('last_ms') || 0;\nconst ts = now > last ? now : last + 1;            // เวลาไม่ซ้ำกัน จึงไม่เขียนทับเหตุการณ์ก่อนหน้า\ncontext.set('last_ms', ts);\nconst fields = { detail: String(e.detail || '') };\nif (typeof e.seq === 'number') fields.seq = e.seq;\nconst point = { measurement: 'events', tags: { channel: ch, type: e.type || 'info' }, fields, timestamp: ts };\nconst rows = context.get('rows') || [];\nrows.unshift({ time: new Date(ts).toLocaleString('th-TH-u-ca-gregory', { timeZone: 'Asia/Bangkok' }), channel: ch,\n               type: e.type || 'info', detail: fields.detail });\nrows.length = Math.min(rows.length, 100);\ncontext.set('rows', rows);\nreturn [{ payload: [point] }, { payload: rows }];",
+        "outputs": 2,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "wires": [
+            [
+                "b_events_db"
+            ],
+            [
+                "b_table"
+            ]
+        ],
+        "x": 500,
+        "y": 490,
+        "g": "grp_b"
+    },
+    {
+        "id": "b_events_db",
+        "type": "link out",
+        "z": "tab_main",
+        "name": "→ InfluxDB",
+        "mode": "link",
+        "links": [
+            "a_from_others"
+        ],
+        "wires": [],
+        "x": 720,
+        "y": 475,
+        "g": "grp_b"
+    },
+    {
+        "id": "b_table",
+        "type": "ui-table",
+        "z": "tab_main",
+        "group": "ug_events",
+        "name": "เหตุการณ์ล่าสุด",
+        "label": "เหตุการณ์ล่าสุด",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "maxrows": 0,
+        "passthru": false,
+        "autocols": false,
+        "showSearch": true,
+        "deselect": true,
+        "selectionType": "none",
+        "columns": [
+            {
+                "title": "เวลา",
+                "key": "time",
+                "keyType": "key",
+                "type": "text",
+                "width": "",
+                "align": "start"
+            },
+            {
+                "title": "ช่อง",
+                "key": "channel",
+                "keyType": "key",
+                "type": "text",
+                "width": "",
+                "align": "start"
+            },
+            {
+                "title": "ชนิด",
+                "key": "type",
+                "keyType": "key",
+                "type": "text",
+                "width": "",
+                "align": "start"
+            },
+            {
+                "title": "รายละเอียด",
+                "key": "detail",
+                "keyType": "key",
+                "type": "text",
+                "width": "",
+                "align": "start"
+            }
+        ],
+        "mobileBreakpoint": "sm",
+        "mobileBreakpointType": "defaults",
+        "action": "replace",
+        "className": "",
+        "wires": [
+            []
+        ],
+        "x": 900,
+        "y": 500,
+        "g": "grp_b"
+    },
+    {
+        "id": "b_note_in",
+        "type": "link in",
+        "z": "tab_main",
+        "name": "แจ้งเตือนจากกลุ่มอื่น",
+        "links": [
+            "c_to_note",
+            "s_to_note"
+        ],
+        "wires": [
+            [
+                "b_note"
+            ]
+        ],
+        "x": 720,
+        "y": 430,
+        "g": "grp_b"
+    },
+    {
+        "id": "grp_b",
+        "type": "group",
+        "z": "tab_main",
+        "name": "ข  สถานะออนไลน์ (retained + LWT) แจ้งเตือน และบันทึกเหตุการณ์",
+        "style": {
+            "label": true,
+            "stroke": "#e8590c",
+            "fill": "#fff4e6",
+            "fill-opacity": "0.45",
+            "color": "#e8590c",
+            "label-position": "nw"
+        },
+        "nodes": [
+            "b_in",
+            "b_status",
+            "b_tick",
+            "b_watch",
+            "b_txt_fixed",
+            "b_txt_track",
+            "b_note",
+            "b_to_events",
+            "b_events_in",
+            "b_eventlog",
+            "b_events_db",
+            "b_table",
+            "b_note_in"
+        ],
+        "x": 20,
+        "y": 261,
+        "w": 1010,
+        "h": 272
+    },
+    {
+        "id": "c_form_label",
+        "type": "ui-form",
+        "z": "tab_main",
+        "name": "ฟอร์มตั้ง Label",
+        "group": "ug_label",
+        "label": "",
+        "order": 2,
+        "width": "0",
+        "height": "0",
+        "options": [
+            {
+                "label": "Label",
+                "key": "label",
+                "type": "dropdown",
+                "required": false,
+                "rows": null
+            },
+            {
+                "label": "หรือพิมพ์ Label เอง (a-z 0-9 _)",
+                "key": "custom",
+                "type": "text",
+                "required": false,
+                "rows": null
+            },
+            {
+                "label": "PIN ผู้ควบคุม",
+                "key": "pin",
+                "type": "password",
+                "required": false,
+                "rows": null
+            }
+        ],
+        "formValue": {
+            "label": "normal",
+            "custom": "",
+            "pin": ""
+        },
+        "payload": "",
+        "submit": "ตั้ง Label",
+        "cancel": "ล้าง",
+        "resetOnSubmit": false,
+        "topic": "topic",
+        "topicType": "msg",
+        "splitLayout": "",
+        "className": "",
+        "passthru": false,
+        "dropdownOptions": [
+            {
+                "dropdown": "label",
+                "value": "normal",
+                "label": "normal (ปกติ)"
+            },
+            {
+                "dropdown": "label",
+                "value": "shade_25",
+                "label": "shade_25"
+            },
+            {
+                "dropdown": "label",
+                "value": "shade_50",
+                "label": "shade_50"
+            },
+            {
+                "dropdown": "label",
+                "value": "shade_75",
+                "label": "shade_75"
+            },
+            {
+                "dropdown": "label",
+                "value": "shade_2sub_50",
+                "label": "shade_2sub_50"
+            },
+            {
+                "dropdown": "label",
+                "value": "soiling",
+                "label": "soiling"
+            },
+            {
+                "dropdown": "label",
+                "value": "bypass_diode_short",
+                "label": "bypass_diode_short"
+            },
+            {
+                "dropdown": "label",
+                "value": "sensor_offset",
+                "label": "sensor_offset"
+            },
+            {
+                "dropdown": "label",
+                "value": "open_circuit",
+                "label": "open_circuit"
+            },
+            {
+                "dropdown": "label",
+                "value": "tracker_stuck",
+                "label": "tracker_stuck"
+            }
+        ],
+        "wires": [
+            [
+                "c_label"
+            ]
+        ],
+        "x": 170,
+        "y": 610,
+        "g": "grp_c"
+    },
+    {
+        "id": "c_label",
+        "type": "function",
+        "z": "tab_main",
+        "name": "ตั้ง Label ของการทดลอง",
+        "func": "function pinOk(p) {\n    const pin = env.get('CONTROL_PIN') || '';\n    return !pin || String(p || '') === pin;\n}\n\n// กลุ่ม ค: ตั้ง Label ของการทดลอง (บันทึกเป็น Tag พร้อมข้อมูลตั้งแต่ตอนเก็บ หัวข้อ 2.8)\n// เอาต์พุต 1 = ข้อความ Label ปัจจุบัน, 2 = เหตุการณ์, 3 = แจ้งเตือน\nconst p = msg.payload || {};\nif (!pinOk(p.pin)) return [null, null, { payload: '⛔ PIN ไม่ถูกต้อง' }];\nlet label = String((p.custom || '').trim() || p.label || msg.label || '').toLowerCase();\nif (!label) return [null, null, { payload: 'กรุณาเลือกหรือพิมพ์ Label' }];\nif (!/^[a-z0-9_]{1,32}$/.test(label)) return [null, null, { payload: '⛔ Label ต้องเป็น a-z 0-9 _ ไม่เกิน 32 ตัว' }];\nconst old = global.get('label', 'file') || 'normal';\nglobal.set('label', label, 'file');\nreturn [{ payload: label }, { topic: 'system', payload: { type: 'label', detail: `${old} → ${label}` } },\n        { payload: `🏷️ Label = ${label}` }];",
+        "outputs": 3,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "wires": [
+            [
+                "c_label_txt",
+                "c_label_txt2"
+            ],
+            [
+                "c_to_events"
+            ],
+            [
+                "c_to_note"
+            ]
+        ],
+        "x": 500,
+        "y": 610,
+        "g": "grp_c"
+    },
+    {
+        "id": "c_label_init",
+        "type": "inject",
+        "z": "tab_main",
+        "name": "แสดง Label เมื่อเริ่ม",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.5,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "wires": [
+            [
+                "c_label_show"
+            ]
+        ],
+        "x": 170,
+        "y": 670,
+        "g": "grp_c"
+    },
+    {
+        "id": "c_label_show",
+        "type": "function",
+        "z": "tab_main",
+        "name": "อ่าน Label ที่บันทึกไว้",
+        "func": "// แสดง Label ที่บันทึกไว้ (ค้างอยู่ในไฟล์ context แม้ Node-RED รีสตาร์ต)\nreturn { payload: global.get('label', 'file') || 'normal' };",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "wires": [
+            [
+                "c_label_txt",
+                "c_label_txt2"
+            ]
+        ],
+        "x": 500,
+        "y": 670,
+        "g": "grp_c"
+    },
+    {
+        "id": "c_label_txt",
+        "type": "ui-text",
+        "z": "tab_main",
+        "group": "ug_label",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "name": "Label ปัจจุบัน",
+        "label": "Label ปัจจุบัน",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "style": true,
+        "font": "",
+        "fontSize": 18,
+        "color": "#e8590c",
+        "wrapText": false,
+        "className": "",
+        "value": "payload",
+        "valueType": "msg",
+        "wires": [],
+        "x": 900,
+        "y": 590,
+        "g": "grp_c"
+    },
+    {
+        "id": "c_form_cmd",
+        "type": "ui-form",
+        "z": "tab_main",
+        "name": "ฟอร์มคำสั่ง",
+        "group": "ug_cmd",
+        "label": "",
+        "order": 1,
+        "width": "0",
+        "height": "0",
+        "options": [
+            {
+                "label": "ส่งถึง",
+                "key": "target",
+                "type": "dropdown",
+                "required": false,
+                "rows": null
+            },
+            {
+                "label": "อัลกอริทึม MPPT",
+                "key": "mppt",
+                "type": "dropdown",
+                "required": false,
+                "rows": null
+            },
+            {
+                "label": "เริ่ม/หยุด",
+                "key": "run",
+                "type": "dropdown",
+                "required": false,
+                "rows": null
+            },
+            {
+                "label": "ระบบติดตาม",
+                "key": "tracker",
+                "type": "dropdown",
+                "required": false,
+                "rows": null
+            },
+            {
+                "label": "PIN ผู้ควบคุม",
+                "key": "pin",
+                "type": "password",
+                "required": false,
+                "rows": null
+            }
+        ],
+        "formValue": {
+            "target": "all",
+            "mppt": "",
+            "run": "",
+            "tracker": "",
+            "pin": ""
+        },
+        "payload": "",
+        "submit": "ส่งคำสั่ง",
+        "cancel": "ล้าง",
+        "resetOnSubmit": false,
+        "topic": "topic",
+        "topicType": "msg",
+        "splitLayout": "",
+        "className": "",
+        "passthru": false,
+        "dropdownOptions": [
+            {
+                "dropdown": "target",
+                "value": "all",
+                "label": "ทั้งสองบอร์ด"
+            },
+            {
+                "dropdown": "target",
+                "value": "fixed",
+                "label": "ESP32 #1 Fixed"
+            },
+            {
+                "dropdown": "target",
+                "value": "track",
+                "label": "ESP32 #2 Track"
+            },
+            {
+                "dropdown": "mppt",
+                "value": "",
+                "label": "(ไม่เปลี่ยน)"
+            },
+            {
+                "dropdown": "mppt",
+                "value": "po",
+                "label": "P&O"
+            },
+            {
+                "dropdown": "mppt",
+                "value": "inc",
+                "label": "Incremental Conductance"
+            },
+            {
+                "dropdown": "run",
+                "value": "",
+                "label": "(ไม่เปลี่ยน)"
+            },
+            {
+                "dropdown": "run",
+                "value": "start",
+                "label": "start"
+            },
+            {
+                "dropdown": "run",
+                "value": "stop",
+                "label": "stop"
+            },
+            {
+                "dropdown": "tracker",
+                "value": "",
+                "label": "(ไม่เปลี่ยน)"
+            },
+            {
+                "dropdown": "tracker",
+                "value": "auto",
+                "label": "auto (ติดตามแสง)"
+            },
+            {
+                "dropdown": "tracker",
+                "value": "home",
+                "label": "home"
+            },
+            {
+                "dropdown": "tracker",
+                "value": "park",
+                "label": "park"
+            }
+        ],
+        "wires": [
+            [
+                "c_cmd"
+            ]
+        ],
+        "x": 170,
+        "y": 790,
+        "g": "grp_c"
+    },
+    {
+        "id": "c_cmd",
+        "type": "function",
+        "z": "tab_main",
+        "name": "สร้างคำสั่ง solar/cmd",
+        "func": "function pinOk(p) {\n    const pin = env.get('CONTROL_PIN') || '';\n    return !pin || String(p || '') === pin;\n}\n\n// กลุ่ม ค: สร้างคำสั่ง solar/cmd (target, mppt, start/stop, คำสั่งระบบติดตาม) ตามตาราง 2.7-1\n// เอาต์พุต 1 = MQTT, 2 = เหตุการณ์, 3 = แจ้งเตือน, 4 = ข้อความคำสั่งล่าสุด\nconst p = msg.payload || {};\nif (!pinOk(p.pin)) return [null, null, { payload: '⛔ PIN ไม่ถูกต้อง' }, null];\nconst cmd = { target: p.target || 'all' };\nif (['po', 'inc'].includes(p.mppt)) cmd.mppt = p.mppt;\nif (['start', 'stop'].includes(p.run)) cmd.run = p.run;\nif (['auto', 'home', 'park'].includes(p.tracker)) cmd.tracker = p.tracker;\nif (Object.keys(cmd).length === 1) return [null, null, { payload: 'ยังไม่ได้เลือกคำสั่ง' }, null];\ncmd.ts = Date.now();\nconst text = JSON.stringify(cmd);\nreturn [{ topic: 'solar/cmd', payload: text },\n        { topic: cmd.target === 'all' ? 'system' : cmd.target, payload: { type: 'cmd', detail: text } },\n        { payload: `📡 ส่งคำสั่ง ${text}` },\n        { payload: text }];",
+        "outputs": 4,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "wires": [
+            [
+                "c_mqtt"
+            ],
+            [
+                "c_to_events"
+            ],
+            [
+                "c_to_note"
+            ],
+            [
+                "c_cmd_txt"
+            ]
+        ],
+        "x": 500,
+        "y": 790,
+        "g": "grp_c"
+    },
+    {
+        "id": "c_mqtt",
+        "type": "mqtt out",
+        "z": "tab_main",
+        "name": "solar/cmd (QoS 1)",
+        "topic": "",
+        "qos": "1",
+        "retain": "false",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "cfg_mqtt",
+        "wires": [],
+        "x": 900,
+        "y": 770,
+        "g": "grp_c"
+    },
+    {
+        "id": "c_to_events",
+        "type": "link out",
+        "z": "tab_main",
+        "name": "→ เหตุการณ์",
+        "mode": "link",
+        "links": [
+            "b_events_in"
+        ],
+        "wires": [],
+        "x": 720,
+        "y": 700,
+        "g": "grp_c"
+    },
+    {
+        "id": "c_to_note",
+        "type": "link out",
+        "z": "tab_main",
+        "name": "→ แจ้งเตือน",
+        "mode": "link",
+        "links": [
+            "b_note_in"
+        ],
+        "wires": [],
+        "x": 720,
+        "y": 740,
+        "g": "grp_c"
+    },
+    {
+        "id": "c_cmd_txt",
+        "type": "ui-text",
+        "z": "tab_main",
+        "group": "ug_cmd",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "name": "คำสั่งล่าสุด",
+        "label": "คำสั่งล่าสุด",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "style": true,
+        "font": "",
+        "fontSize": 16,
+        "color": "#374151",
+        "wrapText": false,
+        "className": "",
+        "value": "payload",
+        "valueType": "msg",
+        "wires": [],
+        "x": 900,
+        "y": 820,
+        "g": "grp_c"
+    },
+    {
+        "id": "c_label_in",
+        "type": "link in",
+        "z": "tab_main",
+        "name": "ตั้ง Label จากหน้าจำลอง",
+        "links": [
+            "s_to_label"
+        ],
+        "wires": [
+            [
+                "c_label"
+            ]
+        ],
+        "x": 170,
+        "y": 720,
+        "g": "grp_c"
+    },
+    {
+        "id": "grp_c",
+        "type": "group",
+        "z": "tab_main",
+        "name": "ค  ควบคุมการทดลอง: เลือก MPPT / start-stop / ระบบติดตาม และตั้ง Label",
+        "style": {
+            "label": true,
+            "stroke": "#2f9e44",
+            "fill": "#ebfbee",
+            "fill-opacity": "0.45",
+            "color": "#2f9e44",
+            "label-position": "nw"
+        },
+        "nodes": [
+            "c_form_label",
+            "c_label",
+            "c_label_init",
+            "c_label_show",
+            "c_label_txt",
+            "c_form_cmd",
+            "c_cmd",
+            "c_mqtt",
+            "c_to_events",
+            "c_to_note",
+            "c_cmd_txt",
+            "c_label_in",
+            "c_label_txt2"
+        ],
+        "x": 60,
+        "y": 541,
+        "w": 960,
+        "h": 312
+    },
+    {
+        "id": "d_in",
+        "type": "link in",
+        "z": "tab_main",
+        "name": "ข้อมูลที่ผ่านการตรวจ",
+        "links": [
+            "a_to_live"
+        ],
+        "wires": [
+            [
+                "d_acc"
+            ]
+        ],
+        "x": 170,
+        "y": 920,
+        "g": "grp_d"
+    },
+    {
+        "id": "d_acc",
+        "type": "function",
+        "z": "tab_main",
+        "name": "พลังงาน (คางหมู) + สรุปรายนาที",
+        "func": "// กลุ่ม ง: พลังงานแบบสี่เหลี่ยมคางหมูเฉพาะช่วงข้อมูลต่อเนื่อง Δt ≤ 3·T_pub (สมการ 2.7-5)\n// และสรุปทุก 1 นาที (ตามเวลา ts ของ ESP32) ลง measurement \"quality\"\nconst ch = msg.topic;\nconst d = msg.payload;\nconst ts = msg.ts;\nconst TPUB = Number(env.get('T_PUB') || 1);\nconst TZ = Number(env.get('SITE_TZ_HOURS') || 7);\nconst day = new Date(ts + TZ * 3600e3).toISOString().slice(0, 10);\nlet a = global.get('acc_' + ch);\nif (!a || a.day !== day) {\n    a = { day, e_pv: 0, e_out: 0, e_mot: 0, missing_s: 0, n: 0, last: null, min: null, lat: [], dts: [] };\n}\nconst out = [];\nconst minute = Math.floor(ts / 60000) * 60000;\nif (a.min && minute > a.min.t) {                      // ปิดนาทีก่อนหน้า\n    const s = global.get('seq_' + ch) || {};\n    const nexp = s.last - s.first + 1;\n    const lat = a.min.lat.slice().sort((x, y) => x - y);\n    const q = (p) => lat[Math.min(lat.length - 1, Math.floor(p * lat.length))];\n    const f = { rx_min: a.min.n, e_pv_wh: a.e_pv - a.min.e_pv, e_out_wh: a.e_out - a.min.e_out,\n                missing_s: a.missing_s - a.min.miss, loss_pct: nexp > 0 ? 100 * (nexp - s.rx) / nexp : 0,\n                dup: s.dup || 0 };\n    if (ch === 'track') f.e_mot_wh = a.e_mot - a.min.e_mot;\n    if (lat.length) { f.lat_p50 = q(0.5); f.lat_p95 = q(0.95); }\n    out.push({ measurement: 'quality', tags: { channel: ch }, fields: f, timestamp: a.min.t });\n    a.min = null;\n}\n// เปิดนาทีใหม่ก่อนรวมพลังงาน ช่วงคร่อมรอยต่อนาทีจึงนับเข้านาทีใหม่ (ผลรวมทุกนาที = พลังงานทั้งวัน)\nif (!a.min) a.min = { t: minute, n: 0, lat: [], e_pv: a.e_pv, e_out: a.e_out, e_mot: a.e_mot, miss: a.missing_s };\nif (a.last && ts > a.last.ts) {\n    const dt = (ts - a.last.ts) / 1000;\n    // คาบการส่งจริง = มัธยฐานของ Δt ล่าสุด 15 ค่า (ไม่น้อยกว่า T_PUB) จึงใช้ได้ทั้งข้อมูลทุก 1 วินาที\n    // จากบอร์ด และข้อมูล dataset ที่เล่นซ้ำทุก 1 นาที โดยช่องว่างครั้งเดียวไม่ทำให้ค่านี้เปลี่ยน\n    a.dts = a.dts || [];\n    a.dts.push(dt);\n    if (a.dts.length > 15) a.dts.shift();\n    const tpub = Math.max(TPUB, a.dts.slice().sort((x, y) => x - y)[Math.floor(a.dts.length / 2)]);\n    if (dt <= 3 * tpub) {\n        a.e_pv += (d.p_pv + a.last.p_pv) / 2 * dt / 3600;\n        a.e_out += (d.p_out + a.last.p_out) / 2 * dt / 3600;\n        if (ch === 'track') a.e_mot += ((d.p_mot || 0) + (a.last.p_mot || 0)) / 2 * dt / 3600;\n    } else {\n        a.missing_s += dt - tpub;                     // ช่วงที่ขาดหาย รายงานแยก ไม่ประมาณค่าข้าม\n    }\n}\nif (!a.last || ts > a.last.ts) a.last = { ts, p_pv: d.p_pv, p_out: d.p_out, p_mot: d.p_mot || 0 };\na.min.n++;\na.n++;\nif (typeof msg.lat === 'number') {\n    a.min.lat.push(msg.lat);\n    a.lat.push(msg.lat);\n    if (a.lat.length > 600) a.lat.shift();\n}\na.last_ts = ts;\nglobal.set('acc_' + ch, a);\nreturn out.length ? { payload: out } : null;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "wires": [
+            [
+                "d_to_db"
+            ]
+        ],
+        "x": 500,
+        "y": 920,
+        "g": "grp_d"
+    },
+    {
+        "id": "d_to_db",
+        "type": "link out",
+        "z": "tab_main",
+        "name": "→ InfluxDB (quality)",
+        "mode": "link",
+        "links": [
+            "a_from_others"
+        ],
+        "wires": [],
+        "x": 720,
+        "y": 920,
+        "g": "grp_d"
+    },
+    {
+        "id": "d_tick",
+        "type": "inject",
+        "z": "tab_main",
+        "name": "ทุก 2 วินาที",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "2",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.5,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "wires": [
+            [
+                "d_summary"
+            ]
+        ],
+        "x": 170,
+        "y": 1000,
+        "g": "grp_d"
+    },
+    {
+        "id": "d_summary",
+        "type": "function",
+        "z": "tab_main",
+        "name": "รวมตัวเลขสำหรับ Dashboard",
+        "func": "// กลุ่ม ง: รวมตัวเลขสำหรับ Dashboard ทุก 2 วินาที\n// เอาต์พุต 1 = การ์ดพลังงาน, 2 = ตารางคุณภาพข้อมูล, 3 = เวลาข้อมูลล่าสุด\nconst q = (arr, p) => { if (!arr.length) return null; const s = arr.slice().sort((x, y) => x - y);\n                        return s[Math.min(s.length - 1, Math.floor(p * s.length))]; };\nconst res = {};\nfor (const ch of ['fixed', 'track']) {\n    const a = global.get('acc_' + ch) || {};\n    const s = global.get('seq_' + ch) || {};\n    const eff = global.get('mppt_eff_' + ch);\n    const nexp = s.first == null ? 0 : s.last - s.first + 1;\n    res[ch] = {\n        day: a.day || '-', e_pv: a.e_pv || 0, e_out: a.e_out || 0, e_mot: a.e_mot || 0,\n        missing_s: a.missing_s || 0, n_exp: nexp, n_rx: s.rx || 0,\n        loss: nexp ? 100 * (nexp - s.rx) / nexp : 0, dup: s.dup || 0, late: s.late || 0,\n        gaps: s.gaps || 0, boot: s.boot || 0,\n        lat50: q(a.lat || [], 0.5), lat95: q(a.lat || [], 0.95),\n        mppt_eff: eff && eff.mpp > 0 ? 100 * eff.pv / eff.mpp : null,\n        status: global.get('status_' + ch) || '-', last_ts: a.last_ts || null\n    };\n}\nconst f = res.fixed, t = res.track;\nres.gain_gross = f.e_out > 0.01 ? 100 * (t.e_out / f.e_out - 1) : null;\nres.gain_net = f.e_out > 0.01 ? 100 * ((t.e_out - t.e_mot) / f.e_out - 1) : null;\nres.label = global.get('label', 'file') || 'normal';\nres.db_points = global.get('db_points_written') || 0;\nconst last = Math.max(f.last_ts || 0, t.last_ts || 0);\nconst when = last ? new Date(last).toLocaleString('th-TH-u-ca-gregory', { timeZone: 'Asia/Bangkok' }) : '-';\nreturn [{ payload: res }, { payload: res }, { payload: when }];",
+        "outputs": 3,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "wires": [
+            [
+                "d_tpl_energy"
+            ],
+            [
+                "d_tpl_quality"
+            ],
+            [
+                "d_txt_time"
+            ]
+        ],
+        "x": 500,
+        "y": 1000,
+        "g": "grp_d"
+    },
+    {
+        "id": "d_tpl_energy",
+        "type": "ui-template",
+        "z": "tab_main",
+        "group": "ug_energy",
+        "page": "",
+        "ui": "",
+        "name": "การ์ดพลังงานวันนี้",
+        "order": 1,
+        "width": "0",
+        "height": "0",
+        "head": "",
+        "format": "<template>\n  <div class=\"kpi\">\n    <div class=\"row head\"><span></span><span>Fixed</span><span>Tracking</span></div>\n    <div class=\"row\"><span>พลังงานขาออกวันนี้</span><b>{{ f(p.fixed?.e_out, 2) }} Wh</b><b>{{ f(p.track?.e_out, 2) }} Wh</b></div>\n    <div class=\"row\"><span>พลังงานจากแผง</span><span>{{ f(p.fixed?.e_pv, 2) }} Wh</span><span>{{ f(p.track?.e_pv, 2) }} Wh</span></div>\n    <div class=\"row\"><span>มอเตอร์ระบบติดตาม</span><span>-</span><span>{{ f(p.track?.e_mot, 2) }} Wh</span></div>\n    <div class=\"row\"><span>ประสิทธิภาพ MPPT*</span><span>{{ pc(p.fixed?.mppt_eff) }}</span><span>{{ pc(p.track?.mppt_eff) }}</span></div>\n    <div class=\"gain\">\n      ส่วนเพิ่มพลังงานของระบบติดตาม:\n      <b :class=\"cls(p.gain_net)\">{{ sign(p.gain_net) }}</b> สุทธิ\n      <small>({{ sign(p.gain_gross) }} ก่อนหักมอเตอร์)</small>\n    </div>\n    <small class=\"note\">วันที่ {{ p.fixed?.day || '-' }} · Label: <b>{{ p.label }}</b> · *คำนวณจากค่าจริงของแบบจำลอง (sim/truth)</small>\n  </div>\n</template>\n<script>\nexport default {\n  computed: { p () { return this.msg?.payload || {} } },\n  methods: {\n    f (v, d) { return typeof v === 'number' ? v.toFixed(d) : '-' },\n    pc (v) { return typeof v === 'number' ? v.toFixed(2) + ' %' : '-' },\n    sign (v) { return typeof v === 'number' ? (v >= 0 ? '+' : '') + v.toFixed(1) + ' %' : '-' },\n    cls (v) { return typeof v === 'number' && v < 0 ? 'neg' : 'pos' }\n  }\n}\n</script>\n<style>\n.kpi { display: flex; flex-direction: column; gap: 6px; font-size: 15px; }\n.kpi .row { display: grid; grid-template-columns: 1.6fr 1fr 1fr; gap: 8px; align-items: baseline; }\n.kpi .row.head { color: #6b7280; font-size: 13px; }\n.kpi .gain { margin-top: 6px; padding: 8px; background: #fff4e6; border-radius: 6px; }\n.kpi .pos { color: #2f9e44; } .kpi .neg { color: #c92a2a; }\n.kpi .note { color: #6b7280; }\n</style>",
+        "storeOutMessages": true,
+        "passthru": false,
+        "resendOnRefresh": true,
+        "templateScope": "local",
+        "className": "",
+        "wires": [
+            []
+        ],
+        "x": 900,
+        "y": 970,
+        "g": "grp_d"
+    },
+    {
+        "id": "d_tpl_quality",
+        "type": "ui-template",
+        "z": "tab_main",
+        "group": "ug_qual",
+        "page": "",
+        "ui": "",
+        "name": "ตารางคุณภาพข้อมูล",
+        "order": 1,
+        "width": "0",
+        "height": "0",
+        "head": "",
+        "format": "<template>\n  <table class=\"qt\">\n    <thead><tr><th>ตัวชี้วัด (หัวข้อ 2.7.6)</th><th>ESP32 #1 Fixed</th><th>ESP32 #2 Track</th></tr></thead>\n    <tbody>\n      <tr><td>สถานะ</td><td>{{ p.fixed?.status }}</td><td>{{ p.track?.status }}</td></tr>\n      <tr><td>รอบการเปิดเครื่อง (boot)</td><td>{{ p.fixed?.boot }}</td><td>{{ p.track?.boot }}</td></tr>\n      <tr><td>N<sub>exp</sub> = seq<sub>last</sub> − seq<sub>first</sub> + 1</td><td>{{ p.fixed?.n_exp }}</td><td>{{ p.track?.n_exp }}</td></tr>\n      <tr><td>N<sub>rx</sub> (ไม่นับซ้ำ)</td><td>{{ p.fixed?.n_rx }}</td><td>{{ p.track?.n_rx }}</td></tr>\n      <tr><td><b>อัตราข้อมูลหาย (2.7-3)</b></td><td><b>{{ pc(p.fixed?.loss, 3) }}</b></td><td><b>{{ pc(p.track?.loss, 3) }}</b></td></tr>\n      <tr><td>ข้อความซ้ำ (QoS 1)</td><td>{{ p.fixed?.dup }}</td><td>{{ p.track?.dup }}</td></tr>\n      <tr><td>มาช้ากว่าลำดับ / ช่วง seq ขาด</td><td>{{ p.fixed?.late }} / {{ p.fixed?.gaps }}</td><td>{{ p.track?.late }} / {{ p.track?.gaps }}</td></tr>\n      <tr><td>เวลาหน่วง τ มัธยฐาน / P95 (2.7-4)</td><td>{{ ms(p.fixed?.lat50) }} / {{ ms(p.fixed?.lat95) }}</td><td>{{ ms(p.track?.lat50) }} / {{ ms(p.track?.lat95) }}</td></tr>\n      <tr><td>เวลาที่ขาดข้อมูลวันนี้</td><td>{{ sec(p.fixed?.missing_s) }}</td><td>{{ sec(p.track?.missing_s) }}</td></tr>\n      <tr><td>พลังงานที่ถูกต้อง (2.7-5)</td><td>{{ wh(p.fixed?.e_out) }}</td><td>{{ wh(p.track?.e_out) }}</td></tr>\n    </tbody>\n  </table>\n  <small class=\"qn\">Point ที่เขียนลง InfluxDB แล้ว: {{ p.db_points }} · τ ใช้ได้เมื่อเวลาจำลอง = เวลาจริง</small>\n</template>\n<script>\nexport default {\n  computed: { p () { return this.msg?.payload || {} } },\n  methods: {\n    pc (v, d) { return typeof v === 'number' ? v.toFixed(d) + ' %' : '-' },\n    ms (v) { return typeof v === 'number' ? v.toFixed(0) + ' ms' : '-' },\n    sec (v) { return typeof v === 'number' ? v.toFixed(0) + ' s' : '-' },\n    wh (v) { return typeof v === 'number' ? v.toFixed(2) + ' Wh' : '-' }\n  }\n}\n</script>\n<style>\n.qt { width: 100%; border-collapse: collapse; font-size: 14px; }\n.qt th, .qt td { border-bottom: 1px solid #e5e7eb; padding: 6px 8px; text-align: left; }\n.qt th { background: #f8f9fa; }\n.qn { color: #6b7280; }\n</style>",
+        "storeOutMessages": true,
+        "passthru": false,
+        "resendOnRefresh": true,
+        "templateScope": "local",
+        "className": "",
+        "wires": [
+            []
+        ],
+        "x": 900,
+        "y": 1010,
+        "g": "grp_d"
+    },
+    {
+        "id": "d_txt_time",
+        "type": "ui-text",
+        "z": "tab_main",
+        "group": "ug_status",
+        "order": 4,
+        "width": 0,
+        "height": 0,
+        "name": "เวลาข้อมูลล่าสุด",
+        "label": "เวลาข้อมูลล่าสุด",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "style": true,
+        "font": "",
+        "fontSize": 16,
+        "color": "#374151",
+        "wrapText": false,
+        "className": "",
+        "value": "payload",
+        "valueType": "msg",
+        "wires": [],
+        "x": 900,
+        "y": 1050,
+        "g": "grp_d"
+    },
+    {
+        "id": "grp_d",
+        "type": "group",
+        "z": "tab_main",
+        "name": "ง  สรุปพลังงาน ส่วนเพิ่มของพลังงาน และอัตราข้อมูลหาย (ทุก 1 นาที)",
+        "style": {
+            "label": true,
+            "stroke": "#7048e8",
+            "fill": "#f3f0ff",
+            "fill-opacity": "0.45",
+            "color": "#7048e8",
+            "label-position": "nw"
+        },
+        "nodes": [
+            "d_in",
+            "d_acc",
+            "d_to_db",
+            "d_tick",
+            "d_summary",
+            "d_tpl_energy",
+            "d_tpl_quality",
+            "d_txt_time"
+        ],
+        "x": 80,
+        "y": 871,
+        "w": 940,
+        "h": 212
+    },
+    {
+        "id": "c_label_txt2",
+        "type": "ui-text",
+        "z": "tab_main",
+        "group": "ug_status",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "name": "Label ของการทดลอง",
+        "label": "Label ของการทดลอง",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "style": true,
+        "font": "",
+        "fontSize": 16,
+        "color": "#e8590c",
+        "wrapText": false,
+        "className": "",
+        "value": "payload",
+        "valueType": "msg",
+        "wires": [],
+        "x": 900,
+        "y": 630,
+        "g": "grp_c"
+    },
+    {
+        "id": "ui_in",
+        "type": "link in",
+        "z": "tab_ui",
+        "name": "ข้อมูลที่ผ่านการตรวจ",
+        "links": [
+            "a_to_live"
+        ],
+        "wires": [
+            [
+                "ui_live"
+            ]
+        ],
+        "x": 120,
+        "y": 300
+    },
+    {
+        "id": "ui_live",
+        "type": "function",
+        "z": "tab_ui",
+        "name": "แยกค่าไปยังกราฟ (≤ 2 ครั้ง/วินาที)",
+        "func": "// กระจายค่าที่ผ่านการตรวจไปยังกราฟ/เกจ  (จำกัดไม่เกิน 2 จุดต่อวินาทีต่อช่อง\n// เพื่อให้เบราว์เซอร์ไม่หนักเมื่อเร่งเวลาจำลอง; ฐานข้อมูลยังได้ครบทุกระเบียน)\nconst ch = msg.topic;\nconst d = msg.payload;\nconst now = Date.now();\nconst lastSent = context.get('t_' + ch) || 0;\nconst latest = context.get('latest') || {};\nlatest[ch] = d;\ncontext.set('latest', latest);\nif (now - lastSent < 500) return null;\ncontext.set('t_' + ch, now);\nconst S = ch === 'fixed' ? 'Fixed' : 'Tracking';\nconst ts = d.ts;\nconst pt = (v, series) => (typeof v === 'number' ? { topic: series || S, payload: v, ts } : null);\nconst eff = d.p_pv > 0.5 ? Math.min(100, 100 * d.p_out / d.p_pv) : null;\nconst out = [\n    pt(d.p_out),                                                   // 1 กราฟ P_out\n    ch === 'fixed' ? { payload: d.p_out } : null,                  // 2 เกจ Fixed\n    ch === 'track' ? { payload: d.p_out } : null,                  // 3 เกจ Track\n    pt(d.p_pv),                                                    // 4 กราฟ P_pv\n    pt(d.v_pv),                                                    // 5 กราฟ V_pv\n    pt(d.i_pv),                                                    // 6 กราฟ I_pv\n    pt(d.duty),                                                    // 7 กราฟ duty\n    pt(eff),                                                       // 8 กราฟประสิทธิภาพ converter\n    ch === 'fixed' ? [pt(d.g, 'G (Reference cell)')] : null,       // 9 กราฟความเข้มแสง\n    [pt(d.t_panel, 'T แผง ' + S), ch === 'fixed' ? pt(d.t_amb, 'T อากาศ') : null],   // 10 อุณหภูมิ\n    ch === 'track' ? [pt(d.az, 'มุม Az แผง')] : null,              // 11 กราฟ azimuth\n    ch === 'track' ? [pt(d.el, 'มุม El แผง')] : null,              // 12 กราฟ elevation\n    ch === 'track' ? [pt(d.e_az, 'e_az'), pt(d.e_el, 'e_el')] : null,   // 13 สัญญาณ LDR\n    { payload: latest },                                           // 14 ตารางค่าล่าสุด\n];\nreturn out;",
+        "outputs": 14,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "wires": [
+            [
+                "ui_c_pout"
+            ],
+            [
+                "ui_g_fixed"
+            ],
+            [
+                "ui_g_track"
+            ],
+            [
+                "ui_c_ppv"
+            ],
+            [
+                "ui_c_vpv"
+            ],
+            [
+                "ui_c_ipv"
+            ],
+            [
+                "ui_c_duty"
+            ],
+            [
+                "ui_c_eff"
+            ],
+            [
+                "ui_c_g"
+            ],
+            [
+                "ui_c_temp"
+            ],
+            [
+                "ui_c_az"
+            ],
+            [
+                "ui_c_el"
+            ],
+            [
+                "ui_c_ldr"
+            ],
+            [
+                "ui_t_latest",
+                "ui_t_motor"
+            ]
+        ],
+        "x": 360,
+        "y": 300
+    },
+    {
+        "id": "ui_c_pout",
+        "type": "ui-chart",
+        "z": "tab_ui",
+        "group": "ug_pout",
+        "name": "กำลังไฟฟ้าขาออก (W)",
+        "label": "กำลังไฟฟ้าขาออก (W)",
+        "order": 1,
+        "chartType": "line",
+        "category": "topic",
+        "categoryType": "msg",
+        "xAxisLabel": "",
+        "xAxisProperty": "ts",
+        "xAxisPropertyType": "msg",
+        "xAxisType": "time",
+        "xAxisFormat": "",
+        "xAxisFormatType": "auto",
+        "xmin": "",
+        "xmax": "",
+        "yAxisLabel": "W",
+        "yAxisProperty": "payload",
+        "yAxisPropertyType": "msg",
+        "ymin": "0",
+        "ymax": "",
+        "bins": 10,
+        "action": "append",
+        "stackSeries": false,
+        "pointShape": "circle",
+        "pointRadius": 0,
+        "showLegend": true,
+        "removeOlder": "0",
+        "removeOlderUnit": "3600",
+        "removeOlderPoints": "1800",
+        "colors": [
+            "#1f77b4",
+            "#e8590c",
+            "#2ca02c",
+            "#9467bd",
+            "#d62728",
+            "#8c564b",
+            "#e377c2"
+        ],
+        "textColor": [
+            "#666666"
+        ],
+        "textColorDefault": true,
+        "gridColor": [
+            "#e5e5e5"
+        ],
+        "gridColorDefault": true,
+        "width": 12,
+        "height": 6,
+        "className": "",
+        "interpolation": "linear",
+        "wires": [
+            []
+        ],
+        "x": 760,
+        "y": 40
+    },
+    {
+        "id": "ui_g_fixed",
+        "type": "ui-gauge",
+        "z": "tab_ui",
+        "name": "Fixed",
+        "group": "ug_gauges",
+        "order": 1,
+        "value": "payload",
+        "valueType": "msg",
+        "width": 2,
+        "height": 3,
+        "gtype": "gauge-half",
+        "gstyle": "needle",
+        "title": "Fixed",
+        "alwaysShowTitle": true,
+        "floatingTitlePosition": "top-left",
+        "units": "W",
+        "icon": "",
+        "prefix": "",
+        "suffix": "",
+        "segments": [
+            {
+                "color": "#9ca3af",
+                "from": 0
+            },
+            {
+                "color": "#f59f00",
+                "from": 15
+            },
+            {
+                "color": "#2f9e44",
+                "from": 35
+            }
+        ],
+        "min": 0,
+        "max": 60,
+        "sizeThickness": 16,
+        "sizeGap": 4,
+        "sizeKeyThickness": 8,
+        "styleRounded": true,
+        "styleGlow": false,
+        "className": "",
+        "wires": [
+            []
+        ],
+        "x": 760,
+        "y": 90
+    },
+    {
+        "id": "ui_g_track",
+        "type": "ui-gauge",
+        "z": "tab_ui",
+        "name": "Tracking",
+        "group": "ug_gauges",
+        "order": 2,
+        "value": "payload",
+        "valueType": "msg",
+        "width": 2,
+        "height": 3,
+        "gtype": "gauge-half",
+        "gstyle": "needle",
+        "title": "Tracking",
+        "alwaysShowTitle": true,
+        "floatingTitlePosition": "top-left",
+        "units": "W",
+        "icon": "",
+        "prefix": "",
+        "suffix": "",
+        "segments": [
+            {
+                "color": "#9ca3af",
+                "from": 0
+            },
+            {
+                "color": "#f59f00",
+                "from": 15
+            },
+            {
+                "color": "#2f9e44",
+                "from": 35
+            }
+        ],
+        "min": 0,
+        "max": 60,
+        "sizeThickness": 16,
+        "sizeGap": 4,
+        "sizeKeyThickness": 8,
+        "styleRounded": true,
+        "styleGlow": false,
+        "className": "",
+        "wires": [
+            []
+        ],
+        "x": 760,
+        "y": 140
+    },
+    {
+        "id": "ui_c_ppv",
+        "type": "ui-chart",
+        "z": "tab_ui",
+        "group": "ug_ppv",
+        "name": "P_pv (W)",
+        "label": "P_pv (W)",
+        "order": 1,
+        "chartType": "line",
+        "category": "topic",
+        "categoryType": "msg",
+        "xAxisLabel": "",
+        "xAxisProperty": "ts",
+        "xAxisPropertyType": "msg",
+        "xAxisType": "time",
+        "xAxisFormat": "",
+        "xAxisFormatType": "auto",
+        "xmin": "",
+        "xmax": "",
+        "yAxisLabel": "W",
+        "yAxisProperty": "payload",
+        "yAxisPropertyType": "msg",
+        "ymin": "0",
+        "ymax": "",
+        "bins": 10,
+        "action": "append",
+        "stackSeries": false,
+        "pointShape": "circle",
+        "pointRadius": 0,
+        "showLegend": true,
+        "removeOlder": "0",
+        "removeOlderUnit": "3600",
+        "removeOlderPoints": "1800",
+        "colors": [
+            "#1f77b4",
+            "#e8590c",
+            "#2ca02c",
+            "#9467bd",
+            "#d62728",
+            "#8c564b",
+            "#e377c2"
+        ],
+        "textColor": [
+            "#666666"
+        ],
+        "textColorDefault": true,
+        "gridColor": [
+            "#e5e5e5"
+        ],
+        "gridColorDefault": true,
+        "width": 6,
+        "height": 5,
+        "className": "",
+        "interpolation": "linear",
+        "wires": [
+            []
+        ],
+        "x": 760,
+        "y": 190
+    },
+    {
+        "id": "ui_c_vpv",
+        "type": "ui-chart",
+        "z": "tab_ui",
+        "group": "ug_vpv",
+        "name": "V_pv (V)",
+        "label": "V_pv (V)",
+        "order": 1,
+        "chartType": "line",
+        "category": "topic",
+        "categoryType": "msg",
+        "xAxisLabel": "",
+        "xAxisProperty": "ts",
+        "xAxisPropertyType": "msg",
+        "xAxisType": "time",
+        "xAxisFormat": "",
+        "xAxisFormatType": "auto",
+        "xmin": "",
+        "xmax": "",
+        "yAxisLabel": "V",
+        "yAxisProperty": "payload",
+        "yAxisPropertyType": "msg",
+        "ymin": "",
+        "ymax": "",
+        "bins": 10,
+        "action": "append",
+        "stackSeries": false,
+        "pointShape": "circle",
+        "pointRadius": 0,
+        "showLegend": true,
+        "removeOlder": "0",
+        "removeOlderUnit": "3600",
+        "removeOlderPoints": "1800",
+        "colors": [
+            "#1f77b4",
+            "#e8590c",
+            "#2ca02c",
+            "#9467bd",
+            "#d62728",
+            "#8c564b",
+            "#e377c2"
+        ],
+        "textColor": [
+            "#666666"
+        ],
+        "textColorDefault": true,
+        "gridColor": [
+            "#e5e5e5"
+        ],
+        "gridColorDefault": true,
+        "width": 6,
+        "height": 5,
+        "className": "",
+        "interpolation": "linear",
+        "wires": [
+            []
+        ],
+        "x": 760,
+        "y": 240
+    },
+    {
+        "id": "ui_c_ipv",
+        "type": "ui-chart",
+        "z": "tab_ui",
+        "group": "ug_ipv",
+        "name": "I_pv (A)",
+        "label": "I_pv (A)",
+        "order": 1,
+        "chartType": "line",
+        "category": "topic",
+        "categoryType": "msg",
+        "xAxisLabel": "",
+        "xAxisProperty": "ts",
+        "xAxisPropertyType": "msg",
+        "xAxisType": "time",
+        "xAxisFormat": "",
+        "xAxisFormatType": "auto",
+        "xmin": "",
+        "xmax": "",
+        "yAxisLabel": "A",
+        "yAxisProperty": "payload",
+        "yAxisPropertyType": "msg",
+        "ymin": "0",
+        "ymax": "",
+        "bins": 10,
+        "action": "append",
+        "stackSeries": false,
+        "pointShape": "circle",
+        "pointRadius": 0,
+        "showLegend": true,
+        "removeOlder": "0",
+        "removeOlderUnit": "3600",
+        "removeOlderPoints": "1800",
+        "colors": [
+            "#1f77b4",
+            "#e8590c",
+            "#2ca02c",
+            "#9467bd",
+            "#d62728",
+            "#8c564b",
+            "#e377c2"
+        ],
+        "textColor": [
+            "#666666"
+        ],
+        "textColorDefault": true,
+        "gridColor": [
+            "#e5e5e5"
+        ],
+        "gridColorDefault": true,
+        "width": 6,
+        "height": 5,
+        "className": "",
+        "interpolation": "linear",
+        "wires": [
+            []
+        ],
+        "x": 760,
+        "y": 290
+    },
+    {
+        "id": "ui_c_duty",
+        "type": "ui-chart",
+        "z": "tab_ui",
+        "group": "ug_duty",
+        "name": "Duty",
+        "label": "Duty",
+        "order": 1,
+        "chartType": "line",
+        "category": "topic",
+        "categoryType": "msg",
+        "xAxisLabel": "",
+        "xAxisProperty": "ts",
+        "xAxisPropertyType": "msg",
+        "xAxisType": "time",
+        "xAxisFormat": "",
+        "xAxisFormatType": "auto",
+        "xmin": "",
+        "xmax": "",
+        "yAxisLabel": "",
+        "yAxisProperty": "payload",
+        "yAxisPropertyType": "msg",
+        "ymin": "",
+        "ymax": "1",
+        "bins": 10,
+        "action": "append",
+        "stackSeries": false,
+        "pointShape": "circle",
+        "pointRadius": 0,
+        "showLegend": true,
+        "removeOlder": "0",
+        "removeOlderUnit": "3600",
+        "removeOlderPoints": "1800",
+        "colors": [
+            "#1f77b4",
+            "#e8590c",
+            "#2ca02c",
+            "#9467bd",
+            "#d62728",
+            "#8c564b",
+            "#e377c2"
+        ],
+        "textColor": [
+            "#666666"
+        ],
+        "textColorDefault": true,
+        "gridColor": [
+            "#e5e5e5"
+        ],
+        "gridColorDefault": true,
+        "width": 6,
+        "height": 5,
+        "className": "",
+        "interpolation": "linear",
+        "wires": [
+            []
+        ],
+        "x": 760,
+        "y": 340
+    },
+    {
+        "id": "ui_c_eff",
+        "type": "ui-chart",
+        "z": "tab_ui",
+        "group": "ug_eff",
+        "name": "ประสิทธิภาพ (%)",
+        "label": "ประสิทธิภาพ (%)",
+        "order": 1,
+        "chartType": "line",
+        "category": "topic",
+        "categoryType": "msg",
+        "xAxisLabel": "",
+        "xAxisProperty": "ts",
+        "xAxisPropertyType": "msg",
+        "xAxisType": "time",
+        "xAxisFormat": "",
+        "xAxisFormatType": "auto",
+        "xmin": "",
+        "xmax": "",
+        "yAxisLabel": "%",
+        "yAxisProperty": "payload",
+        "yAxisPropertyType": "msg",
+        "ymin": "",
+        "ymax": "",
+        "bins": 10,
+        "action": "append",
+        "stackSeries": false,
+        "pointShape": "circle",
+        "pointRadius": 0,
+        "showLegend": true,
+        "removeOlder": "0",
+        "removeOlderUnit": "3600",
+        "removeOlderPoints": "1800",
+        "colors": [
+            "#1f77b4",
+            "#e8590c",
+            "#2ca02c",
+            "#9467bd",
+            "#d62728",
+            "#8c564b",
+            "#e377c2"
+        ],
+        "textColor": [
+            "#666666"
+        ],
+        "textColorDefault": true,
+        "gridColor": [
+            "#e5e5e5"
+        ],
+        "gridColorDefault": true,
+        "width": 6,
+        "height": 5,
+        "className": "",
+        "interpolation": "linear",
+        "wires": [
+            []
+        ],
+        "x": 760,
+        "y": 390
+    },
+    {
+        "id": "ui_c_g",
+        "type": "ui-chart",
+        "z": "tab_ui",
+        "group": "ug_env",
+        "name": "ความเข้มแสงบนระนาบแผง Fixed (W/m²)",
+        "label": "ความเข้มแสงบนระนาบแผง Fixed (W/m²)",
+        "order": 1,
+        "chartType": "line",
+        "category": "topic",
+        "categoryType": "msg",
+        "xAxisLabel": "",
+        "xAxisProperty": "ts",
+        "xAxisPropertyType": "msg",
+        "xAxisType": "time",
+        "xAxisFormat": "",
+        "xAxisFormatType": "auto",
+        "xmin": "",
+        "xmax": "",
+        "yAxisLabel": "W/m²",
+        "yAxisProperty": "payload",
+        "yAxisPropertyType": "msg",
+        "ymin": "0",
+        "ymax": "",
+        "bins": 10,
+        "action": "append",
+        "stackSeries": false,
+        "pointShape": "circle",
+        "pointRadius": 0,
+        "showLegend": true,
+        "removeOlder": "0",
+        "removeOlderUnit": "3600",
+        "removeOlderPoints": "1800",
+        "colors": [
+            "#1f77b4",
+            "#e8590c",
+            "#2ca02c",
+            "#9467bd",
+            "#d62728",
+            "#8c564b",
+            "#e377c2"
+        ],
+        "textColor": [
+            "#666666"
+        ],
+        "textColorDefault": true,
+        "gridColor": [
+            "#e5e5e5"
+        ],
+        "gridColorDefault": true,
+        "width": 6,
+        "height": 4,
+        "className": "",
+        "interpolation": "linear",
+        "wires": [
+            []
+        ],
+        "x": 760,
+        "y": 440
+    },
+    {
+        "id": "ui_c_temp",
+        "type": "ui-chart",
+        "z": "tab_ui",
+        "group": "ug_env",
+        "name": "อุณหภูมิ (°C)",
+        "label": "อุณหภูมิ (°C)",
+        "order": 2,
+        "chartType": "line",
+        "category": "topic",
+        "categoryType": "msg",
+        "xAxisLabel": "",
+        "xAxisProperty": "ts",
+        "xAxisPropertyType": "msg",
+        "xAxisType": "time",
+        "xAxisFormat": "",
+        "xAxisFormatType": "auto",
+        "xmin": "",
+        "xmax": "",
+        "yAxisLabel": "°C",
+        "yAxisProperty": "payload",
+        "yAxisPropertyType": "msg",
+        "ymin": "",
+        "ymax": "",
+        "bins": 10,
+        "action": "append",
+        "stackSeries": false,
+        "pointShape": "circle",
+        "pointRadius": 0,
+        "showLegend": true,
+        "removeOlder": "0",
+        "removeOlderUnit": "3600",
+        "removeOlderPoints": "1800",
+        "colors": [
+            "#1f77b4",
+            "#e8590c",
+            "#2ca02c",
+            "#9467bd",
+            "#d62728",
+            "#8c564b",
+            "#e377c2"
+        ],
+        "textColor": [
+            "#666666"
+        ],
+        "textColorDefault": true,
+        "gridColor": [
+            "#e5e5e5"
+        ],
+        "gridColorDefault": true,
+        "width": 6,
+        "height": 4,
+        "className": "",
+        "interpolation": "linear",
+        "wires": [
+            []
+        ],
+        "x": 760,
+        "y": 490
+    },
+    {
+        "id": "ui_c_az",
+        "type": "ui-chart",
+        "z": "tab_ui",
+        "group": "ug_angle",
+        "name": "Azimuth (องศา)",
+        "label": "Azimuth (องศา)",
+        "order": 1,
+        "chartType": "line",
+        "category": "topic",
+        "categoryType": "msg",
+        "xAxisLabel": "",
+        "xAxisProperty": "ts",
+        "xAxisPropertyType": "msg",
+        "xAxisType": "time",
+        "xAxisFormat": "",
+        "xAxisFormatType": "auto",
+        "xmin": "",
+        "xmax": "",
+        "yAxisLabel": "°",
+        "yAxisProperty": "payload",
+        "yAxisPropertyType": "msg",
+        "ymin": "",
+        "ymax": "",
+        "bins": 10,
+        "action": "append",
+        "stackSeries": false,
+        "pointShape": "circle",
+        "pointRadius": 0,
+        "showLegend": true,
+        "removeOlder": "0",
+        "removeOlderUnit": "3600",
+        "removeOlderPoints": "1800",
+        "colors": [
+            "#1f77b4",
+            "#e8590c",
+            "#2ca02c",
+            "#9467bd",
+            "#d62728",
+            "#8c564b",
+            "#e377c2"
+        ],
+        "textColor": [
+            "#666666"
+        ],
+        "textColorDefault": true,
+        "gridColor": [
+            "#e5e5e5"
+        ],
+        "gridColorDefault": true,
+        "width": 6,
+        "height": 5,
+        "className": "",
+        "interpolation": "linear",
+        "wires": [
+            []
+        ],
+        "x": 760,
+        "y": 540
+    },
+    {
+        "id": "ui_c_el",
+        "type": "ui-chart",
+        "z": "tab_ui",
+        "group": "ug_angle",
+        "name": "Elevation (องศา)",
+        "label": "Elevation (องศา)",
+        "order": 2,
+        "chartType": "line",
+        "category": "topic",
+        "categoryType": "msg",
+        "xAxisLabel": "",
+        "xAxisProperty": "ts",
+        "xAxisPropertyType": "msg",
+        "xAxisType": "time",
+        "xAxisFormat": "",
+        "xAxisFormatType": "auto",
+        "xmin": "",
+        "xmax": "",
+        "yAxisLabel": "°",
+        "yAxisProperty": "payload",
+        "yAxisPropertyType": "msg",
+        "ymin": "",
+        "ymax": "",
+        "bins": 10,
+        "action": "append",
+        "stackSeries": false,
+        "pointShape": "circle",
+        "pointRadius": 0,
+        "showLegend": true,
+        "removeOlder": "0",
+        "removeOlderUnit": "3600",
+        "removeOlderPoints": "1800",
+        "colors": [
+            "#1f77b4",
+            "#e8590c",
+            "#2ca02c",
+            "#9467bd",
+            "#d62728",
+            "#8c564b",
+            "#e377c2"
+        ],
+        "textColor": [
+            "#666666"
+        ],
+        "textColorDefault": true,
+        "gridColor": [
+            "#e5e5e5"
+        ],
+        "gridColorDefault": true,
+        "width": 6,
+        "height": 5,
+        "className": "",
+        "interpolation": "linear",
+        "wires": [
+            []
+        ],
+        "x": 760,
+        "y": 590
+    },
+    {
+        "id": "ui_c_ldr",
+        "type": "ui-chart",
+        "z": "tab_ui",
+        "group": "ug_ldr",
+        "name": "e_az, e_el (−1..1)",
+        "label": "e_az, e_el (−1..1)",
+        "order": 1,
+        "chartType": "line",
+        "category": "topic",
+        "categoryType": "msg",
+        "xAxisLabel": "",
+        "xAxisProperty": "ts",
+        "xAxisPropertyType": "msg",
+        "xAxisType": "time",
+        "xAxisFormat": "",
+        "xAxisFormatType": "auto",
+        "xmin": "",
+        "xmax": "",
+        "yAxisLabel": "",
+        "yAxisProperty": "payload",
+        "yAxisPropertyType": "msg",
+        "ymin": "-1",
+        "ymax": "1",
+        "bins": 10,
+        "action": "append",
+        "stackSeries": false,
+        "pointShape": "circle",
+        "pointRadius": 0,
+        "showLegend": true,
+        "removeOlder": "0",
+        "removeOlderUnit": "3600",
+        "removeOlderPoints": "1800",
+        "colors": [
+            "#1f77b4",
+            "#e8590c",
+            "#2ca02c",
+            "#9467bd",
+            "#d62728",
+            "#8c564b",
+            "#e377c2"
+        ],
+        "textColor": [
+            "#666666"
+        ],
+        "textColorDefault": true,
+        "gridColor": [
+            "#e5e5e5"
+        ],
+        "gridColorDefault": true,
+        "width": 6,
+        "height": 5,
+        "className": "",
+        "interpolation": "linear",
+        "wires": [
+            []
+        ],
+        "x": 760,
+        "y": 640
+    },
+    {
+        "id": "ui_t_latest",
+        "type": "ui-template",
+        "z": "tab_ui",
+        "group": "ug_latest",
+        "page": "",
+        "ui": "",
+        "name": "ตารางค่าล่าสุด",
+        "order": 1,
+        "width": "0",
+        "height": "0",
+        "head": "",
+        "format": "<template>\n  <table class=\"lt\">\n    <thead><tr><th>ฟิลด์</th><th>Fixed (ESP32 #1)</th><th>Track (ESP32 #2)</th></tr></thead>\n    <tbody>\n      <tr v-for=\"k in keys\" :key=\"k\"><td><code>{{ k }}</code></td><td>{{ v('fixed', k) }}</td><td>{{ v('track', k) }}</td></tr>\n    </tbody>\n  </table>\n</template>\n<script>\nexport default {\n  data () { return { keys: ['ts', 'seq', 'v_pv', 'i_pv', 'p_pv', 'v_out', 'i_out', 'p_out', 'duty', 't_panel',\n                             'g', 't_amb', 'mppt', 'az', 'el', 'e_az', 'e_el', 'm_az', 'm_el', 'p_mot', 'mode'] } },\n  methods: {\n    v (ch, k) {\n      const r = this.msg?.payload?.[ch]\n      if (!r || r[k] === undefined) return ''\n      if (k === 'ts') return new Date(r.ts).toLocaleString('th-TH-u-ca-gregory', { timeZone: 'Asia/Bangkok' })\n      return r[k]\n    }\n  }\n}\n</script>\n<style>\n.lt { width: 100%; border-collapse: collapse; font-size: 13px; }\n.lt td, .lt th { border-bottom: 1px solid #eee; padding: 3px 8px; text-align: left; }\n</style>",
+        "storeOutMessages": true,
+        "passthru": false,
+        "resendOnRefresh": true,
+        "templateScope": "local",
+        "className": "",
+        "wires": [
+            []
+        ],
+        "x": 760,
+        "y": 690
+    },
+    {
+        "id": "ui_t_motor",
+        "type": "ui-template",
+        "z": "tab_ui",
+        "group": "ug_motor",
+        "page": "",
+        "ui": "",
+        "name": "สถานะมอเตอร์",
+        "order": 1,
+        "width": "0",
+        "height": "0",
+        "head": "",
+        "format": "<template>\n  <div class=\"trk\" v-if=\"t\">\n    <div><span>โหมด</span><b>{{ t.mode }}</b></div>\n    <div><span>มอเตอร์ Az / El</span><b>{{ arrow(t.m_az) }} / {{ arrow(t.m_el) }}</b></div>\n    <div><span>กำลังมอเตอร์</span><b>{{ t.p_mot }} W</b></div>\n    <div><span>มุมแผง Az / El</span><b>{{ t.az }}° / {{ t.el }}°</b></div>\n    <div><span>สัญญาณ e_az / e_el</span><b>{{ t.e_az }} / {{ t.e_el }}</b></div>\n  </div>\n  <div v-else>ยังไม่มีข้อมูลจาก ESP32 #2</div>\n</template>\n<script>\nexport default {\n  computed: { t () { return this.msg?.payload?.track } },\n  methods: { arrow (m) { return m > 0 ? '▲ หมุน +' : (m < 0 ? '▼ หมุน −' : '■ หยุด') } }\n}\n</script>\n<style>\n.trk { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 8px; }\n.trk div { display: flex; flex-direction: column; background: #f8f9fa; border-radius: 6px; padding: 8px; }\n.trk span { color: #6b7280; font-size: 12px; }\n</style>",
+        "storeOutMessages": true,
+        "passthru": false,
+        "resendOnRefresh": true,
+        "templateScope": "local",
+        "className": "",
+        "wires": [
+            []
+        ],
+        "x": 1060,
+        "y": 590
+    },
+    {
+        "id": "ui_truth_in",
+        "type": "link in",
+        "z": "tab_ui",
+        "name": "ค่าจริง (sim/truth)",
+        "links": [
+            "s_truth_ui"
+        ],
+        "wires": [
+            [
+                "ui_sun"
+            ]
+        ],
+        "x": 120,
+        "y": 760
+    },
+    {
+        "id": "ui_sun",
+        "type": "function",
+        "z": "tab_ui",
+        "name": "ตำแหน่งดวงอาทิตย์ (เฉพาะการจำลอง)",
+        "func": "// (เฉพาะการจำลอง) วาดตำแหน่งดวงอาทิตย์จริงทับมุมแผง เพื่อดูความคลาดเคลื่อนของการติดตาม\nconst d = msg.payload;\nif (msg.topic !== 'track' || typeof d.sun_az !== 'number') return null;\nconst now = Date.now();\nif (now - (context.get('t') || 0) < 500) return null;\ncontext.set('t', now);\nconst el = Math.max(d.sun_el, -5);\nreturn [{ topic: 'ดวงอาทิตย์ Az', payload: d.sun_az, ts: d.ts }, { topic: 'ดวงอาทิตย์ El', payload: el, ts: d.ts }];",
+        "outputs": 2,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "wires": [
+            [
+                "ui_c_az"
+            ],
+            [
+                "ui_c_el"
+            ]
+        ],
+        "x": 360,
+        "y": 760
+    },
+    {
+        "id": "ui_note",
+        "type": "comment",
+        "z": "tab_ui",
+        "name": "กราฟใช้เวลา ts ของ ESP32 เป็นแกน X จึงถูกต้องแม้เร่งเวลาจำลอง",
+        "info": "แต่ละกราฟเก็บจุดล่าสุด 1,800 จุดต่อเส้น (ไม่ตัดตามเวลาจริง) เพื่อให้ดูได้ทั้งโหมดเวลาจริงและโหมดเร่งเวลา",
+        "wires": [],
+        "x": 380,
+        "y": 820
+    },
+    {
+        "id": "e_http",
+        "type": "http in",
+        "z": "tab_api",
+        "name": "GET /api/export.csv",
+        "url": "/api/export.csv",
+        "method": "get",
+        "upload": false,
+        "skipBodyParsing": false,
+        "swaggerDoc": "",
+        "wires": [
+            [
+                "e_query"
+            ]
+        ],
+        "x": 140,
+        "y": 80
+    },
+    {
+        "id": "e_query",
+        "type": "function",
+        "z": "tab_api",
+        "name": "สร้าง Flux query",
+        "func": "// GET /api/export.csv?start=YYYY-MM-DDTHH:MM:SS&stop=...&m=all|electrical|tracker|quality|events|sim_truth\n//                   &every=raw|10s|1m|15m&channel=all|fixed|track     (เวลาเป็นเวลาท้องถิ่น +07:00)\nconst q = msg.req.query || {};\nconst bad = (t) => { msg.statusCode = 400; msg.payload = 'bad request: ' + t; msg.headers = { 'Content-Type': 'text/plain' }; return [null, msg]; };\nconst isoRe = /^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}(:\\d{2})?$/;\nconst TZ = (env.get('SITE_TZ') || '+07:00');\nconst start = String(q.start || ''), stop = String(q.stop || '');\nif (!isoRe.test(start) || !isoRe.test(stop)) return bad('start/stop ต้องเป็น YYYY-MM-DDTHH:MM[:SS]');\nconst sec = (t) => (t.length === 16 ? t + ':00' : t) + TZ;\nconst m = String(q.m || 'all');\nconst every = String(q.every || 'raw');\nconst channel = String(q.channel || 'all');\nif (!['all', 'electrical', 'tracker', 'quality', 'events', 'sim_truth'].includes(m)) return bad('m');\nif (!['raw', '10s', '1m', '15m'].includes(every)) return bad('every');\nif (!['all', 'fixed', 'track'].includes(channel)) return bad('channel');\nconst meas = m === 'all' ? ['electrical', 'tracker'] : [m];\nlet flux = `from(bucket: \"solar_raw\")\n  |> range(start: ${sec(start)}, stop: ${sec(stop)})\n  |> filter(fn: (r) => ${meas.map(x => `r._measurement == \"${x}\"`).join(' or ')})`;\nif (channel !== 'all') flux += `\\n  |> filter(fn: (r) => r.channel == \"${channel}\")`;\nif (every !== 'raw' && m !== 'events') {\n    flux += `\\n  |> filter(fn: (r) => r._field != \"mode\" and r._field != \"label_truth\" and r._field != \"seq\" and r._field != \"detail\")`;\n    flux += `\\n  |> aggregateWindow(every: ${every}, fn: mean, createEmpty: false, timeSrc: \"_start\")`;\n}\nflux += `\n  |> drop(columns: [\"_start\", \"_stop\", \"_measurement\"])\n  |> pivot(rowKey: [\"_time\"], columnKey: [\"_field\"], valueColumn: \"_value\")\n  |> group()\n  |> sort(columns: [\"_time\"])`;\nmsg.filename = `solar_${m}_${every}_${start.replace(/[:T]/g, '')}_${stop.replace(/[:T]/g, '')}.csv`;\nmsg.url = (env.get('INFLUX_URL') || 'http://influxdb:8086') + '/api/v2/query?org=' + encodeURIComponent(env.get('INFLUX_ORG') || 'solar');\nmsg.method = 'POST';\nmsg.headers = { 'Authorization': 'Token ' + env.get('INFLUX_TOKEN'), 'Content-Type': 'application/json', 'Accept': 'application/csv' };\nmsg.payload = JSON.stringify({ query: flux, type: 'flux',\n                               dialect: { header: true, annotations: [], delimiter: ',', dateTimeFormat: 'RFC3339' } });\nreturn [msg, null];",
+        "outputs": 2,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "wires": [
+            [
+                "e_req"
+            ],
+            [
+                "e_resp"
+            ]
+        ],
+        "x": 380,
+        "y": 80
+    },
+    {
+        "id": "e_req",
+        "type": "http request",
+        "z": "tab_api",
+        "name": "InfluxDB /api/v2/query",
+        "method": "use",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "wires": [
+            [
+                "e_csv"
+            ]
+        ],
+        "x": 620,
+        "y": 60
+    },
+    {
+        "id": "e_csv",
+        "type": "function",
+        "z": "tab_api",
+        "name": "จัดรูป CSV",
+        "func": "// แปลง CSV ของ InfluxDB ให้พร้อมใช้: ตัดคอลัมน์ ,result,table ออก เปลี่ยน _time เป็น time_utc\n// และเพิ่ม time_local (+07:00) ไว้หลังสุดของคอลัมน์เวลา\nif (msg.statusCode && msg.statusCode >= 300) {\n    msg.headers = { 'Content-Type': 'text/plain; charset=utf-8' };\n    msg.payload = 'InfluxDB error ' + msg.statusCode + ': ' + msg.payload;\n    return msg;\n}\nconst lines = String(msg.payload || '').split(/\\r?\\n/);\nconst out = [];\nlet timeIdx = -1;\nfor (const line of lines) {\n    if (!line) continue;\n    const rest = line.replace(/^[^,]*,[^,]*,[^,]*,/, '');   // ตัด 3 คอลัมน์แรก\n    if (timeIdx < 0) {                                     // บรรทัดหัวตาราง\n        const cols = rest.split(',');\n        timeIdx = cols.indexOf('_time');\n        if (timeIdx >= 0) { cols[timeIdx] = 'time_utc'; cols.splice(timeIdx + 1, 0, 'time_local'); }\n        out.push(cols.join(','));\n        continue;\n    }\n    if (rest.startsWith('_time') || rest.startsWith('time_utc')) continue;   // หัวตารางซ้ำ\n    const cols = rest.split(',');\n    if (timeIdx >= 0 && cols[timeIdx]) {\n        const t = new Date(cols[timeIdx]);\n        const loc = new Date(t.getTime() + 7 * 3600e3).toISOString().replace('T', ' ').replace('Z', '');\n        cols.splice(timeIdx + 1, 0, loc);\n    }\n    out.push(cols.join(','));\n}\nmsg.statusCode = 200;\nmsg.headers = { 'Content-Type': 'text/csv; charset=utf-8',\n                'Content-Disposition': `attachment; filename=\"${msg.filename || 'solar.csv'}\"` };\nmsg.payload = '﻿' + out.join('\\n') + '\\n';     // BOM ให้ Excel อ่านภาษาไทยได้\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "wires": [
+            [
+                "e_resp"
+            ]
+        ],
+        "x": 840,
+        "y": 60
+    },
+    {
+        "id": "e_resp",
+        "type": "http response",
+        "z": "tab_api",
+        "name": "ส่งไฟล์ CSV",
+        "statusCode": "",
+        "headers": {},
+        "wires": [],
+        "x": 1040,
+        "y": 80
+    },
+    {
+        "id": "e_range_in",
+        "type": "http in",
+        "z": "tab_api",
+        "name": "GET /api/range",
+        "url": "/api/range",
+        "method": "get",
+        "upload": false,
+        "skipBodyParsing": false,
+        "swaggerDoc": "",
+        "wires": [
+            [
+                "e_range_q"
+            ]
+        ],
+        "x": 140,
+        "y": 180
+    },
+    {
+        "id": "e_range_q",
+        "type": "function",
+        "z": "tab_api",
+        "name": "หาเวลาแรก/สุดท้าย",
+        "func": "// GET /api/range : เวลาแรก/สุดท้ายของข้อมูลใน solar_raw (ใช้ตั้งค่าเริ่มต้นของหน้า Export)\nconst flux = `\nfirst = from(bucket: \"solar_raw\") |> range(start: 2020-01-01T00:00:00Z, stop: 2100-01-01T00:00:00Z)\n  |> filter(fn: (r) => r._measurement == \"electrical\" and r._field == \"p_out\") |> first() |> group()\n  |> min(column: \"_time\") |> keep(columns: [\"_time\"]) |> set(key: \"k\", value: \"first\")\nlast = from(bucket: \"solar_raw\") |> range(start: 2020-01-01T00:00:00Z, stop: 2100-01-01T00:00:00Z)\n  |> filter(fn: (r) => r._measurement == \"electrical\" and r._field == \"p_out\") |> last() |> group()\n  |> max(column: \"_time\") |> keep(columns: [\"_time\"]) |> set(key: \"k\", value: \"last\")\nunion(tables: [first, last])`;\nmsg.url = (env.get('INFLUX_URL') || 'http://influxdb:8086') + '/api/v2/query?org=' + encodeURIComponent(env.get('INFLUX_ORG') || 'solar');\nmsg.method = 'POST';\nmsg.headers = { 'Authorization': 'Token ' + env.get('INFLUX_TOKEN'), 'Content-Type': 'application/json',\n                'Accept': 'application/csv' };\nmsg.payload = JSON.stringify({ query: flux, type: 'flux',\n                               dialect: { header: true, annotations: [], delimiter: ',', dateTimeFormat: 'RFC3339' } });\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "wires": [
+            [
+                "e_range_req"
+            ]
+        ],
+        "x": 380,
+        "y": 180
+    },
+    {
+        "id": "e_range_req",
+        "type": "http request",
+        "z": "tab_api",
+        "name": "InfluxDB /api/v2/query",
+        "method": "use",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "wires": [
+            [
+                "e_range_p"
+            ]
+        ],
+        "x": 620,
+        "y": 180
+    },
+    {
+        "id": "e_range_p",
+        "type": "function",
+        "z": "tab_api",
+        "name": "แปลงเป็น JSON",
+        "func": "const res = {};\nconst loc = (iso) => new Date(new Date(iso).getTime() + 7 * 3600e3).toISOString().slice(0, 19);\nfor (const line of String(msg.payload || '').split(/\\r?\\n/)) {\n    const c = line.split(',');\n    // ,result,table,_time,k\n    if (c.length >= 5 && (c[4] === 'first' || c[4] === 'last')) { res[c[4]] = c[3]; res[c[4] + '_local'] = loc(c[3]); }\n}\nmsg.payload = res;\nmsg.statusCode = 200;\nmsg.headers = { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' };\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "wires": [
+            [
+                "e_range_resp"
+            ]
+        ],
+        "x": 840,
+        "y": 180
+    },
+    {
+        "id": "e_range_resp",
+        "type": "http response",
+        "z": "tab_api",
+        "name": "JSON",
+        "statusCode": "",
+        "headers": {},
+        "wires": [],
+        "x": 1040,
+        "y": 180
+    },
+    {
+        "id": "e_health_in",
+        "type": "http in",
+        "z": "tab_api",
+        "name": "GET /api/health",
+        "url": "/api/health",
+        "method": "get",
+        "upload": false,
+        "skipBodyParsing": false,
+        "swaggerDoc": "",
+        "wires": [
+            [
+                "e_health"
+            ]
+        ],
+        "x": 140,
+        "y": 260
+    },
+    {
+        "id": "e_health",
+        "type": "function",
+        "z": "tab_api",
+        "name": "สถานะรวม",
+        "func": "// GET /api/health : สถานะรวม (ใช้ทดสอบ / ตรวจจากสคริปต์)\nconst res = { now: Date.now(), label: global.get('label', 'file') || 'normal',\n              db_points_written: global.get('db_points_written') || 0, nodes: {} };\nfor (const ch of ['fixed', 'track']) {\n    const s = global.get('seq_' + ch);\n    const a = global.get('acc_' + ch) || {};\n    res.nodes[ch] = {\n        status: global.get('status_' + ch) || null,\n        last_rx: global.get('last_rx_' + ch) || null,\n        last_ts: a.last_ts || null,\n        energy_wh: { pv: a.e_pv || 0, out: a.e_out || 0, mot: a.e_mot || 0 },\n        missing_s: a.missing_s || 0,\n        seq: s ? { boot: s.boot, first: s.first, last: s.last, rx: s.rx, dup: s.dup, late: s.late, gaps: s.gaps,\n                   loss_pct: 100 * ((s.last - s.first + 1) - s.rx) / (s.last - s.first + 1) } : null\n    };\n}\nmsg.payload = res;\nmsg.headers = { 'Cache-Control': 'no-store' };\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "wires": [
+            [
+                "e_health_resp"
+            ]
+        ],
+        "x": 380,
+        "y": 260
+    },
+    {
+        "id": "e_health_resp",
+        "type": "http response",
+        "z": "tab_api",
+        "name": "JSON",
+        "statusCode": "",
+        "headers": {},
+        "wires": [],
+        "x": 620,
+        "y": 260
+    },
+    {
+        "id": "e_ds_in",
+        "type": "http in",
+        "z": "tab_api",
+        "name": "GET /api/downsample",
+        "url": "/api/downsample",
+        "method": "get",
+        "upload": false,
+        "skipBodyParsing": false,
+        "swaggerDoc": "",
+        "wires": [
+            [
+                "e_ds_q"
+            ]
+        ],
+        "x": 140,
+        "y": 340
+    },
+    {
+        "id": "e_ds_q",
+        "type": "function",
+        "z": "tab_api",
+        "name": "สรุปย้อนหลังลง solar_1m",
+        "func": "// GET /api/downsample?start=YYYY-MM-DDTHH:MM:SS&stop=... (เวลาท้องถิ่น)\n// ทำแบบเดียวกับ Task downsample_1m แต่กับช่วงเวลาที่เลือก ใช้กับข้อมูลที่จำลองแบบเร่งเวลา/ย้อนหลัง\n// (Task ของ InfluxDB สรุปเฉพาะนาทีที่เพิ่งผ่านไปตามนาฬิกาจริง)\nconst q = msg.req.query || {};\nconst isoRe = /^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}(:\\d{2})?$/;\nconst TZ = (env.get('SITE_TZ') || '+07:00');\nconst start = String(q.start || ''), stop = String(q.stop || '');\nif (!isoRe.test(start) || !isoRe.test(stop)) {\n    msg.statusCode = 400; msg.payload = { ok: false, error: 'start/stop ต้องเป็น YYYY-MM-DDTHH:MM[:SS]' };\n    return [null, msg];\n}\nconst sec = (t) => (t.length === 16 ? t + ':00' : t) + TZ;\nconst flux = `\nraw = from(bucket: \"solar_raw\")\n  |> range(start: ${sec(start)}, stop: ${sec(stop)})\n  |> filter(fn: (r) => r._measurement == \"electrical\" or r._measurement == \"tracker\" or r._measurement == \"sim_truth\")\n  |> filter(fn: (r) => r._field != \"mode\" and r._field != \"seq\" and r._field != \"label_truth\" and r._field != \"lat_ms\")\nmeans = raw\n  |> aggregateWindow(every: 1m, fn: mean, createEmpty: false, timeSrc: \"_start\")\n  |> to(bucket: \"solar_1m\")\n  |> count() |> group() |> sum() |> set(key: \"what\", value: \"means\")\nenergy = raw\n  |> filter(fn: (r) => r._measurement != \"sim_truth\" and (r._field == \"p_pv\" or r._field == \"p_out\" or r._field == \"p_mot\"))\n  |> aggregateWindow(every: 1m, fn: (column, tables=<-) => tables |> integral(unit: 1h, column: column), createEmpty: false, timeSrc: \"_start\")\n  |> map(fn: (r) => ({r with _measurement: \"energy\", _field: r._field + \"_wh\"}))\n  |> to(bucket: \"solar_1m\")\n  |> count() |> group() |> sum() |> set(key: \"what\", value: \"energy\")\nunion(tables: [means, energy])`;\nmsg.range = { start, stop };\nmsg.url = (env.get('INFLUX_URL') || 'http://influxdb:8086') + '/api/v2/query?org=' + encodeURIComponent(env.get('INFLUX_ORG') || 'solar');\nmsg.method = 'POST';\nmsg.headers = { 'Authorization': 'Token ' + env.get('INFLUX_TOKEN'), 'Content-Type': 'application/json', 'Accept': 'application/csv' };\nmsg.payload = JSON.stringify({ query: flux, type: 'flux',\n                               dialect: { header: true, annotations: [], delimiter: ',', dateTimeFormat: 'RFC3339' } });\nreturn [msg, null];",
+        "outputs": 2,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "wires": [
+            [
+                "e_ds_req"
+            ],
+            [
+                "e_ds_resp"
+            ]
+        ],
+        "x": 380,
+        "y": 340
+    },
+    {
+        "id": "e_ds_req",
+        "type": "http request",
+        "z": "tab_api",
+        "name": "InfluxDB /api/v2/query",
+        "method": "use",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "wires": [
+            [
+                "e_ds_r"
+            ]
+        ],
+        "x": 620,
+        "y": 320
+    },
+    {
+        "id": "e_ds_r",
+        "type": "function",
+        "z": "tab_api",
+        "name": "ผลลัพธ์ JSON",
+        "func": "// สรุปผลการ backfill เป็น JSON\nconst ok = !msg.statusCode || msg.statusCode < 300;\nconst rows = {};\nif (ok) {\n    let iv = -1, iw = -1;\n    for (const line of String(msg.payload || '').split(/\\r?\\n/)) {\n        const c = line.split(',');\n        if (c.includes('_value') && c.includes('what')) { iv = c.indexOf('_value'); iw = c.indexOf('what'); continue; }\n        if (iv >= 0 && c.length > Math.max(iv, iw) && c[iw]) rows[c[iw]] = Number(c[iv]);\n    }\n}\nmsg.payload = ok ? { ok: true, range: msg.range, points_written: rows } : { ok: false, error: String(msg.payload).slice(0, 500) };\nmsg.statusCode = ok ? 200 : 502;\nmsg.headers = { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' };\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "wires": [
+            [
+                "e_ds_resp"
+            ]
+        ],
+        "x": 840,
+        "y": 320
+    },
+    {
+        "id": "e_ds_resp",
+        "type": "http response",
+        "z": "tab_api",
+        "name": "JSON",
+        "statusCode": "",
+        "headers": {},
+        "wires": [],
+        "x": 1040,
+        "y": 340
+    },
+    {
+        "id": "e_tpl",
+        "type": "ui-template",
+        "z": "tab_api",
+        "group": "ug_export",
+        "page": "",
+        "ui": "",
+        "name": "ฟอร์มส่งออก CSV",
+        "order": 1,
+        "width": "0",
+        "height": "0",
+        "head": "",
+        "format": "<template>\n  <div class=\"exp\">\n    <p>ดาวน์โหลดข้อมูลจาก InfluxDB เป็น CSV สำหรับวิเคราะห์ / สร้าง Dataset ของ Machine Learning</p>\n    <div class=\"grid\">\n      <label>เริ่ม <input type=\"datetime-local\" v-model=\"start\" step=\"1\"></label>\n      <label>สิ้นสุด <input type=\"datetime-local\" v-model=\"stop\" step=\"1\"></label>\n      <label>ข้อมูล\n        <select v-model=\"m\">\n          <option value=\"all\">ไฟฟ้า + ระบบติดตาม (รวมแถวตามเวลา)</option>\n          <option value=\"electrical\">ไฟฟ้าเท่านั้น</option>\n          <option value=\"tracker\">ระบบติดตามเท่านั้น</option>\n          <option value=\"quality\">คุณภาพข้อมูลรายนาที</option>\n          <option value=\"events\">เหตุการณ์</option>\n          <option value=\"sim_truth\">ค่าจริงของแบบจำลอง (sim_truth)</option>\n        </select>\n      </label>\n      <label>Resample\n        <select v-model=\"every\">\n          <option value=\"raw\">ไม่ resample (ทุก 1 วินาที)</option>\n          <option value=\"10s\">10 วินาที</option>\n          <option value=\"1m\">1 นาที</option>\n          <option value=\"15m\">15 นาที</option>\n        </select>\n      </label>\n      <label>ช่อง\n        <select v-model=\"channel\">\n          <option value=\"all\">ทั้งสองช่อง</option>\n          <option value=\"fixed\">Fixed</option>\n          <option value=\"track\">Track</option>\n        </select>\n      </label>\n    </div>\n    <p class=\"range\" v-if=\"range\">ข้อมูลในฐานข้อมูล: {{ range.first_local }} → {{ range.last_local }}\n      <a href=\"#\" @click.prevent=\"useAll\">ใช้ทั้งช่วง</a> · <a href=\"#\" @click.prevent=\"useLastDay\">วันล่าสุด</a></p>\n    <a class=\"btn\" :href=\"url\" target=\"_blank\">⬇ ดาวน์โหลด CSV</a>\n    <button class=\"btn2\" @click=\"downsample\" :disabled=\"busy\">สร้างข้อมูลสรุปรายนาที (solar_1m) ของช่วงนี้</button>\n    <span class=\"ds\">{{ dsText }}</span>\n    <p class=\"hint\">ลิงก์เดียวกันใช้กับ Python ได้: <code>pandas.read_csv(\"http://&lt;ip&gt;:1880{{ url }}\")</code></p>\n  </div>\n</template>\n<script>\nexport default {\n  data () {\n    const local = (d) => new Date(d.getTime() + 7 * 3600e3).toISOString().slice(0, 19)\n    const now = new Date()\n    return { start: local(new Date(now.getTime() - 3600e3)), stop: local(now), m: 'all', every: '1m', channel: 'all', range: null, busy: false, dsText: '' }\n  },\n  computed: {\n    url () {\n      const q = new URLSearchParams({ start: this.start, stop: this.stop, m: this.m, every: this.every, channel: this.channel })\n      return '/api/export.csv?' + q.toString()\n    }\n  },\n  mounted () {\n    fetch('/api/range').then(r => r.json()).then(r => {\n      if (r.first) { this.range = r; this.useLastDay() }\n    }).catch(() => {})\n  },\n  methods: {\n    useAll () { this.start = this.range.first_local; this.stop = this.range.last_local },\n    useLastDay () { this.start = this.range.last_local.slice(0, 10) + 'T00:00:00'; this.stop = this.range.last_local },\n    downsample () {\n      this.busy = true\n      this.dsText = 'กำลังสรุป...'\n      const q = new URLSearchParams({ start: this.start, stop: this.stop })\n      fetch('/api/downsample?' + q.toString()).then(r => r.json()).then(r => {\n        this.dsText = r.ok ? 'เสร็จแล้ว: ' + JSON.stringify(r.points_written) + ' จุด → bucket solar_1m' : 'ผิดพลาด: ' + r.error\n      }).catch(e => { this.dsText = 'ผิดพลาด: ' + e }).finally(() => { this.busy = false })\n    }\n  }\n}\n</script>\n<style>\n.exp .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin: 8px 0; }\n.exp label { display: flex; flex-direction: column; font-size: 13px; color: #374151; gap: 4px; }\n.exp input, .exp select { border: 1px solid #ced4da; border-radius: 6px; padding: 6px; background: #fff; }\n.exp .btn { display: inline-block; margin-top: 8px; padding: 10px 18px; background: #e8590c; color: #fff;\n            border-radius: 6px; text-decoration: none; font-weight: 600; }\n.exp .hint, .exp .range, .exp .ds { color: #6b7280; font-size: 13px; }\n.exp .btn2 { margin: 8px 0 0 12px; padding: 9px 14px; border: 1px solid #e8590c; color: #e8590c; background: #fff;\n             border-radius: 6px; font-weight: 600; cursor: pointer; }\n</style>",
+        "storeOutMessages": true,
+        "passthru": false,
+        "resendOnRefresh": true,
+        "templateScope": "local",
+        "className": "",
+        "wires": [
+            []
+        ],
+        "x": 380,
+        "y": 420
+    },
+    {
+        "id": "s_truth_in",
+        "type": "mqtt in",
+        "z": "tab_sim",
+        "name": "sim/truth/+",
+        "topic": "sim/truth/+",
+        "qos": "0",
+        "datatype": "json",
+        "broker": "cfg_mqtt",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "wires": [
+            [
+                "s_truth"
+            ]
+        ],
+        "x": 150,
+        "y": 80
+    },
+    {
+        "id": "s_truth",
+        "type": "function",
+        "z": "tab_sim",
+        "name": "แปลงเป็น Point sim_truth",
+        "func": "// (เฉพาะการจำลอง) ค่าจริงจากแบบจำลอง: P_mpp, label จริง, ตำแหน่งดวงอาทิตย์\n// เก็บเป็น measurement sim_truth แยกจากข้อมูลของระบบจริง\nconst ch = msg.topic.split('/')[2];\nconst d = msg.payload;\nif (typeof d !== 'object' || !d || typeof d.ts !== 'number') return null;\nconst fields = {};\nfor (const k of ['p_mpp', 'p_pv_true', 'g_poa', 'shade_1', 'shade_2', 'shade_3', 'sun_el', 'sun_az', 'running']) {\n    if (typeof d[k] === 'number') fields[k] = d[k];\n}\nfields.label_truth = String(d.label || 'normal');\n// ประสิทธิภาพ MPPT สะสมรายวัน = ∫P_pv / ∫P_mpp (EN 50530)\nconst TZ = Number(env.get('SITE_TZ_HOURS') || 7);\nconst day = new Date(d.ts + TZ * 3600e3).toISOString().slice(0, 10);\nlet e = global.get('mppt_eff_' + ch);\nif (!e || e.day !== day) e = { day, pv: 0, mpp: 0 };\ne.pv += d.p_pv_true || 0; e.mpp += d.p_mpp || 0;\nglobal.set('mppt_eff_' + ch, e);\nconst point = { measurement: 'sim_truth', tags: { channel: ch }, fields, timestamp: d.ts };\nreturn [{ payload: [point] }, { topic: ch, payload: d, ts: d.ts }];",
+        "outputs": 2,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "wires": [
+            [
+                "s_truth_db"
+            ],
+            [
+                "s_truth_ui"
+            ]
+        ],
+        "x": 400,
+        "y": 80
+    },
+    {
+        "id": "s_truth_db",
+        "type": "link out",
+        "z": "tab_sim",
+        "name": "→ InfluxDB",
+        "mode": "link",
+        "links": [
+            "a_from_others"
+        ],
+        "wires": [],
+        "x": 615,
+        "y": 60
+    },
+    {
+        "id": "s_truth_ui",
+        "type": "link out",
+        "z": "tab_sim",
+        "name": "→ กราฟดวงอาทิตย์",
+        "mode": "link",
+        "links": [
+            "ui_truth_in"
+        ],
+        "wires": [],
+        "x": 615,
+        "y": 100
+    },
+    {
+        "id": "s_state_in",
+        "type": "mqtt in",
+        "z": "tab_sim",
+        "name": "sim/state",
+        "topic": "sim/state",
+        "qos": "0",
+        "datatype": "json",
+        "broker": "cfg_mqtt",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "wires": [
+            [
+                "s_state_tpl"
+            ]
+        ],
+        "x": 150,
+        "y": 180
+    },
+    {
+        "id": "s_state_tpl",
+        "type": "ui-template",
+        "z": "tab_sim",
+        "group": "ug_simstate",
+        "page": "",
+        "ui": "",
+        "name": "สถานะตัวจำลอง",
+        "order": 1,
+        "width": "0",
+        "height": "0",
+        "head": "",
+        "format": "<template>\n  <div class=\"ss\" v-if=\"p.t\">\n    <div><span>เวลาในแบบจำลอง</span><b>{{ when }}</b></div>\n    <div><span>ความเร็ว</span><b>{{ p.speed }}×</b></div>\n    <div><span>ท้องฟ้า</span><b>{{ p.sky }}</b></div>\n    <template v-for=\"(n, k) in p.nodes\" :key=\"k\">\n      <div><span>{{ k }}</span>\n        <b>{{ n.running ? 'ทำงาน' : 'หยุด' }} · MPPT {{ n.mppt }} · เงา {{ n.shade }} · fault {{ n.fault || '-' }}</b>\n        <small>Wi-Fi {{ n.wifi ? 'ปกติ' : 'หลุด' }} · บัฟเฟอร์ {{ n.buffer }} ระเบียน</small></div>\n    </template>\n  </div>\n  <div v-else>ยังไม่พบตัวจำลอง (esp32-sim) — ตรวจว่า container ทำงานอยู่</div>\n</template>\n<script>\nexport default {\n  computed: {\n    p () { return this.msg?.payload || {} },\n    when () { return this.p.t ? new Date(this.p.t).toLocaleString('th-TH-u-ca-gregory', { timeZone: 'Asia/Bangkok' }) : '-' }\n  }\n}\n</script>\n<style>\n.ss { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 8px; }\n.ss div { display: flex; flex-direction: column; background: #f3f0ff; border-radius: 6px; padding: 8px; }\n.ss span { color: #6b7280; font-size: 12px; }\n</style>",
+        "storeOutMessages": true,
+        "passthru": false,
+        "resendOnRefresh": true,
+        "templateScope": "local",
+        "className": "",
+        "wires": [
+            []
+        ],
+        "x": 420,
+        "y": 180
+    },
+    {
+        "id": "s_form_sky",
+        "type": "ui-form",
+        "z": "tab_sim",
+        "name": "ท้องฟ้า/ความเร็ว",
+        "group": "ug_simsky",
+        "label": "",
+        "order": 1,
+        "width": "0",
+        "height": "0",
+        "options": [
+            {
+                "label": "ท้องฟ้า",
+                "key": "sky",
+                "type": "dropdown",
+                "required": false,
+                "rows": null
+            },
+            {
+                "label": "ความเร็วเวลา",
+                "key": "speed",
+                "type": "dropdown",
+                "required": false,
+                "rows": null
+            },
+            {
+                "label": "PIN ผู้ควบคุม",
+                "key": "pin",
+                "type": "password",
+                "required": false,
+                "rows": null
+            }
+        ],
+        "formValue": {
+            "sky": "",
+            "speed": "",
+            "pin": ""
+        },
+        "payload": "",
+        "submit": "ใช้ค่า",
+        "cancel": "ล้าง",
+        "resetOnSubmit": false,
+        "topic": "sky",
+        "topicType": "str",
+        "splitLayout": "",
+        "className": "",
+        "passthru": false,
+        "dropdownOptions": [
+            {
+                "dropdown": "sky",
+                "value": "",
+                "label": "(ไม่เปลี่ยน)"
+            },
+            {
+                "dropdown": "sky",
+                "value": "clear",
+                "label": "clear ฟ้าใส"
+            },
+            {
+                "dropdown": "sky",
+                "value": "partly_cloudy",
+                "label": "partly_cloudy เมฆบางส่วน"
+            },
+            {
+                "dropdown": "sky",
+                "value": "cloudy",
+                "label": "cloudy เมฆมาก"
+            },
+            {
+                "dropdown": "sky",
+                "value": "overcast",
+                "label": "overcast ฟ้าปิด"
+            },
+            {
+                "dropdown": "speed",
+                "value": "",
+                "label": "(ไม่เปลี่ยน)"
+            },
+            {
+                "dropdown": "speed",
+                "value": "1",
+                "label": "1× เวลาจริง"
+            },
+            {
+                "dropdown": "speed",
+                "value": "10",
+                "label": "10×"
+            },
+            {
+                "dropdown": "speed",
+                "value": "60",
+                "label": "60× (1 วัน ≈ 24 นาที)"
+            },
+            {
+                "dropdown": "speed",
+                "value": "120",
+                "label": "120×"
+            }
+        ],
+        "wires": [
+            [
+                "s_cmd"
+            ]
+        ],
+        "x": 150,
+        "y": 280
+    },
+    {
+        "id": "s_form_shade",
+        "type": "ui-form",
+        "z": "tab_sim",
+        "name": "เงา/ความผิดปกติ",
+        "group": "ug_simshade",
+        "label": "",
+        "order": 1,
+        "width": "0",
+        "height": "0",
+        "options": [
+            {
+                "label": "บอร์ด",
+                "key": "node",
+                "type": "dropdown",
+                "required": false,
+                "rows": null
+            },
+            {
+                "label": "เงาบัง (ผ้าบังแสงบน substring)",
+                "key": "shade",
+                "type": "dropdown",
+                "required": false,
+                "rows": null
+            },
+            {
+                "label": "ความผิดปกติ",
+                "key": "fault",
+                "type": "dropdown",
+                "required": false,
+                "rows": null
+            },
+            {
+                "label": "ตั้ง Label ให้ตรงกันด้วย",
+                "key": "setlabel",
+                "type": "switch",
+                "required": false,
+                "rows": null
+            },
+            {
+                "label": "PIN ผู้ควบคุม",
+                "key": "pin",
+                "type": "password",
+                "required": false,
+                "rows": null
+            }
+        ],
+        "formValue": {
+            "node": "all",
+            "shade": "",
+            "fault": "",
+            "setlabel": true,
+            "pin": ""
+        },
+        "payload": "",
+        "submit": "ใช้ค่า",
+        "cancel": "ล้าง",
+        "resetOnSubmit": false,
+        "topic": "shade",
+        "topicType": "str",
+        "splitLayout": "",
+        "className": "",
+        "passthru": false,
+        "dropdownOptions": [
+            {
+                "dropdown": "node",
+                "value": "all",
+                "label": "ทั้งสองบอร์ด"
+            },
+            {
+                "dropdown": "node",
+                "value": "fixed",
+                "label": "Fixed"
+            },
+            {
+                "dropdown": "node",
+                "value": "track",
+                "label": "Track"
+            },
+            {
+                "dropdown": "shade",
+                "value": "",
+                "label": "(ไม่เปลี่ยน)"
+            },
+            {
+                "dropdown": "shade",
+                "value": "normal",
+                "label": "normal ไม่มีเงา"
+            },
+            {
+                "dropdown": "shade",
+                "value": "shade_25",
+                "label": "shade_25"
+            },
+            {
+                "dropdown": "shade",
+                "value": "shade_50",
+                "label": "shade_50"
+            },
+            {
+                "dropdown": "shade",
+                "value": "shade_75",
+                "label": "shade_75"
+            },
+            {
+                "dropdown": "shade",
+                "value": "shade_2sub_50",
+                "label": "shade_2sub_50"
+            },
+            {
+                "dropdown": "fault",
+                "value": "",
+                "label": "(ไม่เปลี่ยน)"
+            },
+            {
+                "dropdown": "fault",
+                "value": "none",
+                "label": "none ไม่มี"
+            },
+            {
+                "dropdown": "fault",
+                "value": "soiling",
+                "label": "soiling ฝุ่น 20%"
+            },
+            {
+                "dropdown": "fault",
+                "value": "bypass_diode_short",
+                "label": "bypass_diode_short"
+            },
+            {
+                "dropdown": "fault",
+                "value": "sensor_offset",
+                "label": "sensor_offset"
+            },
+            {
+                "dropdown": "fault",
+                "value": "open_circuit",
+                "label": "open_circuit"
+            },
+            {
+                "dropdown": "fault",
+                "value": "tracker_stuck",
+                "label": "tracker_stuck"
+            }
+        ],
+        "wires": [
+            [
+                "s_cmd"
+            ]
+        ],
+        "x": 150,
+        "y": 340
+    },
+    {
+        "id": "s_form_net",
+        "type": "ui-form",
+        "z": "tab_sim",
+        "name": "เครือข่าย/บอร์ด",
+        "group": "ug_simnet",
+        "label": "",
+        "order": 1,
+        "width": "0",
+        "height": "0",
+        "options": [
+            {
+                "label": "บอร์ด",
+                "key": "node",
+                "type": "dropdown",
+                "required": false,
+                "rows": null
+            },
+            {
+                "label": "เหตุการณ์",
+                "key": "action",
+                "type": "dropdown",
+                "required": false,
+                "rows": null
+            },
+            {
+                "label": "วินาที (Wi-Fi หลุด) / จำนวน (ส่งซ้ำ)",
+                "key": "seconds",
+                "type": "number",
+                "required": false,
+                "rows": null
+            },
+            {
+                "label": "PIN ผู้ควบคุม",
+                "key": "pin",
+                "type": "password",
+                "required": false,
+                "rows": null
+            }
+        ],
+        "formValue": {
+            "node": "track",
+            "action": "wifi_drop",
+            "seconds": 60,
+            "pin": ""
+        },
+        "payload": "",
+        "submit": "จำลองเหตุการณ์",
+        "cancel": "ล้าง",
+        "resetOnSubmit": false,
+        "topic": "net",
+        "topicType": "str",
+        "splitLayout": "",
+        "className": "",
+        "passthru": false,
+        "dropdownOptions": [
+            {
+                "dropdown": "node",
+                "value": "track",
+                "label": "Track"
+            },
+            {
+                "dropdown": "node",
+                "value": "fixed",
+                "label": "Fixed"
+            },
+            {
+                "dropdown": "node",
+                "value": "all",
+                "label": "ทั้งสองบอร์ด"
+            },
+            {
+                "dropdown": "action",
+                "value": "wifi_drop",
+                "label": "Wi-Fi หลุด (ทดสอบ LWT + ring buffer)"
+            },
+            {
+                "dropdown": "action",
+                "value": "reboot",
+                "label": "รีบูตบอร์ด (seq เริ่มใหม่)"
+            },
+            {
+                "dropdown": "action",
+                "value": "dup",
+                "label": "ส่งข้อความซ้ำ (ทดสอบ QoS 1 dedupe)"
+            }
+        ],
+        "wires": [
+            [
+                "s_cmd"
+            ]
+        ],
+        "x": 150,
+        "y": 400
+    },
+    {
+        "id": "s_cmd",
+        "type": "function",
+        "z": "tab_sim",
+        "name": "สร้างคำสั่ง sim/cmd",
+        "func": "function pinOk(p) {\n    const pin = env.get('CONTROL_PIN') || '';\n    return !pin || String(p || '') === pin;\n}\n// (เฉพาะการจำลอง) แปลงค่าจากฟอร์มเป็นคำสั่ง sim/cmd ให้ตัวจำลอง ESP32\n// เอาต์พุต 1 = MQTT sim/cmd, 2 = ตั้ง Label ตามเงาที่จำลอง (ถ้าเลือก), 3 = แจ้งเตือน, 4 = เหตุการณ์\nconst p = msg.payload || {};\nconst out = [null, null, null, null];\nif (!pinOk(p.pin)) { out[2] = { payload: '⛔ PIN ไม่ถูกต้อง' }; return out; }\nlet cmd = null;\nif (msg.topic === 'sky') {\n    cmd = {};\n    if (p.sky) cmd.sky = p.sky;\n    if (p.speed) cmd.speed = Number(p.speed);\n} else if (msg.topic === 'shade') {\n    cmd = { node: p.node || 'all' };\n    if (p.shade) cmd.shade = p.shade;\n    if (p.fault) cmd.fault = p.fault;\n    if (p.setlabel) {\n        const lab = p.shade && p.shade !== 'normal' ? p.shade : (p.fault && p.fault !== 'none' ? p.fault : 'normal');\n        out[1] = { payload: { label: lab, pin: p.pin } };\n    }\n} else if (msg.topic === 'net') {\n    if (!p.action) { out[2] = { payload: 'กรุณาเลือกเหตุการณ์' }; return out; }\n    cmd = { node: p.node || 'track' };\n    if (p.action === 'wifi_drop') cmd.wifi_drop = Number(p.seconds || 60);\n    else if (p.action === 'reboot') { cmd = { reboot: p.node || 'track' }; }\n    else if (p.action === 'dup') cmd.dup = Number(p.seconds || 3);\n}\nif (!cmd || Object.keys(cmd).length === 0 || (Object.keys(cmd).length === 1 && cmd.node)) {\n    out[2] = { payload: 'ยังไม่ได้เลือกคำสั่ง' };\n    return out;\n}\nconst text = JSON.stringify(cmd);\nout[0] = { topic: 'sim/cmd', payload: text };\nout[2] = { payload: '🧪 sim/cmd ' + text };\nout[3] = { topic: 'system', payload: { type: 'sim', detail: text } };\nreturn out;",
+        "outputs": 4,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "wires": [
+            [
+                "s_mqtt"
+            ],
+            [
+                "s_to_label"
+            ],
+            [
+                "s_to_note"
+            ],
+            [
+                "s_to_events"
+            ]
+        ],
+        "x": 430,
+        "y": 340
+    },
+    {
+        "id": "s_mqtt",
+        "type": "mqtt out",
+        "z": "tab_sim",
+        "name": "sim/cmd",
+        "topic": "",
+        "qos": "1",
+        "retain": "false",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "cfg_mqtt",
+        "wires": [],
+        "x": 700,
+        "y": 300
+    },
+    {
+        "id": "s_to_label",
+        "type": "link out",
+        "z": "tab_sim",
+        "name": "→ ตั้ง Label",
+        "mode": "link",
+        "links": [
+            "c_label_in"
+        ],
+        "wires": [],
+        "x": 680,
+        "y": 340
+    },
+    {
+        "id": "s_to_note",
+        "type": "link out",
+        "z": "tab_sim",
+        "name": "→ แจ้งเตือน",
+        "mode": "link",
+        "links": [
+            "b_note_in"
+        ],
+        "wires": [],
+        "x": 680,
+        "y": 380
+    },
+    {
+        "id": "s_to_events",
+        "type": "link out",
+        "z": "tab_sim",
+        "name": "→ เหตุการณ์",
+        "mode": "link",
+        "links": [
+            "b_events_in"
+        ],
+        "wires": [],
+        "x": 680,
+        "y": 420
+    }
+]

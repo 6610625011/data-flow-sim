@@ -1,0 +1,2706 @@
+{
+  "generator": "pvsim batch",
+  "config": {
+    "days": 30,
+    "seed": 7,
+    "resample": "1min",
+    "period": 1.0,
+    "extended": true,
+    "window": null,
+    "sky_weights": {
+      "clear": 0.35,
+      "partly_cloudy": 0.3,
+      "cloudy": 0.2,
+      "overcast": 0.15
+    },
+    "fault_kinds": [
+      "partial_shading_lvl1",
+      "partial_shading_lvl2",
+      "partial_shading_lvl3",
+      "soiling",
+      "bypass_diode_short",
+      "tracker_stuck",
+      "sensor_offset",
+      "open_circuit"
+    ]
+  },
+  "days": [
+    {
+      "index": 0,
+      "file": "day_000.csv",
+      "sky": "overcast",
+      "scenario": {
+        "schema_version": 1,
+        "name": "batch_s7_d000",
+        "date": "2026-12-11",
+        "seed": 700000,
+        "mppt_period": 1.0,
+        "env_dt": 1.0,
+        "margin_s": 300.0,
+        "start_h": null,
+        "end_h": null,
+        "latitude": 14.07,
+        "longitude": 100.6,
+        "tz_hours": 7.0,
+        "weather": {
+          "sky": "overcast",
+          "seed": 1342382291,
+          "t_min": 25.88,
+          "t_max": 32.78,
+          "linke": null
+        },
+        "shading": "none",
+        "faults": [],
+        "panels": [
+          {
+            "panel_id": "fixed",
+            "mount": "fixed",
+            "mount_params": {},
+            "algorithm": "po",
+            "mppt_params": {},
+            "datasheet": {},
+            "topology": "buck",
+            "buck": {},
+            "boost": {},
+            "sensor": {},
+            "load": {
+              "mode": "CR",
+              "setpoint": 2.6
+            },
+            "load_profile": null
+          },
+          {
+            "panel_id": "tracker",
+            "mount": "tracker",
+            "mount_params": {},
+            "algorithm": "po",
+            "mppt_params": {},
+            "datasheet": {},
+            "topology": "buck",
+            "buck": {},
+            "boost": {},
+            "sensor": {},
+            "load": {
+              "mode": "CR",
+              "setpoint": 2.6
+            },
+            "load_profile": null
+          }
+        ]
+      },
+      "rows_raw": 82640,
+      "label_counts_raw": {
+        "normal": 82640
+      },
+      "energy_wh": {
+        "fixed": {
+          "mpp": 57.5584,
+          "pv": 39.2634,
+          "out": 35.1458,
+          "mount": 0.0
+        },
+        "tracker": {
+          "mpp": 50.4874,
+          "pv": 50.3943,
+          "out": 44.6502,
+          "mount": 4.2993
+        }
+      }
+    },
+    {
+      "index": 1,
+      "file": "day_001.csv",
+      "sky": "clear",
+      "scenario": {
+        "schema_version": 1,
+        "name": "batch_s7_d001",
+        "date": "2026-11-14",
+        "seed": 700001,
+        "mppt_period": 1.0,
+        "env_dt": 1.0,
+        "margin_s": 300.0,
+        "start_h": null,
+        "end_h": null,
+        "latitude": 14.07,
+        "longitude": 100.6,
+        "tz_hours": 7.0,
+        "weather": {
+          "sky": "clear",
+          "seed": 1653865097,
+          "t_min": 22.95,
+          "t_max": 29.59,
+          "linke": null
+        },
+        "shading": "none",
+        "faults": [
+          {
+            "kind": "bypass_diode_short",
+            "start_h": 15.45,
+            "end_h": 16.72,
+            "panel_id": "fixed",
+            "params": {}
+          }
+        ],
+        "panels": [
+          {
+            "panel_id": "fixed",
+            "mount": "fixed",
+            "mount_params": {},
+            "algorithm": "po",
+            "mppt_params": {},
+            "datasheet": {},
+            "topology": "buck",
+            "buck": {},
+            "boost": {},
+            "sensor": {},
+            "load": {
+              "mode": "CR",
+              "setpoint": 2.86
+            },
+            "load_profile": null
+          },
+          {
+            "panel_id": "tracker",
+            "mount": "tracker",
+            "mount_params": {},
+            "algorithm": "po",
+            "mppt_params": {},
+            "datasheet": {},
+            "topology": "buck",
+            "buck": {},
+            "boost": {},
+            "sensor": {},
+            "load": {
+              "mode": "CR",
+              "setpoint": 2.86
+            },
+            "load_profile": null
+          }
+        ]
+      },
+      "rows_raw": 83928,
+      "label_counts_raw": {
+        "bypass_diode_short": 4572,
+        "normal": 79356
+      },
+      "energy_wh": {
+        "fixed": {
+          "mpp": 273.6602,
+          "pv": 272.2557,
+          "out": 258.9771,
+          "mount": 0.0
+        },
+        "tracker": {
+          "mpp": 349.8426,
+          "pv": 349.1899,
+          "out": 333.5286,
+          "mount": 4.3982
+        }
+      }
+    },
+    {
+      "index": 2,
+      "file": "day_002.csv",
+      "sky": "partly_cloudy",
+      "scenario": {
+        "schema_version": 1,
+        "name": "batch_s7_d002",
+        "date": "2026-04-13",
+        "seed": 700002,
+        "mppt_period": 1.0,
+        "env_dt": 1.0,
+        "margin_s": 300.0,
+        "start_h": null,
+        "end_h": null,
+        "latitude": 14.07,
+        "longitude": 100.6,
+        "tz_hours": 7.0,
+        "weather": {
+          "sky": "partly_cloudy",
+          "seed": 596936635,
+          "t_min": 26.67,
+          "t_max": 35.4,
+          "linke": null
+        },
+        "shading": "none",
+        "faults": [],
+        "panels": [
+          {
+            "panel_id": "fixed",
+            "mount": "fixed",
+            "mount_params": {},
+            "algorithm": "po",
+            "mppt_params": {},
+            "datasheet": {},
+            "topology": "buck",
+            "buck": {},
+            "boost": {},
+            "sensor": {},
+            "load": {
+              "mode": "CR",
+              "setpoint": 2.5
+            },
+            "load_profile": null
+          },
+          {
+            "panel_id": "tracker",
+            "mount": "tracker",
+            "mount_params": {},
+            "algorithm": "po",
+            "mppt_params": {},
+            "datasheet": {},
+            "topology": "buck",
+            "buck": {},
+            "boost": {},
+            "sensor": {},
+            "load": {
+              "mode": "CR",
+              "setpoint": 2.5
+            },
+            "load_profile": null
+          }
+        ]
+      },
+      "rows_raw": 90634,
+      "label_counts_raw": {
+        "normal": 90634
+      },
+      "energy_wh": {
+        "fixed": {
+          "mpp": 243.036,
+          "pv": 237.3748,
+          "out": 223.0695,
+          "mount": 0.0
+        },
+        "tracker": {
+          "mpp": 290.166,
+          "pv": 277.6346,
+          "out": 262.489,
+          "mount": 4.9528
+        }
+      }
+    },
+    {
+      "index": 3,
+      "file": "day_003.csv",
+      "sky": "overcast",
+      "scenario": {
+        "schema_version": 1,
+        "name": "batch_s7_d003",
+        "date": "2026-09-23",
+        "seed": 700003,
+        "mppt_period": 1.0,
+        "env_dt": 1.0,
+        "margin_s": 300.0,
+        "start_h": null,
+        "end_h": null,
+        "latitude": 14.07,
+        "longitude": 100.6,
+        "tz_hours": 7.0,
+        "weather": {
+          "sky": "overcast",
+          "seed": 2093868611,
+          "t_min": 23.16,
+          "t_max": 32.09,
+          "linke": null
+        },
+        "shading": "none",
+        "faults": [],
+        "panels": [
+          {
+            "panel_id": "fixed",
+            "mount": "fixed",
+            "mount_params": {},
+            "algorithm": "po",
+            "mppt_params": {},
+            "datasheet": {},
+            "topology": "buck",
+            "buck": {},
+            "boost": {},
+            "sensor": {},
+            "load": {
+              "mode": "CR",
+              "setpoint": 2.81
+            },
+            "load_profile": null
+          },
+          {
+            "panel_id": "tracker",
+            "mount": "tracker",
+            "mount_params": {},
+            "algorithm": "po",
+            "mppt_params": {},
+            "datasheet": {},
+            "topology": "buck",
+            "buck": {},
+            "boost": {},
+            "sensor": {},
+            "load": {
+              "mode": "CR",
+              "setpoint": 2.81
+            },
+            "load_profile": null
+          }
+        ]
+      },
+      "rows_raw": 88406,
+      "label_counts_raw": {
+        "normal": 88406
+      },
+      "energy_wh": {
+        "fixed": {
+          "mpp": 73.6298,
+          "pv": 73.523,
+          "out": 66.5664,
+          "mount": 0.0
+        },
+        "tracker": {
+          "mpp": 68.7619,
+          "pv": 68.634,
+          "out": 62.0252,
+          "mount": 4.7731
+        }
+      }
+    },
+    {
+      "index": 4,
+      "file": "day_004.csv",
+      "sky": "clear",
+      "scenario": {
+        "schema_version": 1,
+        "name": "batch_s7_d004",
+        "date": "2026-07-13",
+        "seed": 700004,
+        "mppt_period": 1.0,
+        "env_dt": 1.0,
+        "margin_s": 300.0,
+        "start_h": null,
+        "end_h": null,
+        "latitude": 14.07,
+        "longitude": 100.6,
+        "tz_hours": 7.0,
+        "weather": {
+          "sky": "clear",
+          "seed": 439092812,
+          "t_min": 24.36,
+          "t_max": 32.43,
+          "linke": null
+        },
+        "shading": "none",
+        "faults": [
+          {
+            "kind": "partial_shading_lvl2",
+            "start_h": 8.42,
+            "end_h": 10.79,
+            "panel_id": "fixed",
+            "params": {}
+          }
+        ],
+        "panels": [
+          {
+            "panel_id": "fixed",
+            "mount": "fixed",
+            "mount_params": {},
+            "algorithm": "po",
+            "mppt_params": {},
+            "datasheet": {},
+            "topology": "buck",
+            "buck": {},
+            "boost": {},
+            "sensor": {},
+            "load": {
+              "mode": "CR",
+              "setpoint": 2.7
+            },
+            "load_profile": null
+          },
+          {
+            "panel_id": "tracker",
+            "mount": "tracker",
+            "mount_params": {},
+            "algorithm": "po",
+            "mppt_params": {},
+            "datasheet": {},
+            "topology": "buck",
+            "buck": {},
+            "boost": {},
+            "sensor": {},
+            "load": {
+              "mode": "CR",
+              "setpoint": 2.7
+            },
+            "load_profile": null
+          }
+        ]
+      },
+      "rows_raw": 94022,
+      "label_counts_raw": {
+        "normal": 85490,
+        "partial_shading_lvl2": 8532
+      },
+      "energy_wh": {
+        "fixed": {
+          "mpp": 251.3568,
+          "pv": 245.5979,
+          "out": 232.4792,
+          "mount": 0.0
+        },
+        "tracker": {
+          "mpp": 353.6235,
+          "pv": 353.4368,
+          "out": 335.9427,
+          "mount": 5.0056
+        }
+      }
+    },
+    {
+      "index": 5,
+      "file": "day_005.csv",
+      "sky": "cloudy",
+      "scenario": {
+        "schema_version": 1,
+        "name": "batch_s7_d005",
+        "date": "2026-07-23",
+        "seed": 700005,
+        "mppt_period": 1.0,
+        "env_dt": 1.0,
+        "margin_s": 300.0,
+        "start_h": null,
+        "end_h": null,
+        "latitude": 14.07,
+        "longitude": 100.6,
+        "tz_hours": 7.0,
+        "weather": {
+          "sky": "cloudy",
+          "seed": 40807559,
+          "t_min": 24.57,
+          "t_max": 32.41,
+          "linke": null
+        },
+        "shading": "none",
+        "faults": [
+          {
+            "kind": "tracker_stuck",
+            "start_h": 12.41,
+            "end_h": 13.65,
+            "panel_id": "tracker",
+            "params": {}
+          }
+        ],
+        "panels": [
+          {
+            "panel_id": "fixed",
+            "mount": "fixed",
+            "mount_params": {},
+            "algorithm": "po",
+            "mppt_params": {},
+            "datasheet": {},
+            "topology": "buck",
+            "buck": {},
+            "boost": {},
+            "sensor": {},
+            "load": {
+              "mode": "CR",
+              "setpoint": 2.82
+            },
+            "load_profile": null
+          },
+          {
+            "panel_id": "tracker",
+            "mount": "tracker",
+            "mount_params": {},
+            "algorithm": "po",
+            "mppt_params": {},
+            "datasheet": {},
+            "topology": "buck",
+            "buck": {},
+            "boost": {},
+            "sensor": {},
+            "load": {
+              "mode": "CR",
+              "setpoint": 2.82
+            },
+            "load_profile": null
+          }
+        ]
+      },
+      "rows_raw": 93524,
+      "label_counts_raw": {
+        "normal": 89060,
+        "tracker_stuck": 4464
+      },
+      "energy_wh": {
+        "fixed": {
+          "mpp": 112.4384,
+          "pv": 104.5808,
+          "out": 96.695,
+          "mount": 0.0
+        },
+        "tracker": {
+          "mpp": 116.0482,
+          "pv": 106.8365,
+          "out": 98.8607,
+          "mount": 5.0133
+        }
+      }
+    },
+    {
+      "index": 6,
+      "file": "day_006.csv",
+      "sky": "partly_cloudy",
+      "scenario": {
+        "schema_version": 1,
+        "name": "batch_s7_d006",
+        "date": "2026-12-01",
+        "seed": 700006,
+        "mppt_period": 1.0,
+        "env_dt": 1.0,
+        "margin_s": 300.0,
+        "start_h": null,
+        "end_h": null,
+        "latitude": 14.07,
+        "longitude": 100.6,
+        "tz_hours": 7.0,
+        "weather": {
+          "sky": "partly_cloudy",
+          "seed": 1041669940,
+          "t_min": 26.21,
+          "t_max": 33.24,
+          "linke": null
+        },
+        "shading": "none",
+        "faults": [
+          {
+            "kind": "open_circuit",
+            "start_h": 10.85,
+            "end_h": 11.44,
+            "panel_id": "fixed",
+            "params": {}
+          },
+          {
+            "kind": "partial_shading_lvl2",
+            "start_h": 8.35,
+            "end_h": 9.17,
+            "panel_id": "fixed",
+            "params": {}
+          }
+        ],
+        "panels": [
+          {
+            "panel_id": "fixed",
+            "mount": "fixed",
+            "mount_params": {},
+            "algorithm": "po",
+            "mppt_params": {},
+            "datasheet": {},
+            "topology": "buck",
+            "buck": {},
+            "boost": {},
+            "sensor": {},
+            "load": {
+              "mode": "CR",
+              "setpoint": 2.83
+            },
+            "load_profile": null
+          },
+          {
+            "panel_id": "tracker",
+            "mount": "tracker",
+            "mount_params": {},
+            "algorithm": "po",
+            "mppt_params": {},
+            "datasheet": {},
+            "topology": "buck",
+            "buck": {},
+            "boost": {},
+            "sensor": {},
+            "load": {
+              "mode": "CR",
+              "setpoint": 2.83
+            },
+            "load_profile": null
+          }
+        ]
+      },
+      "rows_raw": 82970,
+      "label_counts_raw": {
+        "normal": 77894,
+        "open_circuit": 2124,
+        "partial_shading_lvl2": 2952
+      },
+      "energy_wh": {
+        "fixed": {
+          "mpp": 212.7474,
+          "pv": 207.196,
+          "out": 196.2198,
+          "mount": 0.0
+        },
+        "tracker": {
+          "mpp": 291.3701,
+          "pv": 278.1065,
+          "out": 265.2873,
+          "mount": 4.3241
+        }
+      }
+    },
+    {
+      "index": 7,
+      "file": "day_007.csv",
+      "sky": "clear",
+      "scenario": {
+        "schema_version": 1,
+        "name": "batch_s7_d007",
+        "date": "2026-01-24",
+        "seed": 700007,
+        "mppt_period": 1.0,
+        "env_dt": 1.0,
+        "margin_s": 300.0,
+        "start_h": null,
+        "end_h": null,
+        "latitude": 14.07,
+        "longitude": 100.6,
+        "tz_hours": 7.0,
+        "weather": {
+          "sky": "clear",
+          "seed": 361739129,
+          "t_min": 24.26,
+          "t_max": 32.56,
+          "linke": null
+        },
+        "shading": "none",
+        "faults": [
+          {
+            "kind": "soiling",
+            "start_h": 10.66,
+            "end_h": 12.52,
+            "panel_id": "tracker",
+            "params": {}
+          }
+        ],
+        "panels": [
+          {
+            "panel_id": "fixed",
+            "mount": "fixed",
+            "mount_params": {},
+            "algorithm": "po",
+            "mppt_params": {},
+            "datasheet": {},
+            "topology": "buck",
+            "buck": {},
+            "boost": {},
+            "sensor": {},
+            "load": {
+              "mode": "CR",
+              "setpoint": 3.08
+            },
+            "load_profile": null
+          },
+          {
+            "panel_id": "tracker",
+            "mount": "tracker",
+            "mount_params": {},
+            "algorithm": "po",
+            "mppt_params": {},
+            "datasheet": {},
+            "topology": "buck",
+            "buck": {},
+            "boost": {},
+            "sensor": {},
+            "load": {
+              "mode": "CR",
+              "setpoint": 3.08
+            },
+            "load_profile": null
+          }
+        ]
+      },
+      "rows_raw": 83670,
+      "label_counts_raw": {
+        "normal": 76974,
+        "soiling": 6696
+      },
+      "energy_wh": {
+        "fixed": {
+          "mpp": 285.4699,
+          "pv": 285.3546,
+          "out": 272.3924,
+          "mount": 0.0
+        },
+        "tracker": {
+          "mpp": 347.3282,
+          "pv": 344.2587,
+          "out": 330.1132,
+          "mount": 4.3779
+        }
+      }
+    },
+    {
+      "index": 8,
+      "file": "day_008.csv",
+      "sky": "partly_cloudy",
+      "scenario": {
+        "schema_version": 1,
+        "name": "batch_s7_d008",
+        "date": "2026-11-25",
+        "seed": 700008,
+        "mppt_period": 1.0,
+        "env_dt": 1.0,
+        "margin_s": 300.0,
+        "start_h": null,
+        "end_h": null,
+        "latitude": 14.07,
+        "longitude": 100.6,
+        "tz_hours": 7.0,
+        "weather": {
+          "sky": "partly_cloudy",
+          "seed": 1536756875,
+          "t_min": 22.27,
+          "t_max": 30.74,
+          "linke": null
+        },
+        "shading": "none",
+        "faults": [],
+        "panels": [
+          {
+            "panel_id": "fixed",
+            "mount": "fixed",
+            "mount_params": {},
+            "algorithm": "po",
+            "mppt_params": {},
+            "datasheet": {},
+            "topology": "buck",
+            "buck": {},
+            "boost": {},
+            "sensor": {},
+            "load": {
+              "mode": "CR",
+              "setpoint": 2.37
+            },
+            "load_profile": null
+          },
+          {
+            "panel_id": "tracker",
+            "mount": "tracker",
+            "mount_params": {},
+            "algorithm": "po",
+            "mppt_params": {},
+            "datasheet": {},
+            "topology": "buck",
+            "buck": {},
+            "boost": {},
+            "sensor": {},
+            "load": {
+              "mode": "CR",
+              "setpoint": 2.37
+            },
+            "load_profile": null
+          }
+        ]
+      },
+      "rows_raw": 83256,
+      "label_counts_raw": {
+        "normal": 83256
+      },
+      "energy_wh": {
+        "fixed": {
+          "mpp": 235.0341,
+          "pv": 229.6312,
+          "out": 215.3253,
+          "mount": 0.0
+        },
+        "tracker": {
+          "mpp": 287.6761,
+          "pv": 275.6681,
+          "out": 260.3918,
+          "mount": 4.3462
+        }
+      }
+    },
+    {
+      "index": 9,
+      "file": "day_009.csv",
+      "sky": "overcast",
+      "scenario": {
+        "schema_version": 1,
+        "name": "batch_s7_d009",
+        "date": "2026-11-16",
+        "seed": 700009,
+        "mppt_period": 1.0,
+        "env_dt": 1.0,
+        "margin_s": 300.0,
+        "start_h": null,
+        "end_h": null,
+        "latitude": 14.07,
+        "longitude": 100.6,
+        "tz_hours": 7.0,
+        "weather": {
+          "sky": "overcast",
+          "seed": 1661482047,
+          "t_min": 25.96,
+          "t_max": 31.96,
+          "linke": null
+        },
+        "shading": "none",
+        "faults": [
+          {
+            "kind": "partial_shading_lvl2",
+            "start_h": 12.66,
+            "end_h": 14.36,
+            "panel_id": "fixed",
+            "params": {}
+          },
+          {
+            "kind": "partial_shading_lvl3",
+            "start_h": 12.68,
+            "end_h": 14.46,
+            "panel_id": "tracker",
+            "params": {}
+          }
+        ],
+        "panels": [
+          {
+            "panel_id": "fixed",
+            "mount": "fixed",
+            "mount_params": {},
+            "algorithm": "po",
+            "mppt_params": {},
+            "datasheet": {},
+            "topology": "buck",
+            "buck": {},
+            "boost": {},
+            "sensor": {},
+            "load": {
+              "mode": "CR",
+              "setpoint": 2.52
+            },
+            "load_profile": null
+          },
+          {
+            "panel_id": "tracker",
+            "mount": "tracker",
+            "mount_params": {},
+            "algorithm": "po",
+            "mppt_params": {},
+            "datasheet": {},
+            "topology": "buck",
+            "buck": {},
+            "boost": {},
+            "sensor": {},
+            "load": {
+              "mode": "CR",
+              "setpoint": 2.52
+            },
+            "load_profile": null
+          }
+        ]
+      },
+      "rows_raw": 83794,
+      "label_counts_raw": {
+        "normal": 71266,
+        "partial_shading_lvl2": 6120,
+        "partial_shading_lvl3": 6408
+      },
+      "energy_wh": {
+        "fixed": {
+          "mpp": 56.5691,
+          "pv": 56.4019,
+          "out": 50.2222,
+          "mount": 0.0
+        },
+        "tracker": {
+          "mpp": 45.2331,
+          "pv": 44.7688,
+          "out": 39.4412,
+          "mount": 4.3876
+        }
+      }
+    },
+    {
+      "index": 10,
+      "file": "day_010.csv",
+      "sky": "cloudy",
+      "scenario": {
+        "schema_version": 1,
+        "name": "batch_s7_d010",
+        "date": "2026-11-17",
+        "seed": 700010,
+        "mppt_period": 1.0,
+        "env_dt": 1.0,
+        "margin_s": 300.0,
+        "start_h": null,
+        "end_h": null,
+        "latitude": 14.07,
+        "longitude": 100.6,
+        "tz_hours": 7.0,
+        "weather": {
+          "sky": "cloudy",
+          "seed": 1396628615,
+          "t_min": 22.61,
+          "t_max": 28.79,
+          "linke": null
+        },
+        "shading": "none",
+        "faults": [],
+        "panels": [
+          {
+            "panel_id": "fixed",
+            "mount": "fixed",
+            "mount_params": {},
+            "algorithm": "po",
+            "mppt_params": {},
+            "datasheet": {},
+            "topology": "buck",
+            "buck": {},
+            "boost": {},
+            "sensor": {},
+            "load": {
+              "mode": "CR",
+              "setpoint": 3.08
+            },
+            "load_profile": null
+          },
+          {
+            "panel_id": "tracker",
+            "mount": "tracker",
+            "mount_params": {},
+            "algorithm": "po",
+            "mppt_params": {},
+            "datasheet": {},
+            "topology": "buck",
+            "buck": {},
+            "boost": {},
+            "sensor": {},
+            "load": {
+              "mode": "CR",
+              "setpoint": 3.08
+            },
+            "load_profile": null
+          }
+        ]
+      },
+      "rows_raw": 83728,
+      "label_counts_raw": {
+        "normal": 83728
+      },
+      "energy_wh": {
+        "fixed": {
+          "mpp": 104.3294,
+          "pv": 95.1213,
+          "out": 88.5572,
+          "mount": 0.0
+        },
+        "tracker": {
+          "mpp": 105.2051,
+          "pv": 91.7122,
+          "out": 85.9054,
+          "mount": 4.3824
+        }
+      }
+    },
+    {
+      "index": 11,
+      "file": "day_011.csv",
+      "sky": "partly_cloudy",
+      "scenario": {
+        "schema_version": 1,
+        "name": "batch_s7_d011",
+        "date": "2026-12-17",
+        "seed": 700011,
+        "mppt_period": 1.0,
+        "env_dt": 1.0,
+        "margin_s": 300.0,
+        "start_h": null,
+        "end_h": null,
+        "latitude": 14.07,
+        "longitude": 100.6,
+        "tz_hours": 7.0,
+        "weather": {
+          "sky": "partly_cloudy",
+          "seed": 340914710,
+          "t_min": 23.68,
+          "t_max": 30.94,
+          "linke": null
+        },
+        "shading": "none",
+        "faults": [
+          {
+            "kind": "open_circuit",
+            "start_h": 11.59,
+            "end_h": 13.62,
+            "panel_id": "fixed",
+            "params": {}
+          },
+          {
+            "kind": "partial_shading_lvl2",
+            "start_h": 8.79,
+            "end_h": 11.49,
+            "panel_id": "tracker",
+            "params": {}
+          }
+        ],
+        "panels": [
+          {
+            "panel_id": "fixed",
+            "mount": "fixed",
+            "mount_params": {},
+            "algorithm": "po",
+            "mppt_params": {},
+            "datasheet": {},
+            "topology": "buck",
+            "buck": {},
+            "boost": {},
+            "sensor": {},
+            "load": {
+              "mode": "CR",
+              "setpoint": 3.21
+            },
+            "load_profile": null
+          },
+          {
+            "panel_id": "tracker",
+            "mount": "tracker",
+            "mount_params": {},
+            "algorithm": "po",
+            "mppt_params": {},
+            "datasheet": {},
+            "topology": "buck",
+            "buck": {},
+            "boost": {},
+            "sensor": {},
+            "load": {
+              "mode": "CR",
+              "setpoint": 3.21
+            },
+            "load_profile": null
+          }
+        ]
+      },
+      "rows_raw": 82540,
+      "label_counts_raw": {
+        "normal": 65512,
+        "open_circuit": 7308,
+        "partial_shading_lvl2": 9720
+      },
+      "energy_wh": {
+        "fixed": {
+          "mpp": 157.7685,
+          "pv": 150.7915,
+          "out": 143.186,
+          "mount": 0.0
+        },
+        "tracker": {
+          "mpp": 247.551,
+          "pv": 234.3269,
+          "out": 224.9165,
+          "mount": 4.2927
+        }
+      }
+    },
+    {
+      "index": 12,
+      "file": "day_012.csv",
+      "sky": "partly_cloudy",
+      "scenario": {
+        "schema_version": 1,
+        "name": "batch_s7_d012",
+        "date": "2026-12-08",
+        "seed": 700012,
+        "mppt_period": 1.0,
+        "env_dt": 1.0,
+        "margin_s": 300.0,
+        "start_h": null,
+        "end_h": null,
+        "latitude": 14.07,
+        "longitude": 100.6,
+        "tz_hours": 7.0,
+        "weather": {
+          "sky": "partly_cloudy",
+          "seed": 350184930,
+          "t_min": 23.05,
+          "t_max": 32.5,
+          "linke": null
+        },
+        "shading": "none",
+        "faults": [],
+        "panels": [
+          {
+            "panel_id": "fixed",
+            "mount": "fixed",
+            "mount_params": {},
+            "algorithm": "po",
+            "mppt_params": {},
+            "datasheet": {},
+            "topology": "buck",
+            "buck": {},
+            "boost": {},
+            "sensor": {},
+            "load": {
+              "mode": "CR",
+              "setpoint": 3.39
+            },
+            "load_profile": null
+          },
+          {
+            "panel_id": "tracker",
+            "mount": "tracker",
+            "mount_params": {},
+            "algorithm": "po",
+            "mppt_params": {},
+            "datasheet": {},
+            "topology": "buck",
+            "buck": {},
+            "boost": {},
+            "sensor": {},
+            "load": {
+              "mode": "CR",
+              "setpoint": 3.39
+            },
+            "load_profile": null
+          }
+        ]
+      },
+      "rows_raw": 82718,
+      "label_counts_raw": {
+        "normal": 82718
+      },
+      "energy_wh": {
+        "fixed": {
+          "mpp": 223.1414,
+          "pv": 214.3231,
+          "out": 204.6758,
+          "mount": 0.0
+        },
+        "tracker": {
+          "mpp": 272.9335,
+          "pv": 256.4057,
+          "out": 246.5286,
+          "mount": 4.3055
+        }
+      }
+    },
+    {
+      "index": 13,
+      "file": "day_013.csv",
+      "sky": "clear",
+      "scenario": {
+        "schema_version": 1,
+        "name": "batch_s7_d013",
+        "date": "2026-02-06",
+        "seed": 700013,
+        "mppt_period": 1.0,
+        "env_dt": 1.0,
+        "margin_s": 300.0,
+        "start_h": null,
+        "end_h": null,
+        "latitude": 14.07,
+        "longitude": 100.6,
+        "tz_hours": 7.0,
+        "weather": {
+          "sky": "clear",
+          "seed": 788930212,
+          "t_min": 22.67,
+          "t_max": 29.06,
+          "linke": null
+        },
+        "shading": "none",
+        "faults": [
+          {
+            "kind": "tracker_stuck",
+            "start_h": 11.02,
+            "end_h": 11.68,
+            "panel_id": "tracker",
+            "params": {}
+          }
+        ],
+        "panels": [
+          {
+            "panel_id": "fixed",
+            "mount": "fixed",
+            "mount_params": {},
+            "algorithm": "po",
+            "mppt_params": {},
+            "datasheet": {},
+            "topology": "buck",
+            "buck": {},
+            "boost": {},
+            "sensor": {},
+            "load": {
+              "mode": "CR",
+              "setpoint": 3.06
+            },
+            "load_profile": null
+          },
+          {
+            "panel_id": "tracker",
+            "mount": "tracker",
+            "mount_params": {},
+            "algorithm": "po",
+            "mppt_params": {},
+            "datasheet": {},
+            "topology": "buck",
+            "buck": {},
+            "boost": {},
+            "sensor": {},
+            "load": {
+              "mode": "CR",
+              "setpoint": 3.06
+            },
+            "load_profile": null
+          }
+        ]
+      },
+      "rows_raw": 84604,
+      "label_counts_raw": {
+        "normal": 82228,
+        "tracker_stuck": 2376
+      },
+      "energy_wh": {
+        "fixed": {
+          "mpp": 297.7146,
+          "pv": 293.5438,
+          "out": 280.4648,
+          "mount": 0.0
+        },
+        "tracker": {
+          "mpp": 375.4031,
+          "pv": 375.3038,
+          "out": 359.9129,
+          "mount": 4.4519
+        }
+      }
+    },
+    {
+      "index": 14,
+      "file": "day_014.csv",
+      "sky": "partly_cloudy",
+      "scenario": {
+        "schema_version": 1,
+        "name": "batch_s7_d014",
+        "date": "2026-08-12",
+        "seed": 700014,
+        "mppt_period": 1.0,
+        "env_dt": 1.0,
+        "margin_s": 300.0,
+        "start_h": null,
+        "end_h": null,
+        "latitude": 14.07,
+        "longitude": 100.6,
+        "tz_hours": 7.0,
+        "weather": {
+          "sky": "partly_cloudy",
+          "seed": 1167198069,
+          "t_min": 24.75,
+          "t_max": 33.8,
+          "linke": null
+        },
+        "shading": "none",
+        "faults": [
+          {
+            "kind": "partial_shading_lvl1",
+            "start_h": 10.47,
+            "end_h": 11.28,
+            "panel_id": "fixed",
+            "params": {}
+          },
+          {
+            "kind": "sensor_offset",
+            "start_h": 13.63,
+            "end_h": 16.48,
+            "panel_id": "tracker",
+            "params": {}
+          }
+        ],
+        "panels": [
+          {
+            "panel_id": "fixed",
+            "mount": "fixed",
+            "mount_params": {},
+            "algorithm": "po",
+            "mppt_params": {},
+            "datasheet": {},
+            "topology": "buck",
+            "buck": {},
+            "boost": {},
+            "sensor": {},
+            "load": {
+              "mode": "CR",
+              "setpoint": 2.3
+            },
+            "load_profile": null
+          },
+          {
+            "panel_id": "tracker",
+            "mount": "tracker",
+            "mount_params": {},
+            "algorithm": "po",
+            "mppt_params": {},
+            "datasheet": {},
+            "topology": "buck",
+            "buck": {},
+            "boost": {},
+            "sensor": {},
+            "load": {
+              "mode": "CR",
+              "setpoint": 2.3
+            },
+            "load_profile": null
+          }
+        ]
+      },
+      "rows_raw": 92142,
+      "label_counts_raw": {
+        "normal": 78966,
+        "partial_shading_lvl1": 2916,
+        "sensor_offset": 10260
+      },
+      "energy_wh": {
+        "fixed": {
+          "mpp": 242.984,
+          "pv": 238.4085,
+          "out": 222.7651,
+          "mount": 0.0
+        },
+        "tracker": {
+          "mpp": 302.2006,
+          "pv": 293.6589,
+          "out": 276.1713,
+          "mount": 5.0775
+        }
+      }
+    },
+    {
+      "index": 15,
+      "file": "day_015.csv",
+      "sky": "clear",
+      "scenario": {
+        "schema_version": 1,
+        "name": "batch_s7_d015",
+        "date": "2026-12-08",
+        "seed": 700015,
+        "mppt_period": 1.0,
+        "env_dt": 1.0,
+        "margin_s": 300.0,
+        "start_h": null,
+        "end_h": null,
+        "latitude": 14.07,
+        "longitude": 100.6,
+        "tz_hours": 7.0,
+        "weather": {
+          "sky": "clear",
+          "seed": 1335526271,
+          "t_min": 26.27,
+          "t_max": 33.65,
+          "linke": null
+        },
+        "shading": "none",
+        "faults": [],
+        "panels": [
+          {
+            "panel_id": "fixed",
+            "mount": "fixed",
+            "mount_params": {},
+            "algorithm": "po",
+            "mppt_params": {},
+            "datasheet": {},
+            "topology": "buck",
+            "buck": {},
+            "boost": {},
+            "sensor": {},
+            "load": {
+              "mode": "CR",
+              "setpoint": 3.57
+            },
+            "load_profile": null
+          },
+          {
+            "panel_id": "tracker",
+            "mount": "tracker",
+            "mount_params": {},
+            "algorithm": "po",
+            "mppt_params": {},
+            "datasheet": {},
+            "topology": "buck",
+            "buck": {},
+            "boost": {},
+            "sensor": {},
+            "load": {
+              "mode": "CR",
+              "setpoint": 3.57
+            },
+            "load_profile": null
+          }
+        ]
+      },
+      "rows_raw": 82718,
+      "label_counts_raw": {
+        "normal": 82718
+      },
+      "energy_wh": {
+        "fixed": {
+          "mpp": 266.2269,
+          "pv": 264.9767,
+          "out": 254.5073,
+          "mount": 0.0
+        },
+        "tracker": {
+          "mpp": 339.8946,
+          "pv": 339.7632,
+          "out": 327.8315,
+          "mount": 4.3055
+        }
+      }
+    },
+    {
+      "index": 16,
+      "file": "day_016.csv",
+      "sky": "clear",
+      "scenario": {
+        "schema_version": 1,
+        "name": "batch_s7_d016",
+        "date": "2026-07-28",
+        "seed": 700016,
+        "mppt_period": 1.0,
+        "env_dt": 1.0,
+        "margin_s": 300.0,
+        "start_h": null,
+        "end_h": null,
+        "latitude": 14.07,
+        "longitude": 100.6,
+        "tz_hours": 7.0,
+        "weather": {
+          "sky": "clear",
+          "seed": 1345294397,
+          "t_min": 26.25,
+          "t_max": 35.43,
+          "linke": null
+        },
+        "shading": "none",
+        "faults": [],
+        "panels": [
+          {
+            "panel_id": "fixed",
+            "mount": "fixed",
+            "mount_params": {},
+            "algorithm": "po",
+            "mppt_params": {},
+            "datasheet": {},
+            "topology": "buck",
+            "buck": {},
+            "boost": {},
+            "sensor": {},
+            "load": {
+              "mode": "CR",
+              "setpoint": 3.35
+            },
+            "load_profile": null
+          },
+          {
+            "panel_id": "tracker",
+            "mount": "tracker",
+            "mount_params": {},
+            "algorithm": "po",
+            "mppt_params": {},
+            "datasheet": {},
+            "topology": "buck",
+            "buck": {},
+            "boost": {},
+            "sensor": {},
+            "load": {
+              "mode": "CR",
+              "setpoint": 3.35
+            },
+            "load_profile": null
+          }
+        ]
+      },
+      "rows_raw": 93222,
+      "label_counts_raw": {
+        "normal": 93222
+      },
+      "energy_wh": {
+        "fixed": {
+          "mpp": 274.1432,
+          "pv": 273.4995,
+          "out": 261.4636,
+          "mount": 0.0
+        },
+        "tracker": {
+          "mpp": 347.5091,
+          "pv": 346.2361,
+          "out": 332.6917,
+          "mount": 5.0211
+        }
+      }
+    },
+    {
+      "index": 17,
+      "file": "day_017.csv",
+      "sky": "partly_cloudy",
+      "scenario": {
+        "schema_version": 1,
+        "name": "batch_s7_d017",
+        "date": "2026-03-30",
+        "seed": 700017,
+        "mppt_period": 1.0,
+        "env_dt": 1.0,
+        "margin_s": 300.0,
+        "start_h": null,
+        "end_h": null,
+        "latitude": 14.07,
+        "longitude": 100.6,
+        "tz_hours": 7.0,
+        "weather": {
+          "sky": "partly_cloudy",
+          "seed": 1592456965,
+          "t_min": 25.01,
+          "t_max": 33.17,
+          "linke": null
+        },
+        "shading": "none",
+        "faults": [],
+        "panels": [
+          {
+            "panel_id": "fixed",
+            "mount": "fixed",
+            "mount_params": {},
+            "algorithm": "po",
+            "mppt_params": {},
+            "datasheet": {},
+            "topology": "buck",
+            "buck": {},
+            "boost": {},
+            "sensor": {},
+            "load": {
+              "mode": "CR",
+              "setpoint": 3.8
+            },
+            "load_profile": null
+          },
+          {
+            "panel_id": "tracker",
+            "mount": "tracker",
+            "mount_params": {},
+            "algorithm": "po",
+            "mppt_params": {},
+            "datasheet": {},
+            "topology": "buck",
+            "buck": {},
+            "boost": {},
+            "sensor": {},
+            "load": {
+              "mode": "CR",
+              "setpoint": 3.8
+            },
+            "load_profile": null
+          }
+        ]
+      },
+      "rows_raw": 89338,
+      "label_counts_raw": {
+        "normal": 89338
+      },
+      "energy_wh": {
+        "fixed": {
+          "mpp": 269.289,
+          "pv": 261.6018,
+          "out": 251.7406,
+          "mount": 0.0
+        },
+        "tracker": {
+          "mpp": 322.3316,
+          "pv": 310.6782,
+          "out": 300.1341,
+          "mount": 4.8452
+        }
+      }
+    },
+    {
+      "index": 18,
+      "file": "day_018.csv",
+      "sky": "partly_cloudy",
+      "scenario": {
+        "schema_version": 1,
+        "name": "batch_s7_d018",
+        "date": "2026-09-11",
+        "seed": 700018,
+        "mppt_period": 1.0,
+        "env_dt": 1.0,
+        "margin_s": 300.0,
+        "start_h": null,
+        "end_h": null,
+        "latitude": 14.07,
+        "longitude": 100.6,
+        "tz_hours": 7.0,
+        "weather": {
+          "sky": "partly_cloudy",
+          "seed": 1858898172,
+          "t_min": 22.57,
+          "t_max": 29.57,
+          "linke": null
+        },
+        "shading": "none",
+        "faults": [
+          {
+            "kind": "sensor_offset",
+            "start_h": 10.97,
+            "end_h": 12.57,
+            "panel_id": "fixed",
+            "params": {}
+          }
+        ],
+        "panels": [
+          {
+            "panel_id": "fixed",
+            "mount": "fixed",
+            "mount_params": {},
+            "algorithm": "po",
+            "mppt_params": {},
+            "datasheet": {},
+            "topology": "buck",
+            "buck": {},
+            "boost": {},
+            "sensor": {},
+            "load": {
+              "mode": "CR",
+              "setpoint": 3.4
+            },
+            "load_profile": null
+          },
+          {
+            "panel_id": "tracker",
+            "mount": "tracker",
+            "mount_params": {},
+            "algorithm": "po",
+            "mppt_params": {},
+            "datasheet": {},
+            "topology": "buck",
+            "buck": {},
+            "boost": {},
+            "sensor": {},
+            "load": {
+              "mode": "CR",
+              "setpoint": 3.4
+            },
+            "load_profile": null
+          }
+        ]
+      },
+      "rows_raw": 89524,
+      "label_counts_raw": {
+        "normal": 83764,
+        "sensor_offset": 5760
+      },
+      "energy_wh": {
+        "fixed": {
+          "mpp": 248.616,
+          "pv": 241.0714,
+          "out": 230.3748,
+          "mount": 0.0
+        },
+        "tracker": {
+          "mpp": 292.7708,
+          "pv": 282.8414,
+          "out": 271.2386,
+          "mount": 4.8602
+        }
+      }
+    },
+    {
+      "index": 19,
+      "file": "day_019.csv",
+      "sky": "clear",
+      "scenario": {
+        "schema_version": 1,
+        "name": "batch_s7_d019",
+        "date": "2026-05-18",
+        "seed": 700019,
+        "mppt_period": 1.0,
+        "env_dt": 1.0,
+        "margin_s": 300.0,
+        "start_h": null,
+        "end_h": null,
+        "latitude": 14.07,
+        "longitude": 100.6,
+        "tz_hours": 7.0,
+        "weather": {
+          "sky": "clear",
+          "seed": 1964445298,
+          "t_min": 24.28,
+          "t_max": 32.76,
+          "linke": null
+        },
+        "shading": "none",
+        "faults": [
+          {
+            "kind": "sensor_offset",
+            "start_h": 12.0,
+            "end_h": 13.58,
+            "panel_id": "tracker",
+            "params": {}
+          }
+        ],
+        "panels": [
+          {
+            "panel_id": "fixed",
+            "mount": "fixed",
+            "mount_params": {},
+            "algorithm": "po",
+            "mppt_params": {},
+            "datasheet": {},
+            "topology": "buck",
+            "buck": {},
+            "boost": {},
+            "sensor": {},
+            "load": {
+              "mode": "CR",
+              "setpoint": 3.19
+            },
+            "load_profile": null
+          },
+          {
+            "panel_id": "tracker",
+            "mount": "tracker",
+            "mount_params": {},
+            "algorithm": "po",
+            "mppt_params": {},
+            "datasheet": {},
+            "topology": "buck",
+            "buck": {},
+            "boost": {},
+            "sensor": {},
+            "load": {
+              "mode": "CR",
+              "setpoint": 3.19
+            },
+            "load_profile": null
+          }
+        ]
+      },
+      "rows_raw": 93384,
+      "label_counts_raw": {
+        "normal": 87696,
+        "sensor_offset": 5688
+      },
+      "energy_wh": {
+        "fixed": {
+          "mpp": 282.2965,
+          "pv": 281.9128,
+          "out": 268.9277,
+          "mount": 0.0
+        },
+        "tracker": {
+          "mpp": 362.6344,
+          "pv": 362.5339,
+          "out": 347.5938,
+          "mount": 5.0166
+        }
+      }
+    },
+    {
+      "index": 20,
+      "file": "day_020.csv",
+      "sky": "overcast",
+      "scenario": {
+        "schema_version": 1,
+        "name": "batch_s7_d020",
+        "date": "2026-12-18",
+        "seed": 700020,
+        "mppt_period": 1.0,
+        "env_dt": 1.0,
+        "margin_s": 300.0,
+        "start_h": null,
+        "end_h": null,
+        "latitude": 14.07,
+        "longitude": 100.6,
+        "tz_hours": 7.0,
+        "weather": {
+          "sky": "overcast",
+          "seed": 1129362203,
+          "t_min": 24.81,
+          "t_max": 33.83,
+          "linke": null
+        },
+        "shading": "none",
+        "faults": [
+          {
+            "kind": "bypass_diode_short",
+            "start_h": 12.36,
+            "end_h": 13.66,
+            "panel_id": "fixed",
+            "params": {}
+          },
+          {
+            "kind": "bypass_diode_short",
+            "start_h": 9.48,
+            "end_h": 10.23,
+            "panel_id": "tracker",
+            "params": {}
+          }
+        ],
+        "panels": [
+          {
+            "panel_id": "fixed",
+            "mount": "fixed",
+            "mount_params": {},
+            "algorithm": "po",
+            "mppt_params": {},
+            "datasheet": {},
+            "topology": "buck",
+            "buck": {},
+            "boost": {},
+            "sensor": {},
+            "load": {
+              "mode": "CR",
+              "setpoint": 3.49
+            },
+            "load_profile": null
+          },
+          {
+            "panel_id": "tracker",
+            "mount": "tracker",
+            "mount_params": {},
+            "algorithm": "po",
+            "mppt_params": {},
+            "datasheet": {},
+            "topology": "buck",
+            "buck": {},
+            "boost": {},
+            "sensor": {},
+            "load": {
+              "mode": "CR",
+              "setpoint": 3.49
+            },
+            "load_profile": null
+          }
+        ]
+      },
+      "rows_raw": 82530,
+      "label_counts_raw": {
+        "bypass_diode_short": 7380,
+        "normal": 75150
+      },
+      "energy_wh": {
+        "fixed": {
+          "mpp": 49.6648,
+          "pv": 49.58,
+          "out": 44.8828,
+          "mount": 0.0
+        },
+        "tracker": {
+          "mpp": 44.7779,
+          "pv": 44.6969,
+          "out": 40.2531,
+          "mount": 4.292
+        }
+      }
+    },
+    {
+      "index": 21,
+      "file": "day_021.csv",
+      "sky": "overcast",
+      "scenario": {
+        "schema_version": 1,
+        "name": "batch_s7_d021",
+        "date": "2026-09-09",
+        "seed": 700021,
+        "mppt_period": 1.0,
+        "env_dt": 1.0,
+        "margin_s": 300.0,
+        "start_h": null,
+        "end_h": null,
+        "latitude": 14.07,
+        "longitude": 100.6,
+        "tz_hours": 7.0,
+        "weather": {
+          "sky": "overcast",
+          "seed": 45174117,
+          "t_min": 24.37,
+          "t_max": 34.05,
+          "linke": null
+        },
+        "shading": "none",
+        "faults": [
+          {
+            "kind": "partial_shading_lvl2",
+            "start_h": 10.49,
+            "end_h": 12.37,
+            "panel_id": "fixed",
+            "params": {}
+          }
+        ],
+        "panels": [
+          {
+            "panel_id": "fixed",
+            "mount": "fixed",
+            "mount_params": {},
+            "algorithm": "po",
+            "mppt_params": {},
+            "datasheet": {},
+            "topology": "buck",
+            "buck": {},
+            "boost": {},
+            "sensor": {},
+            "load": {
+              "mode": "CR",
+              "setpoint": 2.82
+            },
+            "load_profile": null
+          },
+          {
+            "panel_id": "tracker",
+            "mount": "tracker",
+            "mount_params": {},
+            "algorithm": "po",
+            "mppt_params": {},
+            "datasheet": {},
+            "topology": "buck",
+            "buck": {},
+            "boost": {},
+            "sensor": {},
+            "load": {
+              "mode": "CR",
+              "setpoint": 2.82
+            },
+            "load_profile": null
+          }
+        ]
+      },
+      "rows_raw": 89710,
+      "label_counts_raw": {
+        "normal": 82942,
+        "partial_shading_lvl2": 6768
+      },
+      "energy_wh": {
+        "fixed": {
+          "mpp": 61.0802,
+          "pv": 60.8863,
+          "out": 54.7039,
+          "mount": 0.0
+        },
+        "tracker": {
+          "mpp": 62.3433,
+          "pv": 60.4735,
+          "out": 54.4885,
+          "mount": 4.8748
+        }
+      }
+    },
+    {
+      "index": 22,
+      "file": "day_022.csv",
+      "sky": "clear",
+      "scenario": {
+        "schema_version": 1,
+        "name": "batch_s7_d022",
+        "date": "2026-06-02",
+        "seed": 700022,
+        "mppt_period": 1.0,
+        "env_dt": 1.0,
+        "margin_s": 300.0,
+        "start_h": null,
+        "end_h": null,
+        "latitude": 14.07,
+        "longitude": 100.6,
+        "tz_hours": 7.0,
+        "weather": {
+          "sky": "clear",
+          "seed": 1464702609,
+          "t_min": 24.66,
+          "t_max": 34.24,
+          "linke": null
+        },
+        "shading": "none",
+        "faults": [
+          {
+            "kind": "bypass_diode_short",
+            "start_h": 8.85,
+            "end_h": 11.28,
+            "panel_id": "fixed",
+            "params": {}
+          },
+          {
+            "kind": "tracker_stuck",
+            "start_h": 11.57,
+            "end_h": 13.16,
+            "panel_id": "tracker",
+            "params": {}
+          }
+        ],
+        "panels": [
+          {
+            "panel_id": "fixed",
+            "mount": "fixed",
+            "mount_params": {},
+            "algorithm": "po",
+            "mppt_params": {},
+            "datasheet": {},
+            "topology": "buck",
+            "buck": {},
+            "boost": {},
+            "sensor": {},
+            "load": {
+              "mode": "CR",
+              "setpoint": 3.67
+            },
+            "load_profile": null
+          },
+          {
+            "panel_id": "tracker",
+            "mount": "tracker",
+            "mount_params": {},
+            "algorithm": "po",
+            "mppt_params": {},
+            "datasheet": {},
+            "topology": "buck",
+            "buck": {},
+            "boost": {},
+            "sensor": {},
+            "load": {
+              "mode": "CR",
+              "setpoint": 3.67
+            },
+            "load_profile": null
+          }
+        ]
+      },
+      "rows_raw": 94130,
+      "label_counts_raw": {
+        "bypass_diode_short": 8748,
+        "normal": 79658,
+        "tracker_stuck": 5724
+      },
+      "energy_wh": {
+        "fixed": {
+          "mpp": 249.9196,
+          "pv": 249.6459,
+          "out": 239.6712,
+          "mount": 0.0
+        },
+        "tracker": {
+          "mpp": 355.5197,
+          "pv": 353.7626,
+          "out": 341.3144,
+          "mount": 5.0037
+        }
+      }
+    },
+    {
+      "index": 23,
+      "file": "day_023.csv",
+      "sky": "cloudy",
+      "scenario": {
+        "schema_version": 1,
+        "name": "batch_s7_d023",
+        "date": "2026-01-16",
+        "seed": 700023,
+        "mppt_period": 1.0,
+        "env_dt": 1.0,
+        "margin_s": 300.0,
+        "start_h": null,
+        "end_h": null,
+        "latitude": 14.07,
+        "longitude": 100.6,
+        "tz_hours": 7.0,
+        "weather": {
+          "sky": "cloudy",
+          "seed": 900947332,
+          "t_min": 23.37,
+          "t_max": 33.36,
+          "linke": null
+        },
+        "shading": "none",
+        "faults": [],
+        "panels": [
+          {
+            "panel_id": "fixed",
+            "mount": "fixed",
+            "mount_params": {},
+            "algorithm": "po",
+            "mppt_params": {},
+            "datasheet": {},
+            "topology": "buck",
+            "buck": {},
+            "boost": {},
+            "sensor": {},
+            "load": {
+              "mode": "CR",
+              "setpoint": 2.28
+            },
+            "load_profile": null
+          },
+          {
+            "panel_id": "tracker",
+            "mount": "tracker",
+            "mount_params": {},
+            "algorithm": "po",
+            "mppt_params": {},
+            "datasheet": {},
+            "topology": "buck",
+            "buck": {},
+            "boost": {},
+            "sensor": {},
+            "load": {
+              "mode": "CR",
+              "setpoint": 2.28
+            },
+            "load_profile": null
+          }
+        ]
+      },
+      "rows_raw": 83206,
+      "label_counts_raw": {
+        "normal": 83206
+      },
+      "energy_wh": {
+        "fixed": {
+          "mpp": 108.7214,
+          "pv": 104.9539,
+          "out": 95.8427,
+          "mount": 0.0
+        },
+        "tracker": {
+          "mpp": 111.0998,
+          "pv": 95.7863,
+          "out": 88.0156,
+          "mount": 4.3431
+        }
+      }
+    },
+    {
+      "index": 24,
+      "file": "day_024.csv",
+      "sky": "cloudy",
+      "scenario": {
+        "schema_version": 1,
+        "name": "batch_s7_d024",
+        "date": "2026-02-14",
+        "seed": 700024,
+        "mppt_period": 1.0,
+        "env_dt": 1.0,
+        "margin_s": 300.0,
+        "start_h": null,
+        "end_h": null,
+        "latitude": 14.07,
+        "longitude": 100.6,
+        "tz_hours": 7.0,
+        "weather": {
+          "sky": "cloudy",
+          "seed": 1922387028,
+          "t_min": 22.14,
+          "t_max": 30.52,
+          "linke": null
+        },
+        "shading": "none",
+        "faults": [
+          {
+            "kind": "partial_shading_lvl1",
+            "start_h": 13.5,
+            "end_h": 15.43,
+            "panel_id": "fixed",
+            "params": {}
+          },
+          {
+            "kind": "tracker_stuck",
+            "start_h": 14.41,
+            "end_h": 17.22,
+            "panel_id": "tracker",
+            "params": {}
+          }
+        ],
+        "panels": [
+          {
+            "panel_id": "fixed",
+            "mount": "fixed",
+            "mount_params": {},
+            "algorithm": "po",
+            "mppt_params": {},
+            "datasheet": {},
+            "topology": "buck",
+            "buck": {},
+            "boost": {},
+            "sensor": {},
+            "load": {
+              "mode": "CR",
+              "setpoint": 3.09
+            },
+            "load_profile": null
+          },
+          {
+            "panel_id": "tracker",
+            "mount": "tracker",
+            "mount_params": {},
+            "algorithm": "po",
+            "mppt_params": {},
+            "datasheet": {},
+            "topology": "buck",
+            "buck": {},
+            "boost": {},
+            "sensor": {},
+            "load": {
+              "mode": "CR",
+              "setpoint": 3.09
+            },
+            "load_profile": null
+          }
+        ]
+      },
+      "rows_raw": 85262,
+      "label_counts_raw": {
+        "normal": 68198,
+        "partial_shading_lvl1": 6948,
+        "tracker_stuck": 10116
+      },
+      "energy_wh": {
+        "fixed": {
+          "mpp": 110.3479,
+          "pv": 91.5552,
+          "out": 85.672,
+          "mount": 0.0
+        },
+        "tracker": {
+          "mpp": 116.3116,
+          "pv": 103.1311,
+          "out": 96.4699,
+          "mount": 4.5007
+        }
+      }
+    },
+    {
+      "index": 25,
+      "file": "day_025.csv",
+      "sky": "clear",
+      "scenario": {
+        "schema_version": 1,
+        "name": "batch_s7_d025",
+        "date": "2026-03-14",
+        "seed": 700025,
+        "mppt_period": 1.0,
+        "env_dt": 1.0,
+        "margin_s": 300.0,
+        "start_h": null,
+        "end_h": null,
+        "latitude": 14.07,
+        "longitude": 100.6,
+        "tz_hours": 7.0,
+        "weather": {
+          "sky": "clear",
+          "seed": 314668779,
+          "t_min": 22.18,
+          "t_max": 31.97,
+          "linke": null
+        },
+        "shading": "none",
+        "faults": [],
+        "panels": [
+          {
+            "panel_id": "fixed",
+            "mount": "fixed",
+            "mount_params": {},
+            "algorithm": "po",
+            "mppt_params": {},
+            "datasheet": {},
+            "topology": "buck",
+            "buck": {},
+            "boost": {},
+            "sensor": {},
+            "load": {
+              "mode": "CR",
+              "setpoint": 3.51
+            },
+            "load_profile": null
+          },
+          {
+            "panel_id": "tracker",
+            "mount": "tracker",
+            "mount_params": {},
+            "algorithm": "po",
+            "mppt_params": {},
+            "datasheet": {},
+            "topology": "buck",
+            "buck": {},
+            "boost": {},
+            "sensor": {},
+            "load": {
+              "mode": "CR",
+              "setpoint": 3.51
+            },
+            "load_profile": null
+          }
+        ]
+      },
+      "rows_raw": 87818,
+      "label_counts_raw": {
+        "normal": 87818
+      },
+      "energy_wh": {
+        "fixed": {
+          "mpp": 304.1847,
+          "pv": 304.0908,
+          "out": 292.1445,
+          "mount": 0.0
+        },
+        "tracker": {
+          "mpp": 372.4893,
+          "pv": 371.4299,
+          "out": 358.297,
+          "mount": 4.7207
+        }
+      }
+    },
+    {
+      "index": 26,
+      "file": "day_026.csv",
+      "sky": "partly_cloudy",
+      "scenario": {
+        "schema_version": 1,
+        "name": "batch_s7_d026",
+        "date": "2026-12-16",
+        "seed": 700026,
+        "mppt_period": 1.0,
+        "env_dt": 1.0,
+        "margin_s": 300.0,
+        "start_h": null,
+        "end_h": null,
+        "latitude": 14.07,
+        "longitude": 100.6,
+        "tz_hours": 7.0,
+        "weather": {
+          "sky": "partly_cloudy",
+          "seed": 1173257361,
+          "t_min": 25.55,
+          "t_max": 35.17,
+          "linke": null
+        },
+        "shading": "none",
+        "faults": [],
+        "panels": [
+          {
+            "panel_id": "fixed",
+            "mount": "fixed",
+            "mount_params": {},
+            "algorithm": "po",
+            "mppt_params": {},
+            "datasheet": {},
+            "topology": "buck",
+            "buck": {},
+            "boost": {},
+            "sensor": {},
+            "load": {
+              "mode": "CR",
+              "setpoint": 2.51
+            },
+            "load_profile": null
+          },
+          {
+            "panel_id": "tracker",
+            "mount": "tracker",
+            "mount_params": {},
+            "algorithm": "po",
+            "mppt_params": {},
+            "datasheet": {},
+            "topology": "buck",
+            "buck": {},
+            "boost": {},
+            "sensor": {},
+            "load": {
+              "mode": "CR",
+              "setpoint": 2.51
+            },
+            "load_profile": null
+          }
+        ]
+      },
+      "rows_raw": 82550,
+      "label_counts_raw": {
+        "normal": 82550
+      },
+      "energy_wh": {
+        "fixed": {
+          "mpp": 224.6617,
+          "pv": 218.7642,
+          "out": 205.7222,
+          "mount": 0.0
+        },
+        "tracker": {
+          "mpp": 275.3435,
+          "pv": 260.7628,
+          "out": 247.0847,
+          "mount": 4.2934
+        }
+      }
+    },
+    {
+      "index": 27,
+      "file": "day_027.csv",
+      "sky": "overcast",
+      "scenario": {
+        "schema_version": 1,
+        "name": "batch_s7_d027",
+        "date": "2026-04-17",
+        "seed": 700027,
+        "mppt_period": 1.0,
+        "env_dt": 1.0,
+        "margin_s": 300.0,
+        "start_h": null,
+        "end_h": null,
+        "latitude": 14.07,
+        "longitude": 100.6,
+        "tz_hours": 7.0,
+        "weather": {
+          "sky": "overcast",
+          "seed": 395836955,
+          "t_min": 22.64,
+          "t_max": 30.92,
+          "linke": null
+        },
+        "shading": "none",
+        "faults": [
+          {
+            "kind": "open_circuit",
+            "start_h": 14.82,
+            "end_h": 15.98,
+            "panel_id": "tracker",
+            "params": {}
+          }
+        ],
+        "panels": [
+          {
+            "panel_id": "fixed",
+            "mount": "fixed",
+            "mount_params": {},
+            "algorithm": "po",
+            "mppt_params": {},
+            "datasheet": {},
+            "topology": "buck",
+            "buck": {},
+            "boost": {},
+            "sensor": {},
+            "load": {
+              "mode": "CR",
+              "setpoint": 3.74
+            },
+            "load_profile": null
+          },
+          {
+            "panel_id": "tracker",
+            "mount": "tracker",
+            "mount_params": {},
+            "algorithm": "po",
+            "mppt_params": {},
+            "datasheet": {},
+            "topology": "buck",
+            "buck": {},
+            "boost": {},
+            "sensor": {},
+            "load": {
+              "mode": "CR",
+              "setpoint": 3.74
+            },
+            "load_profile": null
+          }
+        ]
+      },
+      "rows_raw": 90992,
+      "label_counts_raw": {
+        "normal": 86816,
+        "open_circuit": 4176
+      },
+      "energy_wh": {
+        "fixed": {
+          "mpp": 76.9762,
+          "pv": 76.8846,
+          "out": 70.9173,
+          "mount": 0.0
+        },
+        "tracker": {
+          "mpp": 66.4664,
+          "pv": 66.3665,
+          "out": 61.2071,
+          "mount": 4.9871
+        }
+      }
+    },
+    {
+      "index": 28,
+      "file": "day_028.csv",
+      "sky": "clear",
+      "scenario": {
+        "schema_version": 1,
+        "name": "batch_s7_d028",
+        "date": "2026-03-24",
+        "seed": 700028,
+        "mppt_period": 1.0,
+        "env_dt": 1.0,
+        "margin_s": 300.0,
+        "start_h": null,
+        "end_h": null,
+        "latitude": 14.07,
+        "longitude": 100.6,
+        "tz_hours": 7.0,
+        "weather": {
+          "sky": "clear",
+          "seed": 997984060,
+          "t_min": 24.8,
+          "t_max": 33.88,
+          "linke": null
+        },
+        "shading": "none",
+        "faults": [
+          {
+            "kind": "sensor_offset",
+            "start_h": 14.97,
+            "end_h": 16.05,
+            "panel_id": "fixed",
+            "params": {}
+          }
+        ],
+        "panels": [
+          {
+            "panel_id": "fixed",
+            "mount": "fixed",
+            "mount_params": {},
+            "algorithm": "po",
+            "mppt_params": {},
+            "datasheet": {},
+            "topology": "buck",
+            "buck": {},
+            "boost": {},
+            "sensor": {},
+            "load": {
+              "mode": "CR",
+              "setpoint": 2.27
+            },
+            "load_profile": null
+          },
+          {
+            "panel_id": "tracker",
+            "mount": "tracker",
+            "mount_params": {},
+            "algorithm": "po",
+            "mppt_params": {},
+            "datasheet": {},
+            "topology": "buck",
+            "buck": {},
+            "boost": {},
+            "sensor": {},
+            "load": {
+              "mode": "CR",
+              "setpoint": 2.27
+            },
+            "load_profile": null
+          }
+        ]
+      },
+      "rows_raw": 88770,
+      "label_counts_raw": {
+        "normal": 84882,
+        "sensor_offset": 3888
+      },
+      "energy_wh": {
+        "fixed": {
+          "mpp": 301.0116,
+          "pv": 300.8848,
+          "out": 282.6525,
+          "mount": 0.0
+        },
+        "tracker": {
+          "mpp": 368.5159,
+          "pv": 368.3185,
+          "out": 347.5676,
+          "mount": 4.8027
+        }
+      }
+    },
+    {
+      "index": 29,
+      "file": "day_029.csv",
+      "sky": "cloudy",
+      "scenario": {
+        "schema_version": 1,
+        "name": "batch_s7_d029",
+        "date": "2026-12-23",
+        "seed": 700029,
+        "mppt_period": 1.0,
+        "env_dt": 1.0,
+        "margin_s": 300.0,
+        "start_h": null,
+        "end_h": null,
+        "latitude": 14.07,
+        "longitude": 100.6,
+        "tz_hours": 7.0,
+        "weather": {
+          "sky": "cloudy",
+          "seed": 316760013,
+          "t_min": 22.88,
+          "t_max": 32.21,
+          "linke": null
+        },
+        "shading": "none",
+        "faults": [
+          {
+            "kind": "soiling",
+            "start_h": 10.75,
+            "end_h": 11.72,
+            "panel_id": "tracker",
+            "params": {}
+          }
+        ],
+        "panels": [
+          {
+            "panel_id": "fixed",
+            "mount": "fixed",
+            "mount_params": {},
+            "algorithm": "po",
+            "mppt_params": {},
+            "datasheet": {},
+            "topology": "buck",
+            "buck": {},
+            "boost": {},
+            "sensor": {},
+            "load": {
+              "mode": "CR",
+              "setpoint": 3.11
+            },
+            "load_profile": null
+          },
+          {
+            "panel_id": "tracker",
+            "mount": "tracker",
+            "mount_params": {},
+            "algorithm": "po",
+            "mppt_params": {},
+            "datasheet": {},
+            "topology": "buck",
+            "buck": {},
+            "boost": {},
+            "sensor": {},
+            "load": {
+              "mode": "CR",
+              "setpoint": 3.11
+            },
+            "load_profile": null
+          }
+        ]
+      },
+      "rows_raw": 82518,
+      "label_counts_raw": {
+        "normal": 79026,
+        "soiling": 3492
+      },
+      "energy_wh": {
+        "fixed": {
+          "mpp": 97.7272,
+          "pv": 89.1884,
+          "out": 82.9886,
+          "mount": 0.0
+        },
+        "tracker": {
+          "mpp": 95.108,
+          "pv": 83.6955,
+          "out": 77.9941,
+          "mount": 4.2912
+        }
+      }
+    }
+  ]
+}

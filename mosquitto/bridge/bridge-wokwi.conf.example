@@ -1,0 +1,20 @@
+# Bridge to a public broker so ESP32 boards simulated in Wokwi (free plan: internet only)
+# can reach the simulated Pi.  Enable: copy this file to bridge-wokwi.conf in the same
+# folder, set the same TOPIC_PREFIX as wokwi/*/config.h, then: docker compose restart mosquitto
+#
+#   Wokwi ESP32 --> broker.hivemq.com  <topic prefix>solar/...  --(this bridge)--> local solar/...
+#
+# Telemetry and status come IN; commands from Node-RED go OUT.  Anyone who knows the prefix
+# can read/publish on a public broker: use it only for simulated data.
+connection wokwi-public
+address broker.hivemq.com:1883
+clientid solar-pi-bridge-CHANGE-ME
+cleansession true
+try_private false
+start_type automatic
+restart_timeout 5 30
+keepalive_interval 30
+
+topic solar/+/telemetry in 1 "" tu-solar-CHANGE-ME/
+topic solar/+/status in 1 "" tu-solar-CHANGE-ME/
+topic solar/cmd out 1 "" tu-solar-CHANGE-ME/

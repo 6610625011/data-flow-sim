@@ -1,0 +1,179 @@
+# Simulated Raspberry Pi server + virtual ESP32 boards (Chapter 2.7 design)
+#
+#   docker compose up -d --build        start everything
+#   docker compose logs -f esp32-sim    watch the virtual boards
+#   docker compose down                 stop (data is kept in docker volumes)
+#
+# Every value below can be overridden in a .env file next to this one (see .env.example).
+# On the real Raspberry Pi (64-bit OS) start only the server part:
+#   docker compose up -d mosquitto influxdb influx-init nodered
+name: solar-sim
+
+services:
+  # ------------------------------------------------------------- MQTT broker
+  mosquitto:
+    image: eclipse-mosquitto:2.1.2-alpine
+    restart: unless-stopped
+    entrypoint: ["sh", "/start.sh"]
+    environment:
+      MQTT_USER: ${MQTT_USER:-esp32}
+      MQTT_PASSWORD: ${MQTT_PASSWORD:-esp32-sim-2026}
+    ports:
+      - "1883:1883"            # ESP32 / Wokwi bridge / MQTT Explorer (username + password)
+    volumes:
+      - ./mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf:ro
+      - ./mosquitto/start.sh:/start.sh:ro
+      - ./mosquitto/bridge:/mosquitto/bridge:ro
+      - mosquitto-data:/mosquitto/data
+
+  # ------------------------------------------------------ time-series database
+  influxdb:
+    image: influxdb:2.9.1
+    restart: unless-stopped
+    environment:
+      DOCKER_INFLUXDB_INIT_MODE: setup
+      DOCKER_INFLUXDB_INIT_USERNAME: ${INFLUX_ADMIN_USER:-admin}
+      DOCKER_INFLUXDB_INIT_PASSWORD: ${INFLUX_ADMIN_PASSWORD:-solar-admin-2026}
+      DOCKER_INFLUXDB_INIT_ORG: ${INFLUX_ORG:-solar}
+      DOCKER_INFLUXDB_INIT_BUCKET: solar_raw
+      DOCKER_INFLUXDB_INIT_RETENTION: ${INFLUX_RAW_RETENTION:-}   # empty = keep forever
+      DOCKER_INFLUXDB_INIT_ADMIN_TOKEN: ${INFLUX_TOKEN:-solar-sim-token-change-me}
+    ports:
+      - "8086:8086"            # InfluxDB web UI (Data Explorer) for the group admin
+    volumes:
+      - influxdb-data:/var/lib/influxdb2
+      - influxdb-config:/etc/influxdb2
+    healthcheck:
+      test: ["CMD", "influx", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 40
+
+  # one-shot: bucket solar_1m + downsampling task (idempotent)
+  influx-init:
+    image: influxdb:2.9.1
+    restart: "no"
+    depends_on:
+      influxdb:
+        condition: service_healthy
+    entrypoint: ["bash", "/init/setup.sh"]
+    environment:
+      INFLUX_HOST: http://influxdb:8086
+      INFLUX_TOKEN: ${INFLUX_TOKEN:-solar-sim-token-change-me}
+      INFLUX_ORG: ${INFLUX_ORG:-solar}
+    volumes:
+      - ./influxdb:/init:ro
+
+  # ----------------------------------------------------- Node-RED + Dashboard
+  nodered:
+    build: ./nodered
+    image: solar-sim/nodered:1
+    restart: unless-stopped
+    depends_on:
+      mosquitto:
+        condition: service_started
+      influxdb:
+        condition: service_healthy
+    environment:
+      TZ: Asia/Bangkok
+      INFLUX_URL: http://influxdb:8086
+      INFLUX_TOKEN: ${INFLUX_TOKEN:-solar-sim-token-change-me}
+      INFLUX_ORG: ${INFLUX_ORG:-solar}
+      NODE_RED_CREDENTIAL_SECRET: ${NODE_RED_CREDENTIAL_SECRET:-solar-sim-credential-secret}
+      NODE_RED_ADMIN_USER: ${NODE_RED_ADMIN_USER:-admin}
+      NODE_RED_ADMIN_PASSWORD: ${NODE_RED_ADMIN_PASSWORD:-solar-admin-2026}
+      DASHBOARD_USER: ${DASHBOARD_USER:-group}
+      DASHBOARD_PASSWORD: ${DASHBOARD_PASSWORD:-}       # empty = dashboard open to anyone who can reach it
+      CONTROL_PIN: ${CONTROL_PIN:-2468}                 # needed to send commands / set labels from the dashboard
+      VOC_MAX: ${VOC_MAX:-23.0}
+      ISC_MAX: ${ISC_MAX:-3.6}
+      T_PUB: "1"
+      SITE_TZ_HOURS: "7"
+    ports:
+      - "1880:1880"            # editor: /   dashboard: /dashboard   CSV: /api/export.csv
+    volumes:
+      - ./nodered/data:/data
+
+  # ------------------------------------- virtual ESP32 #1 (fixed) and #2 (track)
+  esp32-sim:
+    build:
+      context: .
+      dockerfile: esp32_sim/Dockerfile
+    image: solar-sim/esp32-sim:1
+    restart: unless-stopped
+    depends_on:
+      - mosquitto
+    environment:
+      MQTT_HOST: mosquitto
+      MQTT_PORT: "1883"
+      MQTT_USER: ${MQTT_USER:-esp32}
+      MQTT_PASSWORD: ${MQTT_PASSWORD:-esp32-sim-2026}
+      SIM_START: ${SIM_START:-now}          # now | 2026-03-21T06:00 (local time)
+      SIM_SPEED: ${SIM_SPEED:-1}            # 60 = one day in 24 minutes
+      SIM_SKY: ${SIM_SKY:-partly_cloudy}    # clear | partly_cloudy | cloudy | overcast | random
+      SIM_SEED: ${SIM_SEED:-1}
+      SIM_MPPT: ${SIM_MPPT:-po}             # po | inc
+      SIM_BUFFER: ${SIM_BUFFER:-600}        # ring buffer records (eq. 2.7-1)
+      SIM_KEEPALIVE: ${SIM_KEEPALIVE:-10}
+      SIM_NODES: ${SIM_NODES:-fixed,track}  # e.g. fixed when ESP32 #2 runs in Wokwi
+    volumes:
+      - ${PVSIM_PATH:-../sim-daniel}/pvsim:/app/pvsim:ro
+      - ${PVSIM_PATH:-../sim-daniel}/presets:/app/presets:ro
+
+  # ------------- optional: datasets (pvsim batch) and replaying them through the pipeline
+  #   docker compose --profile replay run --rm replay pvsim batch --days 30 --seed 7 --resample 1min --extended --workers 2 --out /datasets/batch_30d
+  #   docker compose stop esp32-sim
+  #   docker compose --profile replay run --rm replay esp32_sim.replay /datasets/batch_30d --speed 3600
+  replay:
+    build:
+      context: .
+      dockerfile: esp32_sim/Dockerfile
+    image: solar-sim/esp32-sim:1
+    profiles: ["replay"]
+    depends_on:
+      - mosquitto
+    entrypoint: ["python", "-m"]
+    command: ["esp32_sim.replay", "/datasets/batch_30d", "--speed", "3600"]
+    environment:
+      MQTT_HOST: mosquitto
+      MQTT_PORT: "1883"
+      MQTT_USER: ${MQTT_USER:-esp32}
+      MQTT_PASSWORD: ${MQTT_PASSWORD:-esp32-sim-2026}
+    volumes:
+      - ./datasets:/datasets
+
+  # ------------- optional: bring the Wokwi boards in (docker compose --profile wokwi up -d)
+  # Copies <WOKWI_PREFIX>solar/... from the public broker the Wokwi ESP32 uses into the local
+  # Mosquitto and solar/cmd back out.  WOKWI_PREFIX must equal TOPIC_PREFIX in wokwi/*/config.h.
+  wokwi-bridge:
+    build:
+      context: .
+      dockerfile: esp32_sim/Dockerfile
+    image: solar-sim/esp32-sim:1
+    profiles: ["wokwi"]
+    restart: unless-stopped
+    depends_on:
+      - mosquitto
+    entrypoint: ["python", "-m"]
+    command: ["esp32_sim.wokwi_bridge"]
+    environment:
+      MQTT_HOST: mosquitto
+      MQTT_PORT: "1883"
+      MQTT_USER: ${MQTT_USER:-esp32}
+      MQTT_PASSWORD: ${MQTT_PASSWORD:-esp32-sim-2026}
+      WOKWI_PREFIX: ${WOKWI_PREFIX:-tu-solar-32b21d/}
+      WOKWI_BROKER: ${WOKWI_BROKER:-broker.hivemq.com}
+
+  # ------------------- optional: public link for the group (docker compose --profile tunnel up -d)
+  cloudflared:
+    image: cloudflare/cloudflared:2026.10.0
+    profiles: ["tunnel"]
+    restart: unless-stopped
+    command: tunnel --no-autoupdate --url http://nodered:1880
+    depends_on:
+      - nodered
+
+volumes:
+  mosquitto-data:
+  influxdb-data:
+  influxdb-config:

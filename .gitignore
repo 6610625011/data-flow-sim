@@ -1,0 +1,31 @@
+# Environment & secrets
+.env
+mosquitto/bridge/bridge-wokwi.conf
+
+# Node-RED runtime
+nodered/data/node_modules/
+nodered/data/.config.users.json
+nodered/data/.sessions.json
+nodered/data/flows_cred.json
+nodered/data/context/
+
+# InfluxDB data
+influxdb/data/
+influxdb/config/
+
+# Docker volumes
+mosquitto/data/
+mosquitto/log/
+
+# Python
+__pycache__/
+*.pyc
+*.egg-info/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/

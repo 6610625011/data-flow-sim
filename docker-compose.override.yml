@@ -1,0 +1,9 @@
+# Local settings for this computer (loaded automatically by docker compose; not tracked by Git).
+#
+# ESP32 #2 (track) runs as real firmware in Wokwi and reaches this simulated Pi through
+# mosquitto/bridge/bridge-wokwi.conf, so the Python simulator plays only ESP32 #1 (fixed).
+# Delete this file (or set fixed,track) to simulate both boards again when Wokwi is not running.
+services:
+  esp32-sim:
+    environment:
+      SIM_NODES: fixed

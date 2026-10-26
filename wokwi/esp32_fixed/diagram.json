@@ -1,0 +1,171 @@
+{
+  "version": 1,
+  "author": "Solar project - ESP32 #1 fixed (simulation)",
+  "editor": "wokwi",
+  "parts": [
+    {
+      "type": "board-esp32-devkit-c-v4",
+      "id": "esp",
+      "top": 0,
+      "left": 0,
+      "attrs": {}
+    },
+    {
+      "type": "wokwi-potentiometer",
+      "id": "pot_g",
+      "top": -120,
+      "left": -260,
+      "attrs": {
+        "value": "700"
+      }
+    },
+    {
+      "type": "wokwi-ntc-temperature-sensor",
+      "id": "ntc_panel",
+      "top": 60,
+      "left": -330,
+      "attrs": {
+        "temperature": "45"
+      }
+    },
+    {
+      "type": "wokwi-pushbutton",
+      "id": "btn_wifi",
+      "top": 230,
+      "left": -250,
+      "attrs": {
+        "color": "red",
+        "label": "Wi-Fi on/off",
+        "bounce": "0"
+      }
+    },
+    {
+      "type": "wokwi-led",
+      "id": "led_mqtt",
+      "top": -80,
+      "left": 200,
+      "attrs": {
+        "color": "green",
+        "label": "MQTT"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "r_led",
+      "top": 0,
+      "left": 240,
+      "attrs": {
+        "value": "220",
+        "rotate": "90"
+      }
+    },
+    {
+      "type": "wokwi-ntc-temperature-sensor",
+      "id": "ntc_amb",
+      "top": 160,
+      "left": -330,
+      "attrs": {
+        "temperature": "32"
+      }
+    }
+  ],
+  "connections": [
+    [
+      "esp:TX",
+      "$serialMonitor:RX",
+      "",
+      []
+    ],
+    [
+      "esp:RX",
+      "$serialMonitor:TX",
+      "",
+      []
+    ],
+    [
+      "pot_g:VCC",
+      "esp:3V3",
+      "red",
+      []
+    ],
+    [
+      "pot_g:GND",
+      "esp:GND.1",
+      "black",
+      []
+    ],
+    [
+      "pot_g:SIG",
+      "esp:VP",
+      "orange",
+      []
+    ],
+    [
+      "ntc_panel:VCC",
+      "esp:3V3",
+      "red",
+      []
+    ],
+    [
+      "ntc_panel:GND",
+      "esp:GND.1",
+      "black",
+      []
+    ],
+    [
+      "ntc_panel:OUT",
+      "esp:VN",
+      "violet",
+      []
+    ],
+    [
+      "btn_wifi:1.l",
+      "esp:13",
+      "blue",
+      []
+    ],
+    [
+      "btn_wifi:2.l",
+      "esp:GND.1",
+      "black",
+      []
+    ],
+    [
+      "led_mqtt:A",
+      "esp:23",
+      "green",
+      []
+    ],
+    [
+      "led_mqtt:C",
+      "r_led:1",
+      "black",
+      []
+    ],
+    [
+      "r_led:2",
+      "esp:GND.3",
+      "black",
+      []
+    ],
+    [
+      "ntc_amb:VCC",
+      "esp:3V3",
+      "red",
+      []
+    ],
+    [
+      "ntc_amb:GND",
+      "esp:GND.1",
+      "black",
+      []
+    ],
+    [
+      "ntc_amb:OUT",
+      "esp:34",
+      "violet",
+      []
+    ]
+  ],
+  "dependencies": {}
+}

@@ -1,0 +1,434 @@
+{
+  "version": 1,
+  "author": "Solar project - ESP32 #2 track (simulation)",
+  "editor": "wokwi",
+  "parts": [
+    {
+      "type": "board-esp32-devkit-c-v4",
+      "id": "esp",
+      "top": 0,
+      "left": 0,
+      "attrs": {}
+    },
+    {
+      "type": "wokwi-potentiometer",
+      "id": "pot_g",
+      "top": -120,
+      "left": -260,
+      "attrs": {
+        "value": "700"
+      }
+    },
+    {
+      "type": "wokwi-ntc-temperature-sensor",
+      "id": "ntc_panel",
+      "top": 60,
+      "left": -330,
+      "attrs": {
+        "temperature": "45"
+      }
+    },
+    {
+      "type": "wokwi-pushbutton",
+      "id": "btn_wifi",
+      "top": 230,
+      "left": -250,
+      "attrs": {
+        "color": "red",
+        "label": "Wi-Fi on/off",
+        "bounce": "0"
+      }
+    },
+    {
+      "type": "wokwi-led",
+      "id": "led_mqtt",
+      "top": -80,
+      "left": 200,
+      "attrs": {
+        "color": "green",
+        "label": "MQTT"
+      }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "r_led",
+      "top": 0,
+      "left": 240,
+      "attrs": {
+        "value": "220",
+        "rotate": "90"
+      }
+    },
+    {
+      "type": "wokwi-photoresistor-sensor",
+      "id": "ldr_up",
+      "top": -240,
+      "left": 60,
+      "attrs": {
+        "lux": "20000"
+      }
+    },
+    {
+      "type": "wokwi-photoresistor-sensor",
+      "id": "ldr_down",
+      "top": -240,
+      "left": 260,
+      "attrs": {
+        "lux": "20000"
+      }
+    },
+    {
+      "type": "wokwi-photoresistor-sensor",
+      "id": "ldr_east",
+      "top": -140,
+      "left": 360,
+      "attrs": {
+        "lux": "20000"
+      }
+    },
+    {
+      "type": "wokwi-photoresistor-sensor",
+      "id": "ldr_west",
+      "top": -40,
+      "left": 360,
+      "attrs": {
+        "lux": "20000"
+      }
+    },
+    {
+      "type": "wokwi-a4988",
+      "id": "drv_az",
+      "top": 160,
+      "left": 260,
+      "attrs": {}
+    },
+    {
+      "type": "wokwi-stepper-motor",
+      "id": "motor_az",
+      "top": 100,
+      "left": 420,
+      "attrs": {
+        "size": "17",
+        "display": "angle",
+        "arrow": "orange",
+        "gearRatio": "1:1"
+      }
+    },
+    {
+      "type": "wokwi-a4988",
+      "id": "drv_el",
+      "top": 330,
+      "left": 260,
+      "attrs": {}
+    },
+    {
+      "type": "wokwi-stepper-motor",
+      "id": "motor_el",
+      "top": 270,
+      "left": 420,
+      "attrs": {
+        "size": "17",
+        "display": "angle",
+        "arrow": "orange",
+        "gearRatio": "1:1"
+      }
+    }
+  ],
+  "connections": [
+    [
+      "esp:TX",
+      "$serialMonitor:RX",
+      "",
+      []
+    ],
+    [
+      "esp:RX",
+      "$serialMonitor:TX",
+      "",
+      []
+    ],
+    [
+      "pot_g:VCC",
+      "esp:3V3",
+      "red",
+      []
+    ],
+    [
+      "pot_g:GND",
+      "esp:GND.1",
+      "black",
+      []
+    ],
+    [
+      "pot_g:SIG",
+      "esp:VP",
+      "orange",
+      []
+    ],
+    [
+      "ntc_panel:VCC",
+      "esp:3V3",
+      "red",
+      []
+    ],
+    [
+      "ntc_panel:GND",
+      "esp:GND.1",
+      "black",
+      []
+    ],
+    [
+      "ntc_panel:OUT",
+      "esp:VN",
+      "violet",
+      []
+    ],
+    [
+      "btn_wifi:1.l",
+      "esp:13",
+      "blue",
+      []
+    ],
+    [
+      "btn_wifi:2.l",
+      "esp:GND.1",
+      "black",
+      []
+    ],
+    [
+      "led_mqtt:A",
+      "esp:23",
+      "green",
+      []
+    ],
+    [
+      "led_mqtt:C",
+      "r_led:1",
+      "black",
+      []
+    ],
+    [
+      "r_led:2",
+      "esp:GND.3",
+      "black",
+      []
+    ],
+    [
+      "ldr_up:VCC",
+      "esp:3V3",
+      "red",
+      []
+    ],
+    [
+      "ldr_up:GND",
+      "esp:GND.2",
+      "black",
+      []
+    ],
+    [
+      "ldr_up:AO",
+      "esp:34",
+      "orange",
+      []
+    ],
+    [
+      "ldr_down:VCC",
+      "esp:3V3",
+      "red",
+      []
+    ],
+    [
+      "ldr_down:GND",
+      "esp:GND.2",
+      "black",
+      []
+    ],
+    [
+      "ldr_down:AO",
+      "esp:35",
+      "orange",
+      []
+    ],
+    [
+      "ldr_east:VCC",
+      "esp:3V3",
+      "red",
+      []
+    ],
+    [
+      "ldr_east:GND",
+      "esp:GND.2",
+      "black",
+      []
+    ],
+    [
+      "ldr_east:AO",
+      "esp:32",
+      "orange",
+      []
+    ],
+    [
+      "ldr_west:VCC",
+      "esp:3V3",
+      "red",
+      []
+    ],
+    [
+      "ldr_west:GND",
+      "esp:GND.2",
+      "black",
+      []
+    ],
+    [
+      "ldr_west:AO",
+      "esp:33",
+      "orange",
+      []
+    ],
+    [
+      "drv_az:STEP",
+      "esp:26",
+      "green",
+      []
+    ],
+    [
+      "drv_az:DIR",
+      "esp:27",
+      "blue",
+      []
+    ],
+    [
+      "drv_az:SLEEP",
+      "drv_az:RESET",
+      "gray",
+      []
+    ],
+    [
+      "drv_az:MS1",
+      "esp:3V3",
+      "red",
+      []
+    ],
+    [
+      "drv_az:MS2",
+      "esp:3V3",
+      "red",
+      []
+    ],
+    [
+      "drv_az:MS3",
+      "esp:3V3",
+      "red",
+      []
+    ],
+    [
+      "drv_az:VDD",
+      "esp:3V3",
+      "red",
+      []
+    ],
+    [
+      "drv_az:GND",
+      "esp:GND.2",
+      "black",
+      []
+    ],
+    [
+      "drv_az:1B",
+      "motor_az:B-",
+      "black",
+      []
+    ],
+    [
+      "drv_az:1A",
+      "motor_az:B+",
+      "green",
+      []
+    ],
+    [
+      "drv_az:2A",
+      "motor_az:A+",
+      "blue",
+      []
+    ],
+    [
+      "drv_az:2B",
+      "motor_az:A-",
+      "red",
+      []
+    ],
+    [
+      "drv_el:STEP",
+      "esp:25",
+      "green",
+      []
+    ],
+    [
+      "drv_el:DIR",
+      "esp:14",
+      "blue",
+      []
+    ],
+    [
+      "drv_el:SLEEP",
+      "drv_el:RESET",
+      "gray",
+      []
+    ],
+    [
+      "drv_el:MS1",
+      "esp:3V3",
+      "red",
+      []
+    ],
+    [
+      "drv_el:MS2",
+      "esp:3V3",
+      "red",
+      []
+    ],
+    [
+      "drv_el:MS3",
+      "esp:3V3",
+      "red",
+      []
+    ],
+    [
+      "drv_el:VDD",
+      "esp:3V3",
+      "red",
+      []
+    ],
+    [
+      "drv_el:GND",
+      "esp:GND.2",
+      "black",
+      []
+    ],
+    [
+      "drv_el:1B",
+      "motor_el:B-",
+      "black",
+      []
+    ],
+    [
+      "drv_el:1A",
+      "motor_el:B+",
+      "green",
+      []
+    ],
+    [
+      "drv_el:2A",
+      "motor_el:A+",
+      "blue",
+      []
+    ],
+    [
+      "drv_el:2B",
+      "motor_el:A-",
+      "red",
+      []
+    ]
+  ],
+  "dependencies": {}
+}
