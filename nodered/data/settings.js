@@ -14,6 +14,7 @@ const env = process.env
 const hash = (pw) => bcrypt.hashSync(pw, 8)
 
 module.exports = {
+    httpStatic: "/data/public/",
     flowFile: 'flows.json',
     flowFilePretty: true,
     credentialSecret: env.NODE_RED_CREDENTIAL_SECRET || 'solar-sim-credential-secret',
