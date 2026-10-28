@@ -2,7 +2,7 @@ name: Deploy to Azure VM
 
 on:
   push:
-    branches: [master]
+    branches: [main]
 
 jobs:
   deploy:
@@ -16,7 +16,7 @@ jobs:
           key: ${{ secrets.VM_SSH_KEY }}
           script: |
             cd ~/project/data-flow-sim
-            git pull origin master
+            git pull origin main
             docker compose build
             docker compose up -d
             docker compose ps
