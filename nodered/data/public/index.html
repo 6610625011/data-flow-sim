@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Solar Panel Simulation</title>
 <style>
-  :root { --bg:#0f172a; --card:#1e293b; --border:#334155; --text:#e2e8f0; --muted:#94a3b8; --accent:#38bdf8; --green:#4ade80; }
+  :root { --bg:#0f172a; --card:#1e293b; --border:#334155; --text:#e2e8f0; --muted:#94a3b8; --accent:#38bdf8; --green:#4ade80; --purple:#a78bfa; }
   * { margin:0; padding:0; box-sizing:border-box; }
   body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; }
   .header { text-align:center; padding:2rem 1rem 1rem; }
@@ -15,6 +15,7 @@
   .nav a { background:var(--accent); color:var(--bg); padding:.55rem 1.2rem; border-radius:8px; text-decoration:none; font-weight:600; font-size:.9rem; }
   .nav a:hover { opacity:.85; }
   .nav a.secondary { background:var(--green); }
+  .nav a.tertiary { background:var(--purple); }
   .grid { display:grid; grid-template-columns:1fr; gap:1.2rem; padding:1rem; max-width:1200px; margin:0 auto; }
   @media(min-width:768px) { .grid { grid-template-columns:1fr 1fr; } }
   .card { background:var(--card); border:1px solid var(--border); border-radius:12px; overflow:hidden; }
@@ -22,6 +23,13 @@
   .card-header h2 { font-size:1.1rem; }
   .card-header span { font-size:.8rem; color:var(--muted); }
   .card iframe { width:100%; height:420px; border:none; border-top:1px solid var(--border); }
+  .full-width { max-width:1200px; margin:0 auto; padding:0 1rem; }
+  .card-full { background:var(--card); border:1px solid var(--purple); border-radius:12px; overflow:hidden; margin-top:1.2rem; }
+  .card-full .card-header { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:.5rem; }
+  .card-full .card-header a { color:var(--purple); text-decoration:none; font-size:.85rem; font-weight:600; }
+  .card-full .card-header a:hover { text-decoration:underline; }
+  .card-full iframe { width:100%; height:600px; border:none; border-top:1px solid var(--border); }
+  @media(min-width:768px) { .card-full iframe { height:700px; } }
   .footer { text-align:center; padding:2rem 1rem; color:var(--muted); font-size:.8rem; }
 </style>
 </head>
@@ -34,6 +42,7 @@
     <a href="/dashboard">📊 Live Dashboard</a>
     <a href="https://wokwi.com/projects/478933944216973313" target="_blank" class="secondary">🔧 Wokwi Fixed</a>
     <a href="https://wokwi.com/projects/478933751958391809" target="_blank" class="secondary">🔧 Wokwi Track</a>
+    <a href="/solar-combined.html" class="tertiary">🌐 3D System View</a>
   </div>
   <div class="grid">
     <div class="card">
@@ -49,6 +58,18 @@
         <span>แผงหมุนตามแสงอาทิตย์ 2 แกน</span>
       </div>
       <iframe src="https://wokwi.com/projects/478933751958391809?embed=1" loading="lazy"></iframe>
+    </div>
+  </div>
+  <div class="full-width">
+    <div class="card-full">
+      <div class="card-header">
+        <div>
+          <h2>🌐 3D System Visualization & Workflow</h2>
+          <span>แผนผัง 3D, workflow ESP1/ESP2, MPPT algorithms และ architecture diagram</span>
+        </div>
+        <a href="/solar-combined.html" target="_blank">เปิดเต็มจอ ↗</a>
+      </div>
+      <iframe src="/solar-combined.html" loading="lazy"></iframe>
     </div>
   </div>
   <div class="footer">Thammasat University — Computer Engineering Capstone Project</div>

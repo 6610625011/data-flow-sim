@@ -1,0 +1,875 @@
+<title>Solar Panel System</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #0b1120; --bg2: #111827; --card: rgba(17,24,39,.94);
+  --border: rgba(100,116,139,.3); --text: #e2e8f0; --muted: #64748b;
+  --accent: #38bdf8; --green: #4ade80; --orange: #fb923c; --yellow: #facc15;
+  --red: #f87171; --purple: #a78bfa; --teal: #2dd4bf; --ina: #3b82f6;
+  color-scheme: dark;
+  padding: 0 !important;
+}
+*,*::before,*::after{box-sizing:border-box}
+html,body{height:100%;margin:0;overflow:hidden}
+body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans Thai',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+code,.mono{font-family:'JetBrains Mono',monospace}
+
+/* ── NAV ── */
+.nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  display:flex;align-items:center;gap:0;
+  background:var(--bg2);border-bottom:1px solid var(--border);
+  padding:0 max(16px,env(safe-area-inset-left,0px));
+  padding-top:env(safe-area-inset-top,0px);
+  height:calc(48px + env(safe-area-inset-top,0px));
+}
+.nav-title{font-size:.85rem;font-weight:700;white-space:nowrap;margin-right:12px;flex-shrink:0}
+.tabs{display:flex;gap:2px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;flex:1}
+.tabs::-webkit-scrollbar{display:none}
+.tab{
+  padding:8px 14px;font-size:.75rem;font-weight:600;cursor:pointer;
+  border-radius:8px 8px 0 0;white-space:nowrap;transition:all .15s;
+  color:var(--muted);border:1px solid transparent;border-bottom:none;
+  background:transparent;flex-shrink:0;
+}
+.tab:hover{color:var(--text);background:rgba(56,189,248,.08)}
+.tab.active{color:var(--accent);background:var(--card);border-color:var(--border)}
+.tab .dot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:5px}
+
+/* ── PAGES ── */
+.page{
+  position:absolute;top:calc(48px + env(safe-area-inset-top,0px));left:0;right:0;bottom:0;
+  display:none;overflow-y:auto;overflow-x:hidden;
+}
+.page.active{display:block}
+.page-scroll{
+  padding:20px max(16px,env(safe-area-inset-right,0px)) calc(20px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));
+  max-width:1200px;margin:0 auto;
+}
+
+/* ── 3D page ── */
+#page3d{overflow:hidden}
+#page3d canvas{display:block;width:100%!important;height:100%!important}
+
+/* ── PANELS (3D HUD) ── */
+.hud3d{position:absolute;bottom:0;left:0;right:0;pointer-events:none;z-index:10}
+.hud-panels{
+  display:flex;gap:6px;flex-wrap:wrap;justify-content:center;
+  padding:6px max(16px,env(safe-area-inset-right,0px)) calc(50px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));
+}
+.hud-badges{
+  position:absolute;top:12px;right:max(16px,env(safe-area-inset-right,0px));
+  display:flex;gap:6px;z-index:10;
+}
+.badge{font-size:.68rem;padding:3px 8px;border-radius:14px;font-weight:600}
+.badge-sim{background:var(--orange);color:#000}
+.badge-mppt{background:var(--green);color:#000}
+.pc{
+  background:var(--card);border:1px solid var(--border);border-radius:10px;
+  padding:8px 12px;min-width:145px;flex:1;max-width:260px;backdrop-filter:blur(8px);
+}
+.pc h3{font-size:.62rem;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin:0 0 4px;display:flex;align-items:center;gap:4px}
+.vr{display:flex;gap:8px;flex-wrap:wrap}
+.v{font-size:.7rem}.v b{font-size:.82rem;font-variant-numeric:tabular-nums}
+.ctrl3d{
+  position:absolute;bottom:env(safe-area-inset-bottom,0px);left:50%;transform:translateX(-50%);
+  z-index:11;pointer-events:all;
+  display:flex;gap:6px;align-items:center;
+  padding:4px 12px;background:var(--card);border:1px solid var(--border);
+  border-radius:10px 10px 0 0;backdrop-filter:blur(8px);
+}
+.ctrl3d label{font-size:.66rem;color:var(--muted)}
+.ctrl3d input[type=range]{width:80px;accent-color:var(--accent)}
+.ctrl3d button{background:var(--accent);color:#000;border:none;border-radius:6px;padding:3px 9px;font-size:.68rem;font-weight:600;cursor:pointer}
+
+/* ── WORKFLOW CARDS ── */
+.wf-header{
+  text-align:center;padding:24px 0 16px;
+}
+.wf-header h2{font-size:1.3rem;font-weight:700;margin:0 0 4px}
+.wf-header p{color:var(--muted);font-size:.82rem;margin:0}
+.wf-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:14px}
+.wf-card{
+  background:var(--card);border:1px solid var(--border);border-radius:14px;
+  padding:16px;position:relative;overflow:hidden;
+}
+.wf-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+}
+.wf-card.card-fixed::before{background:var(--accent)}
+.wf-card.card-track::before{background:var(--green)}
+.wf-card.card-server::before{background:var(--purple)}
+.wf-card.card-sensor::before{background:var(--ina)}
+.wf-card h3{font-size:.9rem;font-weight:700;margin:0 0 10px;display:flex;align-items:center;gap:8px}
+.wf-card h3 .ic{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:.8rem;flex-shrink:0}
+
+/* flow diagram */
+.flow{display:flex;flex-direction:column;gap:0;align-items:stretch}
+.flow-step{
+  display:flex;align-items:center;gap:10px;padding:8px 10px;
+  border-radius:8px;background:rgba(255,255,255,.03);position:relative;
+}
+.flow-step+.flow-step{margin-top:2px}
+.flow-arrow{
+  text-align:center;color:var(--muted);font-size:.7rem;padding:2px 0;
+  display:flex;align-items:center;justify-content:center;gap:4px;
+}
+.flow-arrow svg{width:14px;height:14px;fill:none;stroke:var(--muted);stroke-width:2}
+.flow-icon{
+  width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;
+  font-size:.75rem;font-weight:700;flex-shrink:0;
+}
+.flow-info{flex:1;min-width:0}
+.flow-info .fi-title{font-size:.78rem;font-weight:600}
+.flow-info .fi-desc{font-size:.68rem;color:var(--muted);margin-top:1px}
+.flow-info .fi-val{font-size:.72rem;font-weight:600;margin-top:2px}
+.fi-val span{margin-right:8px}
+
+/* spec table */
+.spec-tbl{width:100%;border-collapse:collapse;font-size:.75rem;margin-top:8px}
+.spec-tbl th{text-align:left;color:var(--muted);font-weight:600;padding:4px 8px;border-bottom:1px solid var(--border)}
+.spec-tbl td{padding:4px 8px;border-bottom:1px solid rgba(100,116,139,.15)}
+.spec-tbl td:last-child{text-align:right;font-weight:600}
+
+/* mqtt topics */
+.mqtt-topic{
+  display:inline-flex;align-items:center;gap:4px;
+  background:rgba(6,182,212,.12);border:1px solid rgba(6,182,212,.25);
+  border-radius:6px;padding:2px 8px;font-size:.7rem;margin:2px;
+}
+
+/* architecture SVG */
+.arch-wrap{
+  background:var(--card);border:1px solid var(--border);border-radius:14px;
+  padding:20px;overflow-x:auto;margin-top:14px;
+}
+.arch-wrap svg{display:block;margin:0 auto;max-width:100%;height:auto}
+
+@media(max-width:600px){
+  .wf-grid{grid-template-columns:1fr}
+  .hud-panels{flex-direction:column;align-items:stretch}
+  .pc{max-width:100%}
+  .ctrl3d input[type=range]{width:55px}
+}
+</style>
+
+<!-- ═══════ NAVIGATION ═══════ -->
+<nav class="nav">
+  <div class="nav-title">Smart Solar 50W</div>
+  <div class="tabs">
+    <div class="tab active" data-page="page3d"><span class="dot" style="background:var(--yellow)"></span>3D View</div>
+    <div class="tab" data-page="pageEsp1"><span class="dot" style="background:var(--accent)"></span>ESP1 Fixed</div>
+    <div class="tab" data-page="pageEsp2"><span class="dot" style="background:var(--green)"></span>ESP2 Tracker</div>
+    <div class="tab" data-page="pageArch"><span class="dot" style="background:var(--purple)"></span>Architecture</div>
+  </div>
+</nav>
+
+<!-- ═══════ PAGE: 3D VIEW ═══════ -->
+<div id="page3d" class="page active">
+  <div class="hud-badges">
+    <div class="badge badge-mppt" id="mpptBadge">MPPT: P&O</div>
+    <div class="badge badge-sim">SIM MODE</div>
+  </div>
+  <div class="hud3d">
+    <div class="hud-panels">
+      <div class="pc">
+        <h3><span class="dot" style="background:var(--accent)"></span>ESP32 #1 — Fixed 50W</h3>
+        <div class="vr">
+          <div class="v">P <b id="fp">0.0</b> W</div>
+          <div class="v">V <b id="fv">0.0</b> V</div>
+          <div class="v">I <b id="fi">0.00</b> A</div>
+          <div class="v">T <b id="ft">25</b>°C</div>
+        </div>
+      </div>
+      <div class="pc">
+        <h3><span class="dot" style="background:var(--green)"></span>ESP32 #2 — Tracker 50W</h3>
+        <div class="vr">
+          <div class="v">P <b id="tp">0.0</b> W</div>
+          <div class="v">V <b id="tv">0.0</b> V</div>
+          <div class="v">I <b id="ti">0.00</b> A</div>
+          <div class="v">Az <b id="taz">0</b>°</div>
+          <div class="v">El <b id="tel">0</b>°</div>
+        </div>
+      </div>
+      <div class="pc">
+        <h3><span class="dot" style="background:var(--yellow)"></span>Sun</h3>
+        <div class="vr">
+          <div class="v">GHI <b id="ghi">0</b> W/m²</div>
+          <div class="v">El <b id="sel">0</b>°</div>
+          <div class="v">Amb <b id="amb_t">30</b>°C</div>
+          <div class="v"><b id="stime">06:00</b></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="ctrl3d">
+    <label>Time</label>
+    <input type="range" id="timeSlider" min="0" max="1" step="0.001" value="0.25">
+    <label>Speed</label>
+    <input type="range" id="speedSlider" min="0" max="5" step="0.1" value="1">
+    <button id="resetBtn">Reset</button>
+  </div>
+</div>
+
+<!-- ═══════ PAGE: ESP1 FIXED ═══════ -->
+<div id="pageEsp1" class="page">
+  <div class="page-scroll">
+    <div class="wf-header">
+      <h2>ESP32 #1 — Fixed Panel Workflow</h2>
+      <p>แผงโซลาร์เซลล์ 50W แบบ Fixed-Tilt (14° ทิศใต้) — MPPT P&O Algorithm</p>
+    </div>
+
+    <div class="wf-grid">
+      <!-- Data Flow -->
+      <div class="wf-card card-fixed" style="grid-column:1/-1">
+        <h3><span class="ic" style="background:rgba(56,189,248,.15);color:var(--accent)">⚡</span> Data Flow Pipeline</h3>
+        <div class="flow">
+          <div class="flow-step">
+            <div class="flow-icon" style="background:rgba(30,58,95,.6);color:#60a5fa">☀</div>
+            <div class="flow-info">
+              <div class="fi-title">Solar Panel 50W Monocrystalline</div>
+              <div class="fi-desc">Fixed tilt 14° facing south — Rangsit, Pathum Thani</div>
+              <div class="fi-val"><span>Pmax 50W</span><span>Vmp 18.2V</span><span>Imp 2.75A</span></div>
+            </div>
+          </div>
+          <div class="flow-arrow"><svg viewBox="0 0 14 14"><path d="M7 2v10M4 9l3 3 3-3"/></svg>DC Power</div>
+          <div class="flow-step">
+            <div class="flow-icon" style="background:rgba(249,115,22,.15);color:var(--orange)">⚙</div>
+            <div class="flow-info">
+              <div class="fi-title">DC-DC Buck Converter + MPPT</div>
+              <div class="fi-desc">PWM duty cycle controlled by ESP32 — Perturb & Observe algorithm</div>
+              <div class="fi-val"><span>Algorithm: P&O</span><span>Step: ΔD ±0.5%</span></div>
+            </div>
+          </div>
+          <div class="flow-arrow"><svg viewBox="0 0 14 14"><path d="M7 2v10M4 9l3 3 3-3"/></svg>Regulated DC</div>
+          <div class="flow-step">
+            <div class="flow-icon" style="background:rgba(59,130,246,.15);color:var(--ina)">📊</div>
+            <div class="flow-info">
+              <div class="fi-title">INA226 — Digital V/I Sensor</div>
+              <div class="fi-desc">I²C interface — measures voltage & current via shunt resistor</div>
+              <div class="fi-val"><span>V: 0–36V</span><span>I: 0–3.2A</span><span>Shunt: 0.1Ω</span></div>
+            </div>
+          </div>
+          <div class="flow-arrow"><svg viewBox="0 0 14 14"><path d="M7 2v10M4 9l3 3 3-3"/></svg>I²C Data</div>
+          <div class="flow-step">
+            <div class="flow-icon" style="background:rgba(34,197,94,.15);color:var(--green)">🔧</div>
+            <div class="flow-info">
+              <div class="fi-title">ESP32 Microcontroller #1</div>
+              <div class="fi-desc">อ่านค่า V/I จาก INA226, อุณหภูมิ, คำนวณ MPPT, ส่ง MQTT</div>
+              <div class="fi-val"><span>WiFi 2.4GHz</span><span>GPIO PWM</span></div>
+            </div>
+          </div>
+          <div class="flow-arrow"><svg viewBox="0 0 14 14"><path d="M7 2v10M4 9l3 3 3-3"/></svg>MQTT over WiFi</div>
+          <div class="flow-step">
+            <div class="flow-icon" style="background:rgba(167,139,250,.15);color:var(--purple)">📡</div>
+            <div class="flow-info">
+              <div class="fi-title">Mosquitto MQTT Broker → InfluxDB</div>
+              <div class="fi-desc">รับ telemetry data แล้วเก็บลง time-series database</div>
+              <div class="fi-val mqtt-topic">solar/fixed/telemetry</div>
+            </div>
+          </div>
+          <div class="flow-arrow"><svg viewBox="0 0 14 14"><path d="M7 2v10M4 9l3 3 3-3"/></svg>Query</div>
+          <div class="flow-step">
+            <div class="flow-icon" style="background:rgba(239,68,68,.15);color:var(--red)">📈</div>
+            <div class="flow-info">
+              <div class="fi-title">Node-RED + FlowFuse Dashboard</div>
+              <div class="fi-desc">แสดงผล real-time, กราฟเปรียบเทียบ, alert เมื่อผิดปกติ</div>
+              <div class="fi-val"><span>Port 1880 → 80</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Panel Specs -->
+      <div class="wf-card card-fixed">
+        <h3><span class="ic" style="background:rgba(30,58,95,.6);color:#60a5fa">📋</span> Panel Specifications (STC)</h3>
+        <table class="spec-tbl">
+          <tr><th>Parameter</th><th>Value</th></tr>
+          <tr><td>Type</td><td>Monocrystalline 50W</td></tr>
+          <tr><td>Pmax</td><td>50 W</td></tr>
+          <tr><td>Vmp</td><td>18.2 V</td></tr>
+          <tr><td>Imp</td><td>2.75 A</td></tr>
+          <tr><td>Voc</td><td>22.0 V</td></tr>
+          <tr><td>Isc</td><td>3.0 A</td></tr>
+          <tr><td>Efficiency</td><td>~13.8%</td></tr>
+          <tr><td>Cell area</td><td>~0.362 m²</td></tr>
+          <tr><td>Tilt angle</td><td>14° (= latitude)</td></tr>
+          <tr><td>Temp coeff (Pmax)</td><td>-0.45 %/°C</td></tr>
+        </table>
+      </div>
+
+      <!-- MQTT Payload -->
+      <div class="wf-card card-fixed">
+        <h3><span class="ic" style="background:rgba(6,182,212,.15);color:var(--teal)">📨</span> MQTT Payload Format</h3>
+        <pre class="mono" style="font-size:.7rem;background:rgba(0,0,0,.3);padding:10px;border-radius:8px;overflow-x:auto;margin:0"><code>{
+  "topic": "solar/fixed/telemetry",
+  "voltage": 17.8,
+  "current": 2.65,
+  "power": 47.17,
+  "temperature": 42.3,
+  "ambient_temp": 33.5,
+  "duty_cycle": 72.5,
+  "mppt_mode": "P&O",
+  "timestamp": 1698400000
+}</code></pre>
+      </div>
+
+      <!-- MPPT P&O Algorithm -->
+      <div class="wf-card card-fixed">
+        <h3><span class="ic" style="background:rgba(249,115,22,.15);color:var(--orange)">🔄</span> MPPT — Perturb & Observe</h3>
+        <div class="flow">
+          <div class="flow-step"><div class="flow-icon" style="background:rgba(255,255,255,.05);color:var(--text);font-size:.65rem">1</div><div class="flow-info"><div class="fi-title">Measure V, I → Calculate P</div><div class="fi-desc">อ่านค่าจาก INA226</div></div></div>
+          <div class="flow-arrow"><svg viewBox="0 0 14 14"><path d="M7 2v10M4 9l3 3 3-3"/></svg></div>
+          <div class="flow-step"><div class="flow-icon" style="background:rgba(255,255,255,.05);color:var(--text);font-size:.65rem">2</div><div class="flow-info"><div class="fi-title">Compare ΔP = P(k) − P(k−1)</div><div class="fi-desc">เปรียบเทียบกำลังปัจจุบันกับก่อนหน้า</div></div></div>
+          <div class="flow-arrow"><svg viewBox="0 0 14 14"><path d="M7 2v10M4 9l3 3 3-3"/></svg></div>
+          <div class="flow-step"><div class="flow-icon" style="background:rgba(255,255,255,.05);color:var(--text);font-size:.65rem">3</div><div class="flow-info"><div class="fi-title">If ΔP > 0 → keep direction; else reverse</div><div class="fi-desc">ถ้ากำลังเพิ่ม → เดินทางเดิม, ลด → กลับทาง</div></div></div>
+          <div class="flow-arrow"><svg viewBox="0 0 14 14"><path d="M7 2v10M4 9l3 3 3-3"/></svg></div>
+          <div class="flow-step"><div class="flow-icon" style="background:rgba(255,255,255,.05);color:var(--text);font-size:.65rem">4</div><div class="flow-info"><div class="fi-title">Adjust Duty Cycle ± ΔD</div><div class="fi-desc">ปรับ PWM duty cycle ของ Buck converter</div></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ PAGE: ESP2 TRACKER ═══════ -->
+<div id="pageEsp2" class="page">
+  <div class="page-scroll">
+    <div class="wf-header">
+      <h2>ESP32 #2 — Dual-Axis Tracker Workflow</h2>
+      <p>แผงโซลาร์เซลล์ 50W แบบ Tracking — LDR 4 ทิศทาง + Stepper Motors + MPPT InC</p>
+    </div>
+
+    <div class="wf-grid">
+      <!-- Main Data Flow -->
+      <div class="wf-card card-track" style="grid-column:1/-1">
+        <h3><span class="ic" style="background:rgba(74,222,128,.15);color:var(--green)">⚡</span> Data Flow Pipeline</h3>
+        <div class="flow">
+          <div class="flow-step">
+            <div class="flow-icon" style="background:rgba(30,58,95,.6);color:#60a5fa">☀</div>
+            <div class="flow-info">
+              <div class="fi-title">Solar Panel 50W Monocrystalline</div>
+              <div class="fi-desc">ติดตั้งบน dual-axis tracker — หมุนตามดวงอาทิตย์ทั้ง azimuth และ elevation</div>
+              <div class="fi-val"><span>Pmax 50W</span><span>Vmp 18.2V</span><span>Imp 2.75A</span></div>
+            </div>
+          </div>
+          <div class="flow-arrow"><svg viewBox="0 0 14 14"><path d="M7 2v10M4 9l3 3 3-3"/></svg>DC Power</div>
+          <div class="flow-step">
+            <div class="flow-icon" style="background:rgba(249,115,22,.15);color:var(--orange)">⚙</div>
+            <div class="flow-info">
+              <div class="fi-title">DC-DC Buck Converter + MPPT</div>
+              <div class="fi-desc">Incremental Conductance algorithm — ΔI/ΔV ≈ −I/V</div>
+              <div class="fi-val"><span>Algorithm: InC</span></div>
+            </div>
+          </div>
+          <div class="flow-arrow"><svg viewBox="0 0 14 14"><path d="M7 2v10M4 9l3 3 3-3"/></svg>Regulated DC</div>
+          <div class="flow-step">
+            <div class="flow-icon" style="background:rgba(59,130,246,.15);color:var(--ina)">📊</div>
+            <div class="flow-info">
+              <div class="fi-title">INA226 — Digital V/I Sensor</div>
+              <div class="fi-desc">วัด voltage/current หลัง buck converter</div>
+              <div class="fi-val"><span>V: 0–36V</span><span>I: 0–3.2A</span></div>
+            </div>
+          </div>
+          <div class="flow-arrow"><svg viewBox="0 0 14 14"><path d="M7 2v10M4 9l3 3 3-3"/></svg>I²C</div>
+          <div class="flow-step">
+            <div class="flow-icon" style="background:rgba(34,197,94,.15);color:var(--green)">🔧</div>
+            <div class="flow-info">
+              <div class="fi-title">ESP32 Microcontroller #2</div>
+              <div class="fi-desc">อ่าน V/I, LDR, อุณหภูมิ, คำนวณ MPPT InC, สั่ง stepper, ส่ง MQTT</div>
+              <div class="fi-val"><span>WiFi</span><span>I²C</span><span>ADC</span><span>GPIO PWM</span></div>
+            </div>
+          </div>
+          <div class="flow-arrow"><svg viewBox="0 0 14 14"><path d="M7 2v10M4 9l3 3 3-3"/></svg>MQTT over WiFi</div>
+          <div class="flow-step">
+            <div class="flow-icon" style="background:rgba(167,139,250,.15);color:var(--purple)">📡</div>
+            <div class="flow-info">
+              <div class="fi-title">Mosquitto → InfluxDB → Node-RED</div>
+              <div class="fi-desc">เก็บ telemetry + tracker position data</div>
+              <div class="fi-val mqtt-topic">solar/track/telemetry</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- LDR Tracking System -->
+      <div class="wf-card card-track">
+        <h3><span class="ic" style="background:rgba(234,179,8,.15);color:var(--yellow)">🔆</span> LDR Sun Tracking</h3>
+        <div class="flow">
+          <div class="flow-step"><div class="flow-icon" style="background:rgba(234,179,8,.1);color:var(--yellow);font-size:.65rem">LDR</div><div class="flow-info"><div class="fi-title">LDR Sensor × 4 ทิศทาง</div><div class="fi-desc">ติดที่มุมแผง: บน-ซ้าย, บน-ขวา, ล่าง-ซ้าย, ล่าง-ขวา</div></div></div>
+          <div class="flow-arrow"><svg viewBox="0 0 14 14"><path d="M7 2v10M4 9l3 3 3-3"/></svg>Analog → ADC</div>
+          <div class="flow-step"><div class="flow-icon" style="background:rgba(34,197,94,.1);color:var(--green);font-size:.6rem">ESP</div><div class="flow-info"><div class="fi-title">ESP32 ADC — เปรียบเทียบค่า</div><div class="fi-desc">คำนวณ avg(top) vs avg(bottom), avg(left) vs avg(right)</div><div class="fi-val"><span>Deadband: ±2%</span></div></div></div>
+          <div class="flow-arrow"><svg viewBox="0 0 14 14"><path d="M7 2v10M4 9l3 3 3-3"/></svg>Step/Dir signals</div>
+          <div class="flow-step"><div class="flow-icon" style="background:rgba(239,68,68,.1);color:var(--red);font-size:.55rem">MOT</div><div class="flow-info"><div class="fi-title">Stepper Motors × 2</div><div class="fi-desc">Azimuth motor (ฐาน) + Elevation motor (แกนเอียง)</div><div class="fi-val"><span>Az: 0–360°</span><span>El: 0–90°</span></div></div></div>
+        </div>
+      </div>
+
+      <!-- MPPT InC Algorithm -->
+      <div class="wf-card card-track">
+        <h3><span class="ic" style="background:rgba(249,115,22,.15);color:var(--orange)">🔄</span> MPPT — Incremental Conductance</h3>
+        <div class="flow">
+          <div class="flow-step"><div class="flow-icon" style="background:rgba(255,255,255,.05);color:var(--text);font-size:.65rem">1</div><div class="flow-info"><div class="fi-title">Measure V(k), I(k)</div><div class="fi-desc">อ่านค่าจาก INA226</div></div></div>
+          <div class="flow-arrow"><svg viewBox="0 0 14 14"><path d="M7 2v10M4 9l3 3 3-3"/></svg></div>
+          <div class="flow-step"><div class="flow-icon" style="background:rgba(255,255,255,.05);color:var(--text);font-size:.65rem">2</div><div class="flow-info"><div class="fi-title">Compute ΔI/ΔV</div><div class="fi-desc">ΔI = I(k) − I(k−1), ΔV = V(k) − V(k−1)</div></div></div>
+          <div class="flow-arrow"><svg viewBox="0 0 14 14"><path d="M7 2v10M4 9l3 3 3-3"/></svg></div>
+          <div class="flow-step"><div class="flow-icon" style="background:rgba(255,255,255,.05);color:var(--text);font-size:.65rem">3</div><div class="flow-info"><div class="fi-title">Compare: ΔI/ΔV = −I/V ?</div><div class="fi-desc">ถ้าเท่ากัน → อยู่ที่ MPP, มากกว่า → เพิ่ม V, น้อยกว่า → ลด V</div></div></div>
+          <div class="flow-arrow"><svg viewBox="0 0 14 14"><path d="M7 2v10M4 9l3 3 3-3"/></svg></div>
+          <div class="flow-step"><div class="flow-icon" style="background:rgba(255,255,255,.05);color:var(--text);font-size:.65rem">4</div><div class="flow-info"><div class="fi-title">Adjust Duty Cycle</div><div class="fi-desc">ข้อดี: ไม่สั่นรอบ MPP เหมือน P&O, แม่นยำกว่า</div></div></div>
+        </div>
+      </div>
+
+      <!-- MQTT Payload -->
+      <div class="wf-card card-track">
+        <h3><span class="ic" style="background:rgba(6,182,212,.15);color:var(--teal)">📨</span> MQTT Payload Format</h3>
+        <pre class="mono" style="font-size:.7rem;background:rgba(0,0,0,.3);padding:10px;border-radius:8px;overflow-x:auto;margin:0"><code>{
+  "topic": "solar/track/telemetry",
+  "voltage": 18.1,
+  "current": 2.72,
+  "power": 49.23,
+  "temperature": 40.8,
+  "ambient_temp": 33.5,
+  "duty_cycle": 78.2,
+  "mppt_mode": "InC",
+  "azimuth": 185.3,
+  "elevation": 62.7,
+  "ldr": [820, 815, 790, 785],
+  "timestamp": 1698400000
+}</code></pre>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ PAGE: ARCHITECTURE ═══════ -->
+<div id="pageArch" class="page">
+  <div class="page-scroll">
+    <div class="wf-header">
+      <h2>System Architecture</h2>
+      <p>ภาพรวมระบบ Smart Solar Panel Management — Docker + MQTT + InfluxDB + Node-RED</p>
+    </div>
+
+    <div class="wf-grid">
+      <!-- Full Architecture -->
+      <div class="wf-card card-server" style="grid-column:1/-1">
+        <h3><span class="ic" style="background:rgba(167,139,250,.15);color:var(--purple)">🏗</span> Full System Diagram</h3>
+        <div class="arch-wrap">
+          <svg viewBox="0 0 800 520" style="width:100%;max-width:800px" fill="none">
+            <!-- Fixed Panel Group -->
+            <rect x="20" y="20" width="180" height="70" rx="10" fill="rgba(30,58,95,.6)" stroke="#38bdf8" stroke-width="1.5"/>
+            <text x="110" y="48" text-anchor="middle" fill="#38bdf8" font-size="12" font-weight="700">Solar Panel 50W</text>
+            <text x="110" y="66" text-anchor="middle" fill="#64748b" font-size="10">Fixed Tilt 14° South</text>
+
+            <line x1="110" y1="90" x2="110" y2="120" stroke="#fb923c" stroke-width="1.5" stroke-dasharray="4"/>
+            <rect x="40" y="120" width="140" height="45" rx="8" fill="rgba(249,115,22,.12)" stroke="#fb923c" stroke-width="1.5"/>
+            <text x="110" y="142" text-anchor="middle" fill="#fb923c" font-size="11" font-weight="600">Buck + MPPT P&O</text>
+            <text x="110" y="156" text-anchor="middle" fill="#64748b" font-size="9">PWM Duty Control</text>
+
+            <line x1="110" y1="165" x2="110" y2="190" stroke="#3b82f6" stroke-width="1.5" stroke-dasharray="4"/>
+            <rect x="50" y="190" width="120" height="35" rx="8" fill="rgba(59,130,246,.12)" stroke="#3b82f6" stroke-width="1.5"/>
+            <text x="110" y="212" text-anchor="middle" fill="#3b82f6" font-size="11" font-weight="600">INA226 V/I</text>
+
+            <line x1="110" y1="225" x2="110" y2="255" stroke="#4ade80" stroke-width="1.5" stroke-dasharray="4"/>
+            <rect x="40" y="255" width="140" height="45" rx="8" fill="rgba(34,197,94,.12)" stroke="#4ade80" stroke-width="1.5"/>
+            <text x="110" y="275" text-anchor="middle" fill="#4ade80" font-size="11" font-weight="600">ESP32 #1</text>
+            <text x="110" y="290" text-anchor="middle" fill="#64748b" font-size="9">WiFi + MPPT + Temp</text>
+
+            <!-- Tracking Panel Group -->
+            <rect x="600" y="20" width="180" height="70" rx="10" fill="rgba(30,58,95,.6)" stroke="#4ade80" stroke-width="1.5"/>
+            <text x="690" y="48" text-anchor="middle" fill="#4ade80" font-size="12" font-weight="700">Solar Panel 50W</text>
+            <text x="690" y="66" text-anchor="middle" fill="#64748b" font-size="10">Dual-Axis Tracker</text>
+
+            <line x1="690" y1="90" x2="690" y2="120" stroke="#fb923c" stroke-width="1.5" stroke-dasharray="4"/>
+            <rect x="620" y="120" width="140" height="45" rx="8" fill="rgba(249,115,22,.12)" stroke="#fb923c" stroke-width="1.5"/>
+            <text x="690" y="142" text-anchor="middle" fill="#fb923c" font-size="11" font-weight="600">Buck + MPPT InC</text>
+            <text x="690" y="156" text-anchor="middle" fill="#64748b" font-size="9">ΔI/ΔV = −I/V</text>
+
+            <line x1="690" y1="165" x2="690" y2="190" stroke="#3b82f6" stroke-width="1.5" stroke-dasharray="4"/>
+            <rect x="630" y="190" width="120" height="35" rx="8" fill="rgba(59,130,246,.12)" stroke="#3b82f6" stroke-width="1.5"/>
+            <text x="690" y="212" text-anchor="middle" fill="#3b82f6" font-size="11" font-weight="600">INA226 V/I</text>
+
+            <line x1="690" y1="225" x2="690" y2="255" stroke="#4ade80" stroke-width="1.5" stroke-dasharray="4"/>
+            <rect x="620" y="255" width="140" height="45" rx="8" fill="rgba(34,197,94,.12)" stroke="#4ade80" stroke-width="1.5"/>
+            <text x="690" y="275" text-anchor="middle" fill="#4ade80" font-size="11" font-weight="600">ESP32 #2</text>
+            <text x="690" y="290" text-anchor="middle" fill="#64748b" font-size="9">WiFi+MPPT+LDR+Motor</text>
+
+            <!-- LDR + Motor side -->
+            <rect x="480" y="130" width="110" height="35" rx="8" fill="rgba(234,179,8,.12)" stroke="#eab308" stroke-width="1.5"/>
+            <text x="535" y="152" text-anchor="middle" fill="#eab308" font-size="10" font-weight="600">LDR × 4</text>
+            <line x1="535" y1="165" x2="690" y2="255" stroke="#eab308" stroke-width="1" stroke-dasharray="3"/>
+
+            <rect x="480" y="255" width="110" height="35" rx="8" fill="rgba(239,68,68,.12)" stroke="#ef4444" stroke-width="1.5"/>
+            <text x="535" y="277" text-anchor="middle" fill="#ef4444" font-size="10" font-weight="600">Steppers × 2</text>
+            <line x1="590" y1="272" x2="620" y2="272" stroke="#ef4444" stroke-width="1" stroke-dasharray="3"/>
+
+            <!-- Temp sensors -->
+            <rect x="220" y="50" width="80" height="28" rx="6" fill="rgba(45,212,191,.12)" stroke="#2dd4bf" stroke-width="1"/>
+            <text x="260" y="68" text-anchor="middle" fill="#2dd4bf" font-size="9" font-weight="600">Temp Sens</text>
+            <line x1="200" y1="55" x2="220" y2="60" stroke="#2dd4bf" stroke-width="1" stroke-dasharray="2"/>
+
+            <rect x="500" y="50" width="80" height="28" rx="6" fill="rgba(45,212,191,.12)" stroke="#2dd4bf" stroke-width="1"/>
+            <text x="540" y="68" text-anchor="middle" fill="#2dd4bf" font-size="9" font-weight="600">Temp Sens</text>
+            <line x1="580" y1="64" x2="600" y2="55" stroke="#2dd4bf" stroke-width="1" stroke-dasharray="2"/>
+
+            <!-- MQTT lines to server -->
+            <line x1="110" y1="300" x2="110" y2="340" stroke="#06b6d4" stroke-width="1.5" stroke-dasharray="5 3"/>
+            <line x1="110" y1="340" x2="400" y2="340" stroke="#06b6d4" stroke-width="1.5" stroke-dasharray="5 3"/>
+            <line x1="690" y1="300" x2="690" y2="340" stroke="#06b6d4" stroke-width="1.5" stroke-dasharray="5 3"/>
+            <line x1="690" y1="340" x2="400" y2="340" stroke="#06b6d4" stroke-width="1.5" stroke-dasharray="5 3"/>
+            <text x="400" y="332" text-anchor="middle" fill="#06b6d4" font-size="9">MQTT over WiFi</text>
+
+            <!-- Server Stack -->
+            <rect x="300" y="360" width="200" height="140" rx="12" fill="rgba(167,139,250,.08)" stroke="#a78bfa" stroke-width="1.5"/>
+            <text x="400" y="385" text-anchor="middle" fill="#a78bfa" font-size="12" font-weight="700">Raspberry Pi / Azure VM</text>
+
+            <rect x="320" y="400" width="75" height="30" rx="6" fill="rgba(6,182,212,.12)" stroke="#06b6d4" stroke-width="1"/>
+            <text x="357" y="419" text-anchor="middle" fill="#06b6d4" font-size="9" font-weight="600">Mosquitto</text>
+
+            <rect x="405" y="400" width="75" height="30" rx="6" fill="rgba(56,189,248,.12)" stroke="#38bdf8" stroke-width="1"/>
+            <text x="442" y="419" text-anchor="middle" fill="#38bdf8" font-size="9" font-weight="600">InfluxDB</text>
+
+            <rect x="320" y="445" width="75" height="30" rx="6" fill="rgba(239,68,68,.12)" stroke="#ef4444" stroke-width="1"/>
+            <text x="357" y="464" text-anchor="middle" fill="#ef4444" font-size="9" font-weight="600">Node-RED</text>
+
+            <rect x="405" y="445" width="75" height="30" rx="6" fill="rgba(251,191,36,.12)" stroke="#fbbf24" stroke-width="1"/>
+            <text x="442" y="464" text-anchor="middle" fill="#fbbf24" font-size="9" font-weight="600">Dashboard</text>
+
+            <!-- Docker label -->
+            <text x="400" y="495" text-anchor="middle" fill="#64748b" font-size="9">Docker Compose</text>
+
+            <!-- DC Load -->
+            <rect x="10" y="340" width="80" height="35" rx="6" fill="rgba(161,161,170,.12)" stroke="#a1a1aa" stroke-width="1"/>
+            <text x="50" y="360" text-anchor="middle" fill="#a1a1aa" font-size="9" font-weight="600">DC Load</text>
+            <line x1="90" y1="298" x2="50" y2="340" stroke="#a1a1aa" stroke-width="1" stroke-dasharray="3"/>
+
+            <rect x="710" y="340" width="80" height="35" rx="6" fill="rgba(161,161,170,.12)" stroke="#a1a1aa" stroke-width="1"/>
+            <text x="750" y="360" text-anchor="middle" fill="#a1a1aa" font-size="9" font-weight="600">DC Load</text>
+            <line x1="710" y1="298" x2="750" y2="340" stroke="#a1a1aa" stroke-width="1" stroke-dasharray="3"/>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Docker Stack -->
+      <div class="wf-card card-server">
+        <h3><span class="ic" style="background:rgba(167,139,250,.15);color:var(--purple)">🐳</span> Docker Compose Stack</h3>
+        <table class="spec-tbl">
+          <tr><th>Service</th><th>Image / Version</th></tr>
+          <tr><td>Mosquitto</td><td>eclipse-mosquitto:2.1.2</td></tr>
+          <tr><td>InfluxDB</td><td>influxdb:2.9.1</td></tr>
+          <tr><td>Node-RED</td><td>nodered:5.0.9 + FlowFuse</td></tr>
+        </table>
+        <div style="margin-top:10px;font-size:.72rem;color:var(--muted)">
+          <div>Azure VM: B1s (Debian 12) — East Asia</div>
+          <div>Port mapping: 80 → 1880 (iptables redirect)</div>
+        </div>
+      </div>
+
+      <!-- Repos -->
+      <div class="wf-card card-server">
+        <h3><span class="ic" style="background:rgba(255,255,255,.08);color:var(--text)">📁</span> GitHub Repositories</h3>
+        <table class="spec-tbl">
+          <tr><th>Repo</th><th>Role</th></tr>
+          <tr><td>data-flow-sim</td><td>IoT Pipeline (Chutikan)</td></tr>
+          <tr><td>sim-daniel</td><td>PV Simulator (Daniel)</td></tr>
+        </table>
+        <div style="margin-top:10px;font-size:.72rem;color:var(--muted)">
+          CI/CD: GitHub Actions → SSH deploy to Azure VM
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script>
+/* ═══════════════════════════════════════════
+   TAB NAVIGATION
+   ═══════════════════════════════════════════ */
+const tabs = document.querySelectorAll('.tab');
+const pages = document.querySelectorAll('.page');
+let activeTab = 'page3d';
+let threeInited = false;
+
+tabs.forEach(t => {
+  t.addEventListener('click', () => {
+    const target = t.dataset.page;
+    tabs.forEach(x => x.classList.toggle('active', x === t));
+    pages.forEach(p => p.classList.toggle('active', p.id === target));
+    activeTab = target;
+    if (target === 'page3d' && !threeInited) init3D();
+    if (target === 'page3d' && ren) onResize();
+  });
+});
+
+/* ═══════════════════════════════════════════
+   50W PANEL SPECS
+   ═══════════════════════════════════════════ */
+const SPEC = {
+  Pmax:50, Vmp:18.2, Imp:2.75, Voc:22.0, Isc:3.0,
+  area:0.362, eff:0.138, tempCoeffP:-0.0045, NOCT:45
+};
+const PW=0.9, PH=0.72, PD=0.04, LAT=14.07;
+const C={
+  panel:0x1e3a5f,grid:0x2563a8,frame:0x94a3b8,
+  esp:0x22c55e,chip:0x1a1a2e,buck:0xf97316,sink:0xa3a3a3,
+  motor:0xef4444,ldr:0xeab308,ina:0x3b82f6,temp:0x14b8a6,
+  rpi:0x8b5cf6,ground:0x1a2e1a,post:0x78716c,wire:0x06b6d4,
+  sun:0xfbbf24,load:0x52525b
+};
+
+let scene,cam,ren,ctrl,sunL,sunM,azG,elG;
+let simT=.25,simS=1,lt=0;
+let loadInd1,loadInd2,ldrM=[];
+const parts=[];
+
+function init3D(){
+  if(threeInited) return;
+  threeInited=true;
+  const container=document.getElementById('page3d');
+
+  scene=new THREE.Scene();
+  scene.background=new THREE.Color(0x0a0e1a);
+  scene.fog=new THREE.FogExp2(0x0a0e1a,.012);
+
+  cam=new THREE.PerspectiveCamera(50,container.clientWidth/container.clientHeight,.1,500);
+  cam.position.set(12,8,14);
+
+  ren=new THREE.WebGLRenderer({antialias:true});
+  ren.setSize(container.clientWidth,container.clientHeight);
+  ren.setPixelRatio(Math.min(devicePixelRatio,2));
+  ren.shadowMap.enabled=true;
+  ren.shadowMap.type=THREE.PCFSoftShadowMap;
+  container.insertBefore(ren.domElement,container.firstChild);
+
+  ctrl=new THREE.OrbitControls(cam,ren.domElement);
+  ctrl.target.set(0,2,0); ctrl.enableDamping=true; ctrl.dampingFactor=.08;
+  ctrl.maxPolarAngle=Math.PI/2-.05; ctrl.minDistance=5; ctrl.maxDistance=40;
+
+  /* lights */
+  scene.add(new THREE.AmbientLight(0x334466,.5));
+  sunL=new THREE.DirectionalLight(0xfff4e0,1.2);
+  sunL.castShadow=true;
+  sunL.shadow.mapSize.set(1024,1024);
+  sunL.shadow.camera.left=-15;sunL.shadow.camera.right=15;
+  sunL.shadow.camera.top=15;sunL.shadow.camera.bottom=-15;
+  scene.add(sunL);
+  scene.add(new THREE.HemisphereLight(0x87ceeb,0x2d4a2d,.3));
+
+  /* ground */
+  const gnd=new THREE.Mesh(new THREE.PlaneGeometry(60,60),new THREE.MeshStandardMaterial({color:C.ground,roughness:.95}));
+  gnd.rotation.x=-Math.PI/2; gnd.receiveShadow=true; scene.add(gnd);
+  scene.add(new THREE.GridHelper(60,30,0x2a3a2a,0x1e2e1e));
+
+  /* sun */
+  sunM=new THREE.Mesh(new THREE.SphereGeometry(1.5,16,16),new THREE.MeshBasicMaterial({color:C.sun}));
+  sunM.position.set(0,20,-30); scene.add(sunM);
+  const gc=document.createElement('canvas');gc.width=128;gc.height=128;
+  const gx=gc.getContext('2d');
+  const gg=gx.createRadialGradient(64,64,0,64,64,64);
+  gg.addColorStop(0,'rgba(251,191,36,.6)');gg.addColorStop(.3,'rgba(251,191,36,.2)');gg.addColorStop(1,'rgba(251,191,36,0)');
+  gx.fillStyle=gg;gx.fillRect(0,0,128,128);
+  const glow=new THREE.Sprite(new THREE.SpriteMaterial({map:new THREE.CanvasTexture(gc),transparent:true,depthTest:false}));
+  glow.scale.set(8,8,1); sunM.add(glow);
+
+  buildScene();
+  requestAnimationFrame(anim);
+}
+
+/* helpers */
+function bx(w,h,d,col){const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),new THREE.MeshStandardMaterial({color:col,roughness:.6,metalness:.2}));m.castShadow=true;m.receiveShadow=true;return m}
+function cy(rT,rB,h,col,s=16){const m=new THREE.Mesh(new THREE.CylinderGeometry(rT,rB,h,s),new THREE.MeshStandardMaterial({color:col,roughness:.5,metalness:.3}));m.castShadow=true;m.receiveShadow=true;return m}
+function lbl(text,pos,color='#e2e8f0'){
+  const cv=document.createElement('canvas');cv.width=512;cv.height=64;
+  const cx=cv.getContext('2d');cx.font='bold 26px sans-serif';cx.fillStyle=color;cx.textAlign='center';cx.fillText(text,256,40);
+  const sp=new THREE.Sprite(new THREE.SpriteMaterial({map:new THREE.CanvasTexture(cv),transparent:true,depthTest:false}));
+  sp.scale.set(2.8,.38,1);sp.position.copy(pos);return sp;
+}
+function mkPanel(){
+  const g=new THREE.Group();
+  g.add(bx(PW,PD,PH,C.panel));
+  const pts=[];
+  for(let i=-PW/2+.12;i<PW/2;i+=.12){pts.push(i,PD/2+.002,-PH/2,i,PD/2+.002,PH/2)}
+  for(let j=-PH/2+.09;j<PH/2;j+=.09){pts.push(-PW/2,PD/2+.002,j,PW/2,PD/2+.002,j)}
+  const lg=new THREE.BufferGeometry();lg.setAttribute('position',new THREE.Float32BufferAttribute(pts,3));
+  g.add(new THREE.LineSegments(lg,new THREE.LineBasicMaterial({color:C.grid,transparent:true,opacity:.4})));
+  const f=.03;
+  [[-PW/2-f/2,0,0,f,PD+f,PH+f],[PW/2+f/2,0,0,f,PD+f,PH+f],[0,0,-PH/2-f/2,PW,PD+f,f],[0,0,PH/2+f/2,PW,PD+f,f]].forEach(([x,y,z,w,h,d])=>{
+    const b=bx(w,h,d,C.frame);b.position.set(x,y,z);g.add(b);
+  });
+  return g;
+}
+function mkLoad(parent,x,z){
+  const g=new THREE.Group();g.position.set(x,0,z);
+  const body=bx(.4,.2,.25,C.load);body.position.set(0,.35,0);g.add(body);
+  const scr=bx(.2,.08,.005,0x1a1a2e);scr.position.set(0,.38,-.126);g.add(scr);
+  const led=new THREE.Mesh(new THREE.SphereGeometry(.02,8,8),new THREE.MeshStandardMaterial({color:0x22c55e,emissive:0x22c55e,emissiveIntensity:.3}));
+  led.position.set(.12,.42,-.126);g.add(led);
+  const rP=cy(.02,.02,.06,0xef4444);rP.position.set(.1,.46,0);g.add(rP);
+  const bP=cy(.02,.02,.06,0x1a1a2e);bP.position.set(-.1,.46,0);g.add(bP);
+  for(let i=-.12;i<=.12;i+=.04){const sl=bx(.03,.005,.2,0x3a3a4a);sl.position.set(i,.455,0);g.add(sl)}
+  parent.add(g);return led;
+}
+function at(m,x,y,z){m.position.set(x,y,z);return m}
+function mkINA(p,x,y,z){p.add(at(bx(.2,.03,.12,C.ina),x,y,z));p.add(at(bx(.06,.025,.06,0x1a1a2e),x,y+.028,z));p.add(at(bx(.08,.02,.03,0xc0a040),x+.06,y+.025,z))}
+function mkTemp(p,x,y,z){p.add(at(cy(.025,.025,.06,C.temp),x,y,z));const tip=new THREE.Mesh(new THREE.SphereGeometry(.025,8,8),new THREE.MeshStandardMaterial({color:C.temp,roughness:.4}));tip.position.set(x,y+.03,z);p.add(tip)}
+
+function buildScene(){
+  /* Fixed */
+  const fxG=new THREE.Group();fxG.position.set(-5,0,0);scene.add(fxG);
+  const fxP=mkPanel();fxP.position.y=2.2;fxP.rotation.x=-THREE.MathUtils.degToRad(14);fxG.add(fxP);
+  fxG.add(at(cy(.05,.06,2.2,C.post),-.35,1.1,0));
+  fxG.add(at(cy(.05,.06,2.2,C.post),.35,1.1,0));
+  mkTemp(fxG,0,2,.2);
+  fxG.add(at(bx(.4,.06,.25,C.esp),.8,.35,1.2));
+  fxG.add(at(bx(.12,.04,.12,C.chip),.8,.41,1.2));
+  fxG.add(at(bx(.3,.08,.2,C.buck),-.8,.35,1.2));
+  fxG.add(at(bx(.2,.06,.15,C.sink),-.8,.43,1.2));
+  mkINA(fxG,0,.35,1);
+  loadInd1=mkLoad(fxG,0,1.8);
+  fxG.add(lbl('Fixed 50W',new THREE.Vector3(0,3.2,0),'#38bdf8'));
+  fxG.add(lbl('ESP32 #1',new THREE.Vector3(.8,.65,1.2),'#4ade80'));
+  fxG.add(lbl('INA226',new THREE.Vector3(0,.6,1),'#3b82f6'));
+  fxG.add(lbl('DC Load',new THREE.Vector3(0,.75,1.8),'#a1a1aa'));
+
+  /* Tracker */
+  azG=new THREE.Group();azG.position.set(5,0,0);scene.add(azG);
+  azG.add(at(cy(.5,.55,.1,C.post,24),0,.05,0));
+  azG.add(at(cy(.15,.15,.25,C.motor),0,.23,0));
+  azG.add(at(cy(.06,.07,1.8,C.post),0,1.25,0));
+  elG=new THREE.Group();elG.position.y=2.15;azG.add(elG);
+  {const m=cy(.12,.12,.2,C.motor);m.position.set(-.08,0,0);m.rotation.set(0,0,Math.PI/2);elG.add(m)}
+  const tP=mkPanel();tP.position.set(.35,.15,0);elG.add(tP);
+  [[-PW/2+.05,PD/2+.03,-PH/2+.05],[PW/2-.05,PD/2+.03,-PH/2+.05],[-PW/2+.05,PD/2+.03,PH/2-.05],[PW/2-.05,PD/2+.03,PH/2-.05]].forEach(([x,y,z])=>{
+    const l=new THREE.Mesh(new THREE.SphereGeometry(.035,8,8),new THREE.MeshStandardMaterial({color:C.ldr,emissive:0xeab308,emissiveIntensity:.3}));
+    l.position.set(x+.35,y+.15,z);elG.add(l);ldrM.push(l);
+  });
+  mkTemp(elG,.35,0,.2);
+  azG.add(at(bx(.4,.06,.25,C.esp),.8,.35,1.2));
+  azG.add(at(bx(.12,.04,.12,C.chip),.8,.41,1.2));
+  azG.add(at(bx(.3,.08,.2,C.buck),-.8,.35,1.2));
+  mkINA(azG,0,.35,1);
+  loadInd2=mkLoad(azG,0,1.8);
+  azG.add(lbl('Tracker 50W',new THREE.Vector3(0,3.5,0),'#4ade80'));
+  azG.add(lbl('ESP32 #2',new THREE.Vector3(.8,.65,1.2),'#4ade80'));
+  azG.add(lbl('INA226',new THREE.Vector3(0,.6,1),'#3b82f6'));
+
+  /* Server */
+  const svG=new THREE.Group();svG.position.set(0,0,5);scene.add(svG);
+  svG.add(at(bx(.6,.06,.4,C.rpi),0,.35,0));
+  svG.add(at(bx(.15,.05,.15,0x1e1e2e),0,.41,0));
+  svG.add(lbl('Raspberry Pi',new THREE.Vector3(0,.9,0),'#a78bfa'));
+
+  /* Wires */
+  function wire(a,b,col=C.wire){
+    const g=new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(...a),new THREE.Vector3(...b)]);
+    const l=new THREE.Line(g,new THREE.LineDashedMaterial({color:col,dashSize:.2,gapSize:.1,transparent:true,opacity:.6}));
+    l.computeLineDistances();scene.add(l);
+  }
+  wire([-4.2,.4,1.4],[-4.2,.4,2.5]);wire([-4.2,.4,2.5],[0,.4,5]);
+  wire([5.8,.4,1.4],[5.8,.4,2.5]);wire([5.8,.4,2.5],[0,.4,5]);
+
+  /* Particles */
+  const pGeo=new THREE.SphereGeometry(.04,6,6);
+  for(let i=0;i<24;i++){
+    const m=new THREE.Mesh(pGeo,new THREE.MeshBasicMaterial({color:C.wire,transparent:true,opacity:.8}));
+    m.visible=false;scene.add(m);
+    parts.push({m,side:i%2===0?'fixed':'track',t:Math.random(),spd:.3+Math.random()*.2,sx:i%2===0?-4.2:5.8});
+  }
+}
+
+/* sun position */
+function sunPos(tn){
+  const hr=5+tn*14,ha=(hr-12)*15;
+  const dec=10,lr=THREE.MathUtils.degToRad(LAT),dr=THREE.MathUtils.degToRad(dec),hr2=THREE.MathUtils.degToRad(ha);
+  const sE=Math.sin(lr)*Math.sin(dr)+Math.cos(lr)*Math.cos(dr)*Math.cos(hr2);
+  const el=Math.asin(Math.max(-1,Math.min(1,sE)));
+  const cA=(Math.sin(dr)-Math.sin(lr)*sE)/(Math.cos(lr)*Math.cos(el)+1e-4);
+  let az=Math.acos(Math.max(-1,Math.min(1,cA)));
+  if(ha>0)az=2*Math.PI-az;
+  return{azD:THREE.MathUtils.radToDeg(az),elD:Math.max(0,THREE.MathUtils.radToDeg(el)),azR:az,elR:Math.max(0,el),hr,ghi:Math.max(0,sE)*1000*(.87+Math.random()*.04)};
+}
+
+function simData(s){
+  const ambTemp=28+7*Math.sin((s.hr-6)/14*Math.PI);
+  const tr=THREE.MathUtils.degToRad(14);
+  const cosIncF=Math.sin(s.elR)*Math.cos(tr)+Math.cos(s.elR)*Math.cos(s.azR-Math.PI)*Math.sin(tr);
+  const irradF=Math.max(0,cosIncF)*s.ghi;
+  const tcF=ambTemp+irradF/800*(SPEC.NOCT-20);
+  const tfF=1+SPEC.tempCoeffP*(tcF-25);
+  const pF=Math.min(SPEC.Pmax,irradF*SPEC.area*SPEC.eff*Math.max(0,tfF));
+  const vF=pF>.1?SPEC.Vmp*(.85+.15*Math.min(1,irradF/800)):0;
+  const iF=pF>.1?pF/vF:0;
+
+  const irradT=s.elD>2?s.ghi*.98:0;
+  const tcT=ambTemp+irradT/800*(SPEC.NOCT-20);
+  const tfT=1+SPEC.tempCoeffP*(tcT-25);
+  const pT=Math.min(SPEC.Pmax,irradT*SPEC.area*SPEC.eff*Math.max(0,tfT));
+  const vT=pT>.1?SPEC.Vmp*(.85+.15*Math.min(1,irradT/800)):0;
+  const iT=pT>.1?pT/vT:0;
+
+  return{f:{p:pF,v:vF,i:iF,tc:tcF},t:{p:pT,v:vT,i:iT,az:s.azD,el:s.elD,tc:tcT},ambTemp};
+}
+
+const $=id=>document.getElementById(id);
+function hud(s,d){
+  const h=Math.floor(s.hr),m=Math.floor((s.hr-h)*60);
+  $('stime').textContent=String(h).padStart(2,'0')+':'+String(m).padStart(2,'0');
+  $('sel').textContent=s.elD.toFixed(0);$('ghi').textContent=s.ghi.toFixed(0);$('amb_t').textContent=d.ambTemp.toFixed(0);
+  $('fp').textContent=d.f.p.toFixed(1);$('fv').textContent=d.f.v.toFixed(1);$('fi').textContent=d.f.i.toFixed(2);$('ft').textContent=d.f.tc.toFixed(0);
+  $('tp').textContent=d.t.p.toFixed(1);$('tv').textContent=d.t.v.toFixed(1);$('ti').textContent=d.t.i.toFixed(2);
+  $('taz').textContent=d.t.az.toFixed(0);$('tel').textContent=d.t.el.toFixed(0);
+  if(loadInd1){loadInd1.material.emissiveIntensity=d.f.p>1?.4+(d.f.p/SPEC.Pmax)*.6:.05}
+  if(loadInd2){loadInd2.material.emissiveIntensity=d.t.p>1?.4+(d.t.p/SPEC.Pmax)*.6:.05}
+}
+
+function anim(t){
+  requestAnimationFrame(anim);
+  if(activeTab!=='page3d'){lt=t;return}
+  const dt=lt?(t-lt)/1e3:0; lt=t;
+  simT+=dt*simS*.01; if(simT>1)simT=0;
+  $('timeSlider').value=simT;
+  const sun=sunPos(simT);
+  const sd=40;
+  const sx=-Math.sin(sun.azR)*Math.cos(sun.elR)*sd;
+  const sy=Math.sin(sun.elR)*sd;
+  const sz=-Math.cos(sun.azR)*Math.cos(sun.elR)*sd;
+  sunM.position.set(sx,sy,sz);
+  sunL.position.set(sx*.5,sy*.5,sz*.5);
+  sunL.intensity=Math.max(0,sun.elD/90)*1.5;
+  const df=Math.max(0,Math.min(1,sun.elD/30));
+  scene.background.setRGB(THREE.MathUtils.lerp(.04,.15,df),THREE.MathUtils.lerp(.05,.25,df),THREE.MathUtils.lerp(.1,.55,df));
+  scene.fog.color.copy(scene.background);
+  sunM.visible=sun.elD>-2;
+  if(sun.elD>2&&azG&&elG){
+    azG.rotation.y+=(-(sun.azR-Math.PI)-azG.rotation.y)*.02;
+    elG.rotation.x+=(-(Math.PI/2-sun.elR)-elG.rotation.x)*.02;
+  }
+  ldrM.forEach(l=>{l.material.emissiveIntensity=sun.elD>2?.3+(sun.ghi/1e3)*.7:.05});
+  parts.forEach(p=>{
+    p.t+=dt*p.spd;if(p.t>1)p.t-=1;
+    p.m.visible=sun.elD>2;if(!p.m.visible)return;
+    if(p.t<.3)p.m.position.set(p.sx,.4,1.4+(p.t/.3)*1.1);
+    else p.m.position.lerpVectors(new THREE.Vector3(p.sx,.4,2.5),new THREE.Vector3(0,.4,5),(p.t-.3)/.7);
+    p.m.material.opacity=.3+Math.sin(p.t*Math.PI)*.6;
+  });
+  hud(sun,simData(sun));
+  ctrl.update();
+  ren.render(scene,cam);
+}
+
+function onResize(){
+  if(!ren)return;
+  const c=document.getElementById('page3d');
+  cam.aspect=c.clientWidth/c.clientHeight;
+  cam.updateProjectionMatrix();
+  ren.setSize(c.clientWidth,c.clientHeight);
+}
+window.addEventListener('resize',onResize);
+
+$('timeSlider').addEventListener('input',e=>{simT=parseFloat(e.target.value)});
+$('speedSlider').addEventListener('input',e=>{simS=parseFloat(e.target.value)});
+$('resetBtn').addEventListener('click',()=>{simT=.25;simS=1;$('speedSlider').value=1;if(cam){cam.position.set(12,8,14);ctrl.target.set(0,2,0)}});
+
+/* init 3D on load since it's the default tab */
+init3D();
+</script>
