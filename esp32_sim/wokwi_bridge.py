@@ -17,6 +17,8 @@ messages; Node-RED still checks every record exactly as it would from a real boa
 from __future__ import annotations
 
 import argparse
+import datetime
+import os
 import signal
 import threading
 import time
@@ -24,7 +26,21 @@ import time
 import paho.mqtt.client as mqtt
 from paho.mqtt.enums import CallbackAPIVersion
 
-from .virtual_esp32 import env, log
+
+def env(key: str, default=None):
+    """Read an environment variable, returning *default* if not set."""
+    val = os.environ.get(key)
+    if val is None:
+        return default
+    try:
+        return type(default)(val) if default is not None else val
+    except (ValueError, TypeError):
+        return val
+
+
+def log(msg: str) -> None:
+    """Simple timestamped logger."""
+    print(f"[{datetime.datetime.now().isoformat(timespec='seconds')}] {msg}", flush=True)
 
 
 class Bridge:
